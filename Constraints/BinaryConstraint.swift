@@ -11,38 +11,24 @@
  */
 import Foundation
 
-struct BinaryConstraint<T: Comparable> : Constraint {
-    private let assignments: Assignments
-    private let variable1: Variable
-    private let variable2: Variable
-    private let value: Value<T>
-    private let op: (Value<T>, Value<T>) -> Value<T>
-    private let comp: (Value<T>, Value<T>) -> Bool
+public struct BinaryConstraint<T: Value> : Constraint {
+    private let variable1: Variable<T>
+    private let variable2: Variable<T>
+    private let condition: (T, T) -> Bool
     
-    private var variablesCombined: Value<T>? {
-        guard let currentAssignment1 = assignments.getAssignment(of: variable1),
-              let currentAssignment2 = assignments.getAssignment(of: variable2) else {
-            return nil
-        }
-        let lhs = op(currentAssignment1, currentAssignment2)
+    public init(variable1: Variable<T>,
+                variable2: Variable<T>,
+                condition: @escaping (T, T) -> Bool) {
+        self.variable1 = variable1
+        self.variable2 = variable2
+        self.condition = condition
     }
     
     public var isSatisfied: Bool {
-        guard let lhs = variablesCombined else {
+        guard let currentAssignment1 = variable1.assignment,
+              let currentAssignment2 = variable2.assignment else {
             return false
         }
-        return comp(lhs, value)
-    }
-    
-    init(assignments: Assignments,
-         variable1: Variable,
-         variable2: Variable,
-         value: Value<T>,
-         comp: @escaping (Value<T>, Value<T>) -> Bool) {
-        self.assignments = assignments
-        self.variable1 = variable1
-        self.variable2 = variable2
-        self.value = value
-        self.comp = comp
+        return condition(currentAssignment1, currentAssignment2)
     }
 }

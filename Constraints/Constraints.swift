@@ -7,13 +7,18 @@
 
 import Foundation
 
-struct Constraints {
-    private let assignments: Assignments
-    private var allConstraints: Set<Constraint>
+public struct Constraints {
+    private var allConstraints: [Constraint]
     
-    init(assignments: Assignments) {
-        self.assignments = assignments
-        self.allConstraints = Set()
+    public init(allConstraints: [Constraint] = []) {
+        self.allConstraints = allConstraints
     }
     
+    public mutating func add(constraint: Constraint) {
+        allConstraints.append(constraint)
+    }
+    
+    public var allSatisfied: Bool {
+        return allConstraints.allSatisfy({ $0.isSatisfied })
+    }
 }

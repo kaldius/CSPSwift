@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol Constraint {
+public protocol Constraint {
     var isSatisfied: Bool { get }
 }

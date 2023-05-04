@@ -11,28 +11,20 @@
 
 import Foundation
 
-struct UnaryConstraint<T: Comparable>: Constraint {
-    private let assignments: Assignments
-    private let variable: Variable
-    private let value: Value<T>
-    private let comp: (Value<T>, Value<T>) -> Bool
+public struct UnaryConstraint<T: Value>: Constraint {
+    private let variable: Variable<T>
+    private let condition: (T) -> Bool
+    
+    public init(variable: Variable<T>,
+                condition: @escaping (T) -> Bool) {
+        self.variable = variable
+        self.condition = condition
+    }
     
     public var isSatisfied: Bool {
-        guard let currentAssignment = assignments.getAssignment(of: variable) else {
+        guard let currentAssignment = variable.assignment else {
             return false
         }
-        return comp(currentAssignment, value)
+        return condition(currentAssignment)
     }
-    
-    init(assignments: Assignments,
-         variable: Variable,
-         value: Value<T>,
-         comp: @escaping (Value<T>, Value<T>) -> Bool) {
-        self.assignments = assignments
-        self.variable = variable
-        self.value = value
-        self.comp = comp
-    }
-    
-    
 }
