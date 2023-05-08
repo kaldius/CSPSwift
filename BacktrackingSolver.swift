@@ -7,33 +7,33 @@
 
 import Foundation
 
-public struct BacktrackingSolver<T: Value> {
+public struct BacktrackingSolver<T: Value, I: InferenceEngine> {
     /// Returns the solvable in a solved state if it can be solved,
     /// returns `nil` otherwise.
-    public func backtrack(variables: Variables<T>, constraints: Constraints) -> Variables<T>? {
-        if variables.isCompletelyAssigned && constraints.allSatisfied {
-            return variables
+    public func backtrack(variableSet: VariableSet<T, I>, constraints: Constraints) -> Bool {
+        if variableSet.isCompletelyAssigned && constraints.allSatisfied {
+            return true
         }
-        guard let unassignedVariable = variables.nextUnassignedVariable else {
+        guard let unassignedVariable = variableSet.nextUnassignedVariable else {
             // if there is no nextUnassignedVariable and the constraints are not
             // all satisfied, search has failed
-            return nil
+            return false
         }
-        for domainValue in variables.orderDomainValues(for: unassignedVariable) {
+        for domainValue in variableSet.orderDomainValues(for: unassignedVariable) {
             if unassignedVariable.canAssign(to: domainValue) {
                 unassignedVariable.assignment = domainValue
                 // make new inferences (without setting yet)
                 if true { // !inferences.leadsToFailure {
                     // set new inferences
-                    let result = backtrack(variables: variables, constraints: constraints)
-                    if result != nil {
-                        return result
+                    let result = backtrack(variableSet: variableSet, constraints: constraints)
+                    if result {
+                        return true
                     }
                     // remove inferences from csp
                 }
                 unassignedVariable.unassign()
             }
         }
-        return nil
+        return false
     }
 }
