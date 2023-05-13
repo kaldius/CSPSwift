@@ -9,7 +9,7 @@ import Foundation
 
 public class Variable<T: Value> {
     public let name: String
-    private(set) var domain: Set<T>
+    public var domain: Set<T>
     
     /// If setting to a value that is not in `remainingDomain`,
     /// the revert back to old value.

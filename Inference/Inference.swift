@@ -28,4 +28,8 @@ public struct Inference<T: Value> {
     public mutating func addDomain(for variable: Variable<T>, domain: Set<T>) {
         variableToDomain[variable] = domain
     }
+    
+    public func getDomain(for variable: Variable<T>) -> Set<T>? {
+        variableToDomain[variable]
+    }
 }

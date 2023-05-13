@@ -12,5 +12,5 @@ public protocol InferenceEngine {
     var variables: Set<Variable<T>> { get }
     var constraints: Constraints { get }
     
-    func makeNewInferences() -> Inference<T>
+    func makeNewInference() -> Inference<T>
 }

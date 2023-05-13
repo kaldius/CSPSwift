@@ -8,13 +8,13 @@
 import Foundation
 
 public struct Constraints {
-    private var allConstraints: [Constraint]
+    private(set) var allConstraints: [any Constraint]
     
-    public init(allConstraints: [Constraint] = []) {
+    public init(allConstraints: [any Constraint] = []) {
         self.allConstraints = allConstraints
     }
     
-    public mutating func add(constraint: Constraint) {
+    public mutating func add(constraint: any Constraint) {
         allConstraints.append(constraint)
     }
     

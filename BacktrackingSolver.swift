@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct BacktrackingSolver<T: Value, I: InferenceEngine> {
+public struct BacktrackingSolver<T: Value, I: InferenceEngine> where I.T == T {
     /// Returns the solvable in a solved state if it can be solved,
     /// returns `nil` otherwise.
     public func backtrack(variableSet: VariableSet<T, I>, constraints: Constraints) -> Bool {

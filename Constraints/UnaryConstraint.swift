@@ -12,12 +12,14 @@
 import Foundation
 
 public struct UnaryConstraint<T: Value>: Constraint {
-    private let variable: Variable<T>
+    public let variable: Variable<T>
+    public var variables: [Variable<T>]
     private let condition: (T) -> Bool
     
     public init(variable: Variable<T>,
                 condition: @escaping (T) -> Bool) {
         self.variable = variable
+        self.variables = [variable]
         self.condition = condition
     }
     
@@ -26,5 +28,9 @@ public struct UnaryConstraint<T: Value>: Constraint {
             return false
         }
         return condition(currentAssignment)
+    }
+    
+    public func wouldBeSatisfied(with variableAssignment: T) -> Bool {
+        condition(variableAssignment)
     }
 }

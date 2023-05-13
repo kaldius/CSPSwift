@@ -7,16 +7,17 @@
 
 import Foundation
 
-public struct VariableSet<T: Value, I: InferenceEngine> {
+public struct VariableSet<T: Value, I: InferenceEngine> where I.T == T {
     private var variables: Set<Variable<T>>
     private let inferenceEngine: I
-    private var currentInference: Inference<T>
+    // TODO: optimize by making it a real stack?
+    private var previousInferences: [Inference<T>]
     
     public init(variables: Set<Variable<T>>,
                 inferenceEngine: I) {
         self.variables = variables
         self.inferenceEngine = inferenceEngine
-        self.currentInference = Inference()
+        self.previousInferences = []
     }
     
     public var isCompletelyAssigned: Bool {
@@ -29,7 +30,7 @@ public struct VariableSet<T: Value, I: InferenceEngine> {
     }
     
     public var leadsToFailure: Bool {
-        currentInference.leadsToFailure
+        previousInferences.last?.leadsToFailure ?? false
     }
     
     // TODO: optimizations?
@@ -48,31 +49,35 @@ public struct VariableSet<T: Value, I: InferenceEngine> {
     
     private func numConsistentDomainValues(ifSetting variable: Variable<T>, to value: T) -> Int? {
         variable.assignment = value
-        let newInference = inferenceEngine.makeNewInferences()
+        let newInference = inferenceEngine.makeNewInference()
         if newInference.leadsToFailure {
             return nil
         }
         return newInference.numConsistentDomainValues
     }
     
-    public func setNew(domains: [Variable<T>: [T]]) {
-        // could be [String: [T]] also idk...
-        // TODO: set all variables to the new domains provided, but maintain undo stack
+    /// Makes new inferences, then saves it in the `previousInferences` stack.
+    public mutating func makeNewInferences() {
+        let newInference = inferenceEngine.makeNewInference()
+        previousInferences.append(newInference)
     }
     
-    public func undoLastChange() {
-        // TODO: revert all variables' domains to the previous state
-    }
-    
-    public func makeNewInferences() {
-        // TODO: call inferenceEngine.makeNewInferences() then store and save undo stack
-    }
-    
+    /// Takes the latest inference in the `previousInferences` stack and sets all variables' domains.
     public func setNewInferences() {
-        // TODO: set all variables' domains to the currentInferences' values
+        let latestInference = previousInferences.last
+        for variable in variables {
+            guard let inferredDomain = latestInference?.getDomain(for: variable) else {
+                // should never happen. Consider throwing error?
+                assert(false)
+            }
+            variable.domain = inferredDomain
+        }
     }
     
-    public func undoInferences() {
-        // TODO: set al variables' domains to the previous set of domains
+    /// Removes the latest inference from the `previousInferences` stack and
+    /// sets all variable domains to the second latest inference.
+    public mutating func undoInferences() {
+        previousInferences.removeLast()
+        setNewInferences()
     }
 }
