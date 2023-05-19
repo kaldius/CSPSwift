@@ -36,7 +36,7 @@ public struct ForwardChecking<T: Value>: InferenceEngine {
     private func inferDomain(for variable: some Variable, constraint: some Constraint) -> [some Value] {
         var newDomain = variable.domain
         for domainValue in variable.domain {
-            variable.assignment = domainValue
+            variable.assign(to: domainValue)
             if constraint.isViolated {
                 newDomain.remove(domainValue)
             }

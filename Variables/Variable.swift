@@ -37,11 +37,14 @@ extension Variable {
         return assignment == nil && domain.contains(castedNewAssignment)
     }
     
-    public func assign(to newAssignment: some Value) {
-        guard let castedNewAssignment = newAssignment as? ValueType else {
-            return
+    @discardableResult
+    public func assign(to newAssignment: some Value) -> Bool {
+        guard let castedNewAssignment = newAssignment as? ValueType,
+              domain.contains(castedNewAssignment) else {
+            return false
         }
         assignment = castedNewAssignment
+        return true
     }
     
     public func setDomain(newDomain: [any Value]) {
