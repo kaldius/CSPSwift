@@ -7,31 +7,49 @@
 
 import Foundation
 
-public class Variable<T: Value> {
-    public let name: String
-    public var domain: Set<T>
+public protocol Variable: AnyObject, Hashable {
+    associatedtype ValueType: Value
     
-    /// If setting to a value that is not in `remainingDomain`,
-    /// the revert back to old value.
-    public var assignment: T? {
-        didSet {
-            if let newValue = assignment, !domain.contains(newValue) {
-                assignment = oldValue
-            }
-        }
+    var name: String { get }
+    var domain: Set<ValueType> { get set }
+    var assignment: ValueType? { get set }
+}
+
+extension Variable {
+    public var domainAsArray: [ValueType] {
+        Array(domain)
     }
     
-    public init(name: String,
-                domain: Set<T> = Set()) {
-        self.name = name
-        self.assignment = nil
-        self.domain = domain
+    public var domainSize: Int {
+        domain.count
+    }
+    
+    public var isAssigned: Bool {
+        assignment != nil
     }
     
     /// Returns true if this variable can be set to `newAssignment`,
     /// false otherwise.
-    public func canAssign(to newAssignment: T) -> Bool {
-        domain.contains(newAssignment)
+    public func canAssign(to newAssignment: some Value) -> Bool {
+        guard let castedNewAssignment = newAssignment as? ValueType else {
+            return false
+        }
+        return assignment == nil && domain.contains(castedNewAssignment)
+    }
+    
+    public func assign(to newAssignment: some Value) {
+        guard let castedNewAssignment = newAssignment as? ValueType else {
+            return
+        }
+        assignment = castedNewAssignment
+    }
+    
+    public func setDomain(newDomain: [any Value]) {
+        let castedDomain = newDomain.compactMap({ $0 as? ValueType })
+        guard castedDomain.count > 0 else {
+            assert(false)
+        }
+        domain = Set(castedDomain)
     }
     
     // TODO: need to update domain?
@@ -40,14 +58,14 @@ public class Variable<T: Value> {
     }
 }
 
-extension Variable: Equatable {
-    public static func == (lhs: Variable, rhs: Variable) -> Bool {
-        lhs.name == rhs.name
+extension Variable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.name == rhs.name && lhs.assignment == rhs.assignment
     }
 }
 
-extension Variable: Hashable {
+extension Variable {
     public func hash(into hasher: inout Hasher) {
-        return hasher.combine(name)
+        hasher.combine(name)
     }
 }

@@ -8,9 +8,8 @@
 import Foundation
 
 public protocol InferenceEngine {
-    associatedtype T: Value
-    var variables: Set<Variable<T>> { get }
+    var variables: [any Variable] { get }
     var constraints: Constraints { get }
     
-    func makeNewInference() -> Inference<T>
+    func makeNewInference() -> Inference
 }

@@ -8,50 +8,39 @@
 import Foundation
 
 public struct ForwardChecking<T: Value>: InferenceEngine {
-    public var variables: Set<Variable<T>>
+    public var variables: [any Variable]
     public var constraints: Constraints
     
-    public init(variables: Set<Variable<T>>, constraints: Constraints) {
+    public init(variables: [any Variable], constraints: Constraints) {
         self.variables = variables
         self.constraints = constraints
     }
     
-    public func makeNewInference() -> Inference<T> {
-        // for all variables with assignments,
-        // for all constraints,
-        // for all variables in constraints without assignments
-        // test each domain value
-        // if pass, keep, if fail, remove
-        /*
-        for constraint in constraints.allConstraints {
-            for variable in constraint.variables where variable.assignment == nil {
-                
+    public func makeNewInference() -> Inference {
+        var inference = Inference()
+        // for constraints with assigned variables
+        for constraint in constraints.allConstraints where containsAssignedVariable(constraint){
+            // for unassigned variables
+            for variable in constraint.variables where !variable.isAssigned {
+                let inferredDomain = inferDomain(for: variable, constraint: constraint)
+                inference.addDomain(for: variable, domain: inferredDomain)
             }
         }
-         */
-        return Inference()
+        return inference
     }
     
-    private func inferFrom(constraint: any Constraint) {
-        if let unaryConstraint = constraint as? UnaryConstraint<T> {
-            inferFrom(unaryConstraint: unaryConstraint)
-        }
-        if let binaryConstraint = constraint as? BinaryConstraint<T> {
-            inferFrom(binaryConstraint: binaryConstraint)
-        }
+    private func containsAssignedVariable(_ constraint: any Constraint) -> Bool {
+        constraint.variables.contains(where: { $0.isAssigned })
     }
     
-    private func inferFrom(unaryConstraint: UnaryConstraint<T>) {
-        if unaryConstraint.variable.domain.count == 1 {
-            return
+    private func inferDomain(for variable: some Variable, constraint: some Constraint) -> [some Value] {
+        var newDomain = variable.domain
+        for domainValue in variable.domain {
+            variable.assignment = domainValue
+            if constraint.isViolated {
+                newDomain.remove(domainValue)
+            }
         }
-        // FIXME: fix
-        let newDomain = unaryConstraint.variable.domain.compactMap({ domainValue in
-            domainValue
-        })
-    }
-    
-    private func inferFrom(binaryConstraint: BinaryConstraint<T>) {
-        
+        return Array(newDomain)
     }
 }

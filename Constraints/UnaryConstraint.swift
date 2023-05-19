@@ -11,6 +11,7 @@
 
 import Foundation
 
+/*
 public struct UnaryConstraint<T: Value>: Constraint {
     public let variable: Variable<T>
     public var variables: [Variable<T>]
@@ -34,3 +35,5 @@ public struct UnaryConstraint<T: Value>: Constraint {
         condition(variableAssignment)
     }
 }
+
+*/

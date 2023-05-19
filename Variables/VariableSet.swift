@@ -7,48 +7,48 @@
 
 import Foundation
 
-public struct VariableSet<T: Value, I: InferenceEngine> where I.T == T {
-    private var variables: Set<Variable<T>>
-    private let inferenceEngine: I
-    // TODO: optimize by making it a real stack?
-    private var previousInferences: [Inference<T>]
+public struct VariableSet {
+    private var variables: [any Variable]
+    // FIXME: should inferenceEngine be here or at solver level?
+    private let inferenceEngine: InferenceEngine
+    private var previousInferences: [Inference]
     
-    public init(variables: Set<Variable<T>>,
-                inferenceEngine: I) {
+    public init(variables: [any Variable],
+                inferenceEngine: InferenceEngine) {
         self.variables = variables
         self.inferenceEngine = inferenceEngine
         self.previousInferences = []
     }
     
     public var isCompletelyAssigned: Bool {
-        variables.allSatisfy({ $0.assignment != nil })
+        variables.allSatisfy({ $0.isAssigned })
     }
     
-    public var nextUnassignedVariable: Variable<T>? {
+    public var nextUnassignedVariable: (any Variable)? {
         // FIXME: is comparator correct?
-        variables.min(by: { $0.domain.count > $1.domain.count })
-    }
-    
-    public var leadsToFailure: Bool {
-        previousInferences.last?.leadsToFailure ?? false
+        variables.min(by: { $0.domainSize > $1.domainSize })
     }
     
     // TODO: optimizations?
-    public func orderDomainValues(for variable: Variable<T>) -> [T] {
-        var priorityValuePairs: [(Int, T)] = variable.domain.compactMap({ domainValue in
-            // larger priority = better
-            guard let priority = numConsistentDomainValues(ifSetting: variable, to: domainValue) else {
-                return nil
-            }
-            return (priority, domainValue)
-        })
-        priorityValuePairs.sort(by: { $0.0 > $1.0 })
-        let orderedValues = priorityValuePairs.map({ $1 })
+    public func orderDomainValues(for variable: some Variable) -> [some Value] {
+        var sortables = variable.domain.map({ Sortable(type(of: $0), value: $0) })
+        sortables.sort(by: { $0.priority > $1.priority })
+        let orderedValues = sortables.map({ $0.value })
         return orderedValues
     }
     
-    private func numConsistentDomainValues(ifSetting variable: Variable<T>, to value: T) -> Int? {
-        variable.assignment = value
+    private func getPriorityValuePair<T>(for variable: some Variable, domainValue: T) -> (Int, T)? where T: Value {
+        guard let priority = numConsistentDomainValues(ifSetting: variable, to: domainValue) else {
+            return nil
+        }
+        return (priority, domainValue)
+    }
+    
+    private func numConsistentDomainValues(ifSetting variable: some Variable, to value: some Value) -> Int? {
+        guard variable.canAssign(to: value) else {
+            return nil
+        }
+        variable.assign(to: value)
         let newInference = inferenceEngine.makeNewInference()
         if newInference.leadsToFailure {
             return nil
@@ -56,24 +56,27 @@ public struct VariableSet<T: Value, I: InferenceEngine> where I.T == T {
         return newInference.numConsistentDomainValues
     }
     
+    // FIXME: should inferenceEngine be here or at solver level?
     /// Makes new inferences, then saves it in the `previousInferences` stack.
     public mutating func makeNewInferences() {
         let newInference = inferenceEngine.makeNewInference()
         previousInferences.append(newInference)
     }
     
+    // FIXME: should inferenceEngine be here or at solver level?
     /// Takes the latest inference in the `previousInferences` stack and sets all variables' domains.
     public func setNewInferences() {
         let latestInference = previousInferences.last
         for variable in variables {
-            guard let inferredDomain = latestInference?.getDomain(for: variable) else {
+            guard let inferredDomain = latestInference?.getDomain(for: variable.name) else {
                 // should never happen. Consider throwing error?
                 assert(false)
             }
-            variable.domain = inferredDomain
+            variable.setDomain(newDomain: inferredDomain)
         }
     }
     
+    // FIXME: should inferenceEngine be here or at solver level?
     /// Removes the latest inference from the `previousInferences` stack and
     /// sets all variable domains to the second latest inference.
     public mutating func undoInferences() {

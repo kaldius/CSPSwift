@@ -8,8 +8,7 @@
 import Foundation
 
 public protocol Constraint {
-    associatedtype T: Value
-    var variables: [Variable<T>] { get }
-    // var condition: (T...) throws -> Bool { get }
+    var variables: [any Variable] { get }
     var isSatisfied: Bool { get }
+    var isViolated: Bool { get }
 }

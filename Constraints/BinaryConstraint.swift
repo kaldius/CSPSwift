@@ -11,6 +11,7 @@
  */
 import Foundation
 
+/*
 public struct BinaryConstraint<T: Value> : Constraint {
     public let variable1: Variable<T>
     public let variable2: Variable<T>
@@ -49,3 +50,5 @@ public struct BinaryConstraint<T: Value> : Constraint {
         return condition(currentAssignment1, currentAssignment2)
     }
 }
+
+*/

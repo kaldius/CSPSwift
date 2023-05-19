@@ -7,29 +7,42 @@
 
 import Foundation
 
-public struct Inference<T: Value> {
-    private(set) var variableToDomain: [Variable<T>: Set<T>]
+public struct Inference {
+    private(set) var variableNameToDomain: [String: [any Value]]
+    private var variableNameToVariable: [String: any Variable]
     
-    init(variableToDomain: [Variable<T> : Set<T>] = [:]) {
-        self.variableToDomain = variableToDomain
+    init() {
+        self.variableNameToDomain = [:]
+        self.variableNameToVariable = [:]
     }
     
     public var leadsToFailure: Bool {
-        variableToDomain.contains(where: { keyValuePair in
+        variableNameToDomain.contains(where: { keyValuePair in
             keyValuePair.value.isEmpty })
     }
     
     public var numConsistentDomainValues: Int {
-        variableToDomain.reduce(0, { count, keyValuePair in
-            count + keyValuePair.key.domain.count
+        variableNameToDomain.reduce(0, { countSoFar, keyValuePair in
+            countSoFar + keyValuePair.value.count
         })
     }
     
-    public mutating func addDomain(for variable: Variable<T>, domain: Set<T>) {
-        variableToDomain[variable] = domain
+    public mutating func addDomain(for variable: some Variable, domain: [any Value]) {
+        let variableName = variable.name
+        variableNameToDomain[variableName] = domain
+        variableNameToVariable[variableName] = variable
     }
     
-    public func getDomain(for variable: Variable<T>) -> Set<T>? {
-        variableToDomain[variable]
+    public func getDomain(for variableName: String) -> [any Value] {
+        guard let domain = variableNameToDomain[variableName] else {
+            assert(false)
+        }
+        return domain
+    }
+    
+    /// Convenience method
+    public func getDomain(for variable: any Variable) -> [any Value] {
+        let variableName = variable.name
+        return getDomain(for: variableName)
     }
 }
