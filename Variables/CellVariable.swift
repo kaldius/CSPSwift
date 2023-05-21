@@ -14,8 +14,8 @@ class CellVariable: Variable {
     public var name: String {
         "[\(row), \(col)]"
     }
-    public var domain: Set<Bool> = Set([true, false])
-    public var assignment: Bool?
+    public var domain: Set<CellState> = Set(CellState.allCases)
+    public var assignment: CellState?
     
     init(row: Int, col: Int) {
         self.row = row
