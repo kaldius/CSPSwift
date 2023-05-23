@@ -1,11 +1,3 @@
-//
-//  IntVariable.swift
-//  
-//
-//  Created by Quan Teng Foong on 13/5/23.
-//
-
-import Foundation
 
 public class IntVariable: Variable {
     public var name: String

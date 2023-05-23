@@ -12,6 +12,9 @@ public protocol Variable: AnyObject, Hashable {
     
     var name: String { get }
     var domain: Set<ValueType> { get set }
+    
+    // TODO: I want to make assignment private(set) so that the user
+    // must use assign(to: any Value) in order to set the assignment
     var assignment: ValueType? { get set }
 }
 
@@ -28,6 +31,14 @@ extension Variable {
         assignment != nil
     }
     
+    public var assignmentAsAnyValue: (any Value)? {
+        assignment
+    }
+    
+    public var emptyValueSet: Set<ValueType> {
+        Set<ValueType>()
+    }
+    
     /// Returns true if this variable can be set to `newAssignment`,
     /// false otherwise.
     public func canAssign(to newAssignment: some Value) -> Bool {
@@ -38,7 +49,7 @@ extension Variable {
     }
     
     @discardableResult
-    public func assign(to newAssignment: some Value) -> Bool {
+    public func assign(to newAssignment: any Value) -> Bool {
         guard let castedNewAssignment = newAssignment as? ValueType,
               domain.contains(castedNewAssignment) else {
             return false
@@ -50,6 +61,7 @@ extension Variable {
     public func setDomain(newDomain: [any Value]) {
         let castedDomain = newDomain.compactMap({ $0 as? ValueType })
         guard castedDomain.count > 0 else {
+            // TODO: throw error
             assert(false)
         }
         domain = Set(castedDomain)

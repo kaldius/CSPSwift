@@ -1,11 +1,6 @@
-//
-//  CellVariable.swift
-//  
-//
-//  Created by Quan Teng Foong on 20/5/23.
-//
-
-import Foundation
+/**
+ A `Variable` representing a `Cell`, whose domain is all the possible `CellState`s.
+ */
 
 class CellVariable: Variable {
     public let row: Int
