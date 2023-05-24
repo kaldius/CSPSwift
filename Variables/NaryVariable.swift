@@ -36,14 +36,16 @@ extension NaryVariable {
             return Set(naryVariableDomainValues)
         }
         set {
-            // FIXME: is there even a point in setting the domain of an NaryVariable?
             guard newValue.count == associatedVariables.count else {
                 // TODO: throw error
                 assert(false)
             }
             let associatedVariableDomains = getAssociatedVariableDomains(using: newValue)
+            guard checkAssociatedVariableDomains(domains: associatedVariableDomains) else {
+                // TODO: throw error
+                assert(false)
+            }
             for idx in 0 ..< associatedVariables.count {
-                // FIXME: do i need to check the type of the new domain???
                 associatedVariables[idx].setDomain(newDomain: associatedVariableDomains[idx])
             }
         }
@@ -90,6 +92,13 @@ extension NaryVariable {
     private func getAssociatedVariableDomains(using possibleAssignments: Set<NaryVariableDomainValue>) -> [[any Value]] {
         Array(0 ..< associatedVariables.count).map({ idx in
             possibleAssignments.map({ $0.value[idx] })
+        })
+    }
+    
+    /// Checks that all new domains are subsets of the respective variable's original domain.
+    private func checkAssociatedVariableDomains(domains: [[any Value]]) -> Bool {
+        Array(0 ..< associatedVariables.count).allSatisfy({ idx in
+            associatedVariables[idx].canSetDomain(newDomain: domains[idx])
         })
     }
 }

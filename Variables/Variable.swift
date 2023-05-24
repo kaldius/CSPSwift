@@ -58,12 +58,20 @@ extension Variable {
         return true
     }
     
-    public func setDomain(newDomain: [any Value]) {
+    public func canSetDomain(newDomain: [any Value]) -> Bool {
         let castedDomain = newDomain.compactMap({ $0 as? ValueType })
         guard castedDomain.count > 0 else {
+            return false
+        }
+        return Set(castedDomain).isSubset(of: domain)
+    }
+    
+    public func setDomain(newDomain: [any Value]) {
+        guard canSetDomain(newDomain: newDomain) else {
             // TODO: throw error
             assert(false)
         }
+        let castedDomain = newDomain.compactMap({ $0 as? ValueType })
         domain = Set(castedDomain)
     }
     
