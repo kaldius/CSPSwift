@@ -27,13 +27,23 @@ extension NaryVariable {
     /// sets all of their domains.
     var domain: Set<NaryVariableDomainValue> {
         get {
+            // if any associated domain is empty, no possible domain values
+            guard associatedDomains.allSatisfy({ $0.count > 0 }) else {
+                return Set()
+            }
             let permutations = Array<any Value>.possibleAssignments(domains: associatedDomains)
             let naryVariableDomainValues = permutations.map({ NaryVariableDomainValue(value: $0) })
             return Set(naryVariableDomainValues)
         }
         set {
+            // FIXME: is there even a point in setting the domain of an NaryVariable?
+            guard newValue.count == associatedVariables.count else {
+                // TODO: throw error
+                assert(false)
+            }
             let associatedVariableDomains = getAssociatedVariableDomains(using: newValue)
             for idx in 0 ..< associatedVariables.count {
+                // FIXME: do i need to check the type of the new domain???
                 associatedVariables[idx].setDomain(newDomain: associatedVariableDomains[idx])
             }
         }
@@ -43,6 +53,8 @@ extension NaryVariable {
     /// Set: also sets assignments for all `associatedVariables`
     var assignment: NaryVariableDomainValue? {
         get {
+            // if there are any unassigned associated variables,
+            // this NaryVariable is not considered assigned
             if associatedVariables.contains(where: { !$0.isAssigned }) {
                 return nil
             }
@@ -54,8 +66,15 @@ extension NaryVariable {
             guard let unwrappedNewValue = newValue else {
                 return
             }
+            guard unwrappedNewValue.value.count == associatedVariables.count else {
+                // TODO: throw error
+                assert(false)
+            }
             for idx in 0 ..< associatedVariables.count {
-                associatedVariables[idx].assign(to: unwrappedNewValue.value[idx])
+                guard associatedVariables[idx].assign(to: unwrappedNewValue.value[idx]) else {
+                    // TODO: throw error
+                    assert(false)
+                }
             }
         }
     }
