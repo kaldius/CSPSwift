@@ -1,6 +1,6 @@
 //
 //  BinaryConstraint.swift
-//  
+//
 //
 //  Created by Quan Teng Foong on 2/5/23.
 //

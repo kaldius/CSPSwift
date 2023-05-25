@@ -1,11 +1,6 @@
-//
-//  InferenceEngine.swift
-//  
-//
-//  Created by Quan Teng Foong on 3/5/23.
-//
-
-import Foundation
+/**
+ All Inference Engines used in this CSP solver need to follow this protocol.
+ */
 
 public protocol InferenceEngine {
     var variables: [any Variable] { get }

@@ -3,6 +3,7 @@
  
  Reference semantics used here to ensure that any changes to `Variable` are seen by all.
  */
+
 public protocol Variable: AnyObject, Hashable {
     associatedtype ValueType: Value
     

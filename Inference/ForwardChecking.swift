@@ -1,11 +1,6 @@
-//
-//  ForwardChecking.swift
-//  
-//
-//  Created by Quan Teng Foong on 3/5/23.
-//
-
-import Foundation
+/**
+ A concrete implementation of the Forward Checking inference method.
+ */
 
 public struct ForwardChecking<T: Value>: InferenceEngine {
     public var variables: [any Variable]

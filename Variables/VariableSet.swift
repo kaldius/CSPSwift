@@ -2,6 +2,7 @@
  Holds a reference to all the Variables in the CSP.
  Exposes queries required by the solver.
  */
+
 public struct VariableSet {
     private var variables: [any Variable]
     
