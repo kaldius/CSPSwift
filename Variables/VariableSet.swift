@@ -1,15 +1,11 @@
-//
-//  Variables.swift
-//  
-//
-//  Created by Quan Teng Foong on 3/5/23.
-//
-
-import Foundation
-
+/**
+ Holds a reference to all the Variables in the CSP.
+ Exposes queries required by the solver.
+ */
 public struct VariableSet {
     private var variables: [any Variable]
-    // FIXME: should inferenceEngine be here or at solver level?
+    
+    /// Required for `orderDomainValues`
     private let inferenceEngine: InferenceEngine
     
     public init(variables: [any Variable],
@@ -22,11 +18,15 @@ public struct VariableSet {
         variables.allSatisfy({ $0.isAssigned })
     }
     
+    /// Selects the next Variable to assign using the Minimum Remaining Values heuristic
     public var nextUnassignedVariable: (any Variable)? {
         // FIXME: is comparator correct?
         variables.min(by: { $0.domainSize > $1.domainSize })
     }
     
+    /// Orders domain values for a given Variable using the Least Constraining Value heuristic
+    /// i.e. Returns an array of Values, sorted by `r` from greatest to smallest, where
+    /// `r` is the total number of remaining consistent domain values for all Variables.
     // TODO: optimizations?
     public func orderDomainValues(for variable: some Variable) -> [some Value] {
         var sortables = variable.domain.map({ domainValue in
@@ -39,6 +39,17 @@ public struct VariableSet {
         sortables.sort(by: { $0.priority > $1.priority })
         let orderedValues = sortables.map({ $0.value })
         return orderedValues
+    }
+    
+    // TODO: CHECK and test
+    public func updateDomains(using inference: Inference) {
+        for variable in variables {
+            guard let inferredDomain = inference.getDomain(for: variable) else {
+                // TODO: throw error
+                assert(false)
+            }
+            updateDomain(for: variable, to: inferredDomain)
+        }
     }
     
     /// Tries setting `variable` to `value`, then counts total number of
@@ -55,14 +66,6 @@ public struct VariableSet {
             return 0
         }
         return newInference.numConsistentDomainValues
-    }
-    
-    // TODO: CHECK and test
-    public func updateDomains(using inference: Inference) {
-        for variable in variables {
-            let inferredDomain = inference.getDomain(for: variable)
-            updateDomain(for: variable, to: inferredDomain)
-        }
     }
     
     private func updateDomain(for variable: some Variable, to newDomain: [any Value]) {

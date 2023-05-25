@@ -1,11 +1,6 @@
-//
-//  Value.swift
-//  
-//
-//  Created by Quan Teng Foong on 2/5/23.
-//
-
-import Foundation
-
+/**
+ All domain values that are assignable to the variables used in this solver
+ have to conform to this protocol.
+ */
 public protocol Value: Hashable {
 }

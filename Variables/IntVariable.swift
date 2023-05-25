@@ -1,4 +1,3 @@
-
 public class IntVariable: Variable {
     public var name: String
     public var internalDomain: Set<Int>

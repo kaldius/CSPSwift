@@ -1,11 +1,6 @@
-//
-//  Inference.swift
-//  
-//
-//  Created by Quan Teng Foong on 9/5/23.
-//
-
-import Foundation
+/**
+ Represents the result returned by an `InferenceEngine`.
+ */
 
 public struct Inference {
     private var variableNameToDomain: [String: [any Value]]
@@ -21,22 +16,27 @@ public struct Inference {
             keyValuePair.value.isEmpty })
     }
     
+    /// Returns the total number of consistent domain values for all variables
     public var numConsistentDomainValues: Int {
         variableNameToDomain.reduce(0, { countSoFar, keyValuePair in
             countSoFar + keyValuePair.value.count
         })
     }
     
+    /// Inserts a domain for a given `Variable`
     public mutating func addDomain(for variable: some Variable, domain: [any Value]) {
         let variableName = variable.name
         variableNameToDomain[variableName] = domain
         variableNameToVariable[variableName] = variable
     }
     
-    public func getDomain(for variable: some Variable) -> [any Value] {
-        guard let domain = variableNameToDomain[variable.name] else {
-            assert(false)
-        }
-        return domain
+    /// Returns the inferred domain for a given `Variable`
+    public func getDomain(for variable: some Variable) -> [any Value]? {
+        getDomain(for: variable.name)
+    }
+    
+    /// Returns the inferred domain for a given `Variable`'s name
+    public func getDomain(for variableName: String) -> [any Value]? {
+        variableNameToDomain[variableName]
     }
 }
