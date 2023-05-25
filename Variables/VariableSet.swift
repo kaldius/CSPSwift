@@ -8,6 +8,9 @@ public struct VariableSet {
     
     /// Required for `orderDomainValues`
     private let inferenceEngine: InferenceEngine
+
+    // TODO: add a stack of old inferences (think: these were the past states!)
+    // then remove the stack in each variable (cannot coordinate!)
     
     public init(variables: [any Variable],
                 inferenceEngine: InferenceEngine) {
@@ -45,10 +48,7 @@ public struct VariableSet {
     // TODO: CHECK and test
     public func updateDomains(using inference: Inference) {
         for variable in variables {
-            guard let inferredDomain = inference.getDomain(for: variable) else {
-                // TODO: throw error
-                assert(false)
-            }
+            let inferredDomain = inference.getDomain(for: variable)
             updateDomain(for: variable, to: inferredDomain)
         }
     }

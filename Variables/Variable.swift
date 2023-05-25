@@ -25,7 +25,15 @@ public protocol Variable: AnyObject, Hashable {
 extension Variable {
     public var domain: Set<ValueType> {
         get {
-            internalDomain
+            if isAssigned {
+                guard let unwrappedAssignment = assignment else {
+                    // TODO: throw error
+                    assert(false)
+                }
+                return [unwrappedAssignment]
+            } else {
+                return internalDomain
+            }
         }
         set(newDomain) {
             guard canSetDomain(to: newDomain) else {

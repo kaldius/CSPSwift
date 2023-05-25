@@ -2,7 +2,7 @@
  A concrete implementation of the Forward Checking inference method.
  */
 
-public struct ForwardChecking<T: Value>: InferenceEngine {
+public struct ForwardChecking: InferenceEngine {
     public var variables: [any Variable]
     public var constraints: Constraints
     
@@ -14,7 +14,8 @@ public struct ForwardChecking<T: Value>: InferenceEngine {
     public func makeNewInference() -> Inference {
         var inference = Inference()
         // for constraints with assigned variables
-        for constraint in constraints.allConstraints where containsAssignedVariable(constraint){
+        for constraint in constraints.allConstraints where constraint.containsAssignedVariable {
+            print("checking \(constraint.variables[0].name) greater than \(constraint.variables[1].name)")
             // for unassigned variables
             for variable in constraint.variables where !variable.isAssigned {
                 let inferredDomain = inferDomain(for: variable, constraint: constraint)
@@ -23,14 +24,12 @@ public struct ForwardChecking<T: Value>: InferenceEngine {
         }
         return inference
     }
-    
-    private func containsAssignedVariable(_ constraint: any Constraint) -> Bool {
-        constraint.variables.contains(where: { $0.isAssigned })
-    }
-    
+
     private func inferDomain(for variable: some Variable, constraint: some Constraint) -> [some Value] {
         if variable.isAssigned {
-            return variable.emptyValueArray
+            var newDomain = variable.emptyValueArray
+            newDomain.append(variable.assignment!)
+            return newDomain
         }
         var newDomain = variable.domain
         for domainValue in variable.domain {

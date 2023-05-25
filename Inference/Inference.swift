@@ -2,6 +2,7 @@
  Represents the result returned by an `InferenceEngine`.
  */
 
+// TODO: rename this to "VariableDomainState" or smth
 public struct Inference {
     private var variableNameToDomain: [String: [any Value]]
     private var variableNameToVariable: [String: any Variable]
@@ -35,12 +36,10 @@ public struct Inference {
     }
     
     /// Returns the inferred domain for a given `Variable`
-    public func getDomain(for variable: some Variable) -> [any Value]? {
-        getDomain(for: variable.name)
-    }
-    
-    /// Returns the inferred domain for a given `Variable`'s name
-    public func getDomain(for variableName: String) -> [any Value]? {
-        variableNameToDomain[variableName]
+    public func getDomain(for variable: some Variable) -> [any Value] {
+        guard let domain = variableNameToDomain[variable.name] else {
+            return variable.domainAsArray
+        }
+        return domain
     }
 }
