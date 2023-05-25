@@ -10,6 +10,7 @@ struct AuxillaryConstraint: Constraint {
         self.mainVariable = mainVariable
         self.sumVariable = sumVariable
         self.index = index
+        addSelfToAllVariables()
     }
     
     var isSatisfied: Bool {

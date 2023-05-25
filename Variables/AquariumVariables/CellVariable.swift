@@ -9,8 +9,10 @@ class CellVariable: Variable {
     public var name: String {
         "[\(row), \(col)]"
     }
-    public var domain: Set<CellState> = Set(CellState.allCases)
-    public var assignment: CellState?
+    public var internalDomain: Set<CellState>
+    public var domainUndoStack: Stack<Set<CellState>>
+    public var internalAssignment: CellState?
+    public var constraints: [any Constraint]
     
     public var isAir: Bool {
         assignment == .air
@@ -23,5 +25,9 @@ class CellVariable: Variable {
     init(row: Int, col: Int) {
         self.row = row
         self.col = col
+        self.internalDomain = Set(CellState.allCases)
+        self.domainUndoStack = Stack()
+        self.internalAssignment = nil
+        self.constraints = []
     }
 }

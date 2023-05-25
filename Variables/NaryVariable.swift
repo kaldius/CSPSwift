@@ -10,12 +10,17 @@ protocol NaryVariable: Variable {
 }
  */
 
+/*
 class NaryVariable: Variable {
     var name: String
+    var domainUndoStack: Stack<Set<NaryVariableDomainValue>>
+    var constraints: [any Constraint]
     var associatedVariables: [any Variable]
     
     init(name: String, associatedVariables: [any Variable]) {
         self.name = name
+        self.domainUndoStack = Stack()
+        self.constraints = []
         self.associatedVariables = associatedVariables
     }
 }
@@ -45,9 +50,7 @@ extension NaryVariable {
                 // TODO: throw error
                 assert(false)
             }
-            for idx in 0 ..< associatedVariables.count {
-                associatedVariables[idx].setDomain(newDomain: associatedVariableDomains[idx])
-            }
+            setAssociatedDomains(associatedVariableDomains)
         }
     }
     
@@ -101,4 +104,18 @@ extension NaryVariable {
             associatedVariables[idx].canSetDomain(newDomain: domains[idx])
         })
     }
+    
+    ///
+    private func setAssociatedDomains(_ associatedDomains: [[any Value]]) {
+        var idx = 0
+        for variable in associatedVariables {
+            setNewDomain(for: variable, to: associatedDomains[idx])
+        }
+    }
+    
+    private func setNewDomain(for variable: some Variable, to newDomain: [any Value]) {
+        let valueTypeSet = variable.createValueTypeSet(from: newDomain)
+        variable.domain = valueTypeSet
+    }
 }
+*/

@@ -8,6 +8,12 @@
 import Foundation
 
 public struct BacktrackingSolver {
+    let inferenceEngine: InferenceEngine
+    
+    init(inferenceEngine: InferenceEngine) {
+        self.inferenceEngine = inferenceEngine
+    }
+    
     /// Returns the solvable in a solved state if it can be solved,
     /// returns `nil` otherwise.
     public func backtrack(variableSet: VariableSet, constraints: Constraints) -> Bool {
@@ -23,13 +29,16 @@ public struct BacktrackingSolver {
             if unassignedVariable.canAssign(to: domainValue) {
                 unassignedVariable.assign(to: domainValue)
                 // make new inferences (without setting yet)
-                if true { // !inference.leadsToFailure {
+                let inference = inferenceEngine.makeNewInference()
+                if !inference.leadsToFailure {
                     // set new inferences
+                    variableSet.updateDomains(using: inference)
                     let result = backtrack(variableSet: variableSet, constraints: constraints)
                     if result {
                         return true
                     }
                     // remove inferences from csp
+                    variableSet.undoPreviousInferenceUpdate()
                 }
                 unassignedVariable.unassign()
             }

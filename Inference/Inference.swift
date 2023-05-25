@@ -8,7 +8,7 @@
 import Foundation
 
 public struct Inference {
-    private(set) var variableNameToDomain: [String: [any Value]]
+    private var variableNameToDomain: [String: [any Value]]
     private var variableNameToVariable: [String: any Variable]
     
     init() {
@@ -33,16 +33,10 @@ public struct Inference {
         variableNameToVariable[variableName] = variable
     }
     
-    public func getDomain(for variableName: String) -> [any Value] {
-        guard let domain = variableNameToDomain[variableName] else {
+    public func getDomain(for variable: some Variable) -> [any Value] {
+        guard let domain = variableNameToDomain[variable.name] else {
             assert(false)
         }
         return domain
-    }
-    
-    /// Convenience method
-    public func getDomain(for variable: any Variable) -> [any Value] {
-        let variableName = variable.name
-        return getDomain(for: variableName)
     }
 }

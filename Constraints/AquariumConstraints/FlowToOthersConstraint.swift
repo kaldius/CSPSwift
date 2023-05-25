@@ -12,6 +12,7 @@ struct FlowToOthersConstraint: Constraint {
     init(mainCell: CellVariable, adjacentCells: [CellVariable]) {
         self.mainCell = mainCell
         self.adjacentCells = adjacentCells
+        addSelfToAllVariables()
     }
     
     /// The constraint is satisfied if either `mainCell`
