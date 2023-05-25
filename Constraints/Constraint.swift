@@ -1,13 +1,8 @@
-//
-//  Constraint.swift
-//  
-//
-//  Created by Quan Teng Foong on 2/5/23.
-//
+/**
+ All constraints used for this solver must conform to this protocol.
+ */
 
-import Foundation
-
-public protocol Constraint {
+public protocol Constraint: Equatable {
     var variables: [any Variable] { get }
     var isSatisfied: Bool { get }
     var isViolated: Bool { get }

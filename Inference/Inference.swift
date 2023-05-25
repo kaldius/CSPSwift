@@ -25,6 +25,10 @@ public struct Inference {
     
     /// Inserts a domain for a given `Variable`
     public mutating func addDomain(for variable: some Variable, domain: [any Value]) {
+        guard variable.canSetDomain(to: domain) else {
+            // TODO: throw error
+            assert(false)
+        }
         let variableName = variable.name
         variableNameToDomain[variableName] = domain
         variableNameToVariable[variableName] = variable

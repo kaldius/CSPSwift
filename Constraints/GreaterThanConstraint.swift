@@ -12,7 +12,7 @@ struct GreaterThanConstraint: Constraint {
         [variableA, variableB]
     }
 
-    init(variableA: IntVariable, variableB: IntVariable) {
+    init(_ variableA: IntVariable, isGreaterThan variableB: IntVariable) {
         self.variableA = variableA
         self.variableB = variableB
     }

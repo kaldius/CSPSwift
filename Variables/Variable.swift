@@ -28,7 +28,7 @@ extension Variable {
             internalDomain
         }
         set(newDomain) {
-            guard canSetDomain(newDomain: newDomain) else {
+            guard canSetDomain(to: newDomain) else {
                 // TODO: throw error
                 assert(false)
             }
@@ -68,6 +68,14 @@ extension Variable {
         }
         assignment = castedNewAssignment
     }
+
+    public func canSetDomain(to newDomain: [any Value]) -> Bool {
+        let newDomainAsValueType = newDomain.compactMap({ $0 as? ValueType })
+        guard newDomain.count == newDomainAsValueType.count else {
+            return false
+        }
+        return canSetDomain(to: Set(newDomainAsValueType))
+    }
     
     /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.
     /// If casting fails for any element, throws error.
@@ -103,11 +111,8 @@ extension Variable {
         return assignment == nil && domain.contains(unwrappedNewAssignment)
     }
     
-    private func canSetDomain(newDomain: Set<ValueType>) -> Bool {
-        guard newDomain.count > 0 else {
-            return false
-        }
-        return Set(newDomain).isSubset(of: domain)
+    private func canSetDomain(to newDomain: Set<ValueType>) -> Bool {
+        Set(newDomain).isSubset(of: domain)
     }
     
     // MARK: convenience attributes

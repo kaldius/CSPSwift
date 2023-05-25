@@ -1,11 +1,6 @@
-//
-//  Constraints.swift
-//  
-//
-//  Created by Quan Teng Foong on 2/5/23.
-//
-
-import Foundation
+/**
+ `Constraints` holds all the constraints for a given CSP.
+ */
 
 public struct Constraints {
     private(set) var allConstraints: [any Constraint]
