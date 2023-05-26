@@ -11,18 +11,15 @@ public struct ForwardChecking: InferenceEngine {
         self.constraints = constraints
     }
     
-    public func makeNewInference() -> Inference {
-        var inference = Inference()
-        // for constraints with assigned variables
+    public func makeNewInference() -> VariableDomainState {
+        var variableDomainState = VariableDomainState(gettingCurrentStateFrom: variables)
         for constraint in constraints.allConstraints where constraint.containsAssignedVariable {
-            print("checking \(constraint.variables[0].name) greater than \(constraint.variables[1].name)")
-            // for unassigned variables
             for variable in constraint.variables where !variable.isAssigned {
                 let inferredDomain = inferDomain(for: variable, constraint: constraint)
-                inference.addDomain(for: variable, domain: inferredDomain)
+                variableDomainState.addDomain(for: variable, domain: inferredDomain)
             }
         }
-        return inference
+        return variableDomainState
     }
 
     private func inferDomain(for variable: some Variable, constraint: some Constraint) -> [some Value] {

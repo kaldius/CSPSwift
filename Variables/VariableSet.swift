@@ -3,26 +3,28 @@
  Exposes queries required by the solver.
  */
 
-public struct VariableSet {
+public class VariableSet {
     private var variables: [any Variable]
     
-    /// Required for `orderDomainValues`
+    /// Required for `orderDomainValues`.
     private let inferenceEngine: InferenceEngine
 
-    // TODO: add a stack of old inferences (think: these were the past states!)
-    // then remove the stack in each variable (cannot coordinate!)
-    
+    /// Stores `VariableDomainState`s used for the undo operation.
+    private var domainUndoStack: Stack<VariableDomainState>
+
     public init(variables: [any Variable],
                 inferenceEngine: InferenceEngine) {
         self.variables = variables
         self.inferenceEngine = inferenceEngine
+        self.domainUndoStack = Stack()
+        saveCurrentDomainState()
     }
     
     public var isCompletelyAssigned: Bool {
         variables.allSatisfy({ $0.isAssigned })
     }
     
-    /// Selects the next Variable to assign using the Minimum Remaining Values heuristic
+    /// Selects the next Variable to assign using the Minimum Remaining Values heuristic.
     public var nextUnassignedVariable: (any Variable)? {
         // FIXME: is comparator correct?
         variables.min(by: { $0.domainSize > $1.domainSize })
@@ -44,15 +46,22 @@ public struct VariableSet {
         let orderedValues = sortables.map({ $0.value })
         return orderedValues
     }
-    
-    // TODO: CHECK and test
-    public func updateDomains(using inference: Inference) {
-        for variable in variables {
-            let inferredDomain = inference.getDomain(for: variable)
-            updateDomain(for: variable, to: inferredDomain)
-        }
+
+    /// Given a `VariableDomainState`, save the current state and set the domains
+    /// to the ones given in the new state.
+    public func updateDomains(using state: VariableDomainState) {
+        saveCurrentDomainState()
+        setDomains(using: state)
     }
-    
+
+    /// Undo all `Variable`s domains to the previous saved state.
+    public func revertToPreviousDomainState() {
+        guard let prevState = domainUndoStack.pop() else {
+            return
+        }
+        setDomains(using: prevState)
+    }
+
     /// Tries setting `variable` to `value`, then counts total number of
     /// consistent domain values for all other variables.
     ///
@@ -63,20 +72,25 @@ public struct VariableSet {
         }
         variable.assign(to: value)
         let newInference = inferenceEngine.makeNewInference()
-        if newInference.leadsToFailure {
+        if newInference.containsEmptyDomain {
             return 0
         }
         return newInference.numConsistentDomainValues
     }
-    
-    private func updateDomain(for variable: some Variable, to newDomain: [any Value]) {
+
+    private func saveCurrentDomainState() {
+        domainUndoStack.push(VariableDomainState(gettingCurrentStateFrom: variables))
+    }
+
+    private func setDomains(using state: VariableDomainState) {
+        for variable in variables {
+            let newDomain = state.getDomain(for: variable)
+            setDomain(for: variable, to: newDomain)
+        }
+    }
+
+    private func setDomain(for variable: some Variable, to newDomain: [any Value]) {
         let valueTypeSet = variable.createValueTypeSet(from: newDomain)
         variable.domain = valueTypeSet
-    }
-    
-    public func undoPreviousInferenceUpdate() {
-        for variable in variables {
-            variable.undoSetDomain()
-        }
     }
 }

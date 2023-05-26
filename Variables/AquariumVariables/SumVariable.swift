@@ -1,3 +1,6 @@
+/**
+ A `Varaible` representing the sum of all `CellVariable`s with water in them.
+ */
 class SumVariable: Variable {
     let size: Int
     var name: String

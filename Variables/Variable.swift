@@ -12,9 +12,6 @@ public protocol Variable: AnyObject, Hashable {
     /// To be used by the computed variable `domain`
     var internalDomain: Set<ValueType> { get set }
 
-    /// To allow `undoSetDomain`
-    var domainUndoStack: Stack<Set<ValueType>> { get set }
-    
     /// To be used by the computed variable `assignment`
     var internalAssignment: ValueType? { get set }
     
@@ -40,8 +37,6 @@ extension Variable {
                 // TODO: throw error
                 assert(false)
             }
-            
-            domainUndoStack.push(domain)
             internalDomain = newDomain
         }
     }
@@ -94,14 +89,6 @@ extension Variable {
             assert(false)
         }
         return set
-    }
-    
-    /// Sets the domain to the previous domain value right before the last set operation.
-    public func undoSetDomain() {
-        guard let prevDomain = domainUndoStack.pop() else {
-            return
-        }
-        internalDomain = prevDomain
     }
     
     public func unassign() {

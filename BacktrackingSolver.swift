@@ -29,16 +29,16 @@ public struct BacktrackingSolver {
             if unassignedVariable.canAssign(to: domainValue) {
                 unassignedVariable.assign(to: domainValue)
                 // make new inferences (without setting yet)
-                let inference = inferenceEngine.makeNewInference()
-                if !inference.leadsToFailure {
+                let state = inferenceEngine.makeNewInference()
+                if !state.containsEmptyDomain {
                     // set new inferences
-                    variableSet.updateDomains(using: inference)
+                    variableSet.updateDomains(using: state)
                     let result = backtrack(variableSet: variableSet, constraints: constraints)
                     if result {
                         return true
                     }
                     // remove inferences from csp
-                    variableSet.undoPreviousInferenceUpdate()
+                    variableSet.revertToPreviousDomainState()
                 }
                 unassignedVariable.unassign()
             }

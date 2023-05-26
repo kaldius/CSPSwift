@@ -13,13 +13,11 @@ protocol NaryVariable: Variable {
 /*
 class NaryVariable: Variable {
     var name: String
-    var domainUndoStack: Stack<Set<NaryVariableDomainValue>>
     var constraints: [any Constraint]
     var associatedVariables: [any Variable]
     
     init(name: String, associatedVariables: [any Variable]) {
         self.name = name
-        self.domainUndoStack = Stack()
         self.constraints = []
         self.associatedVariables = associatedVariables
     }

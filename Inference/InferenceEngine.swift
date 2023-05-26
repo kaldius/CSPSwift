@@ -6,5 +6,5 @@ public protocol InferenceEngine {
     var variables: [any Variable] { get }
     var constraints: Constraints { get }
 
-    func makeNewInference() -> Inference
+    func makeNewInference() -> VariableDomainState
 }
