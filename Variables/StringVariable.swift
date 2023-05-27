@@ -4,7 +4,7 @@ public class StringVariable: Variable {
     public var internalAssignment: String?
     public var constraints: [any Constraint]
     
-    init(name: String, domain: Set<String> = Set()) {
+    init(name: String, domain: Set<String>) {
         self.name = name
         self.internalDomain = domain
         self.internalAssignment = nil

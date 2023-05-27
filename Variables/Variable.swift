@@ -9,13 +9,13 @@ public protocol Variable: AnyObject, Hashable {
     
     var name: String { get }
     
-    /// To be used by the computed variable `domain`
+    /// To be used by the computed variable `domain`.
     var internalDomain: Set<ValueType> { get set }
 
-    /// To be used by the computed variable `assignment`
+    /// To be used by the computed variable `assignment`.
     var internalAssignment: ValueType? { get set }
     
-    /// All constraints that involve this variable
+    /// All constraints that involve this variable.
     var constraints: [any Constraint] { get set }
 }
 
@@ -145,5 +145,42 @@ extension Variable {
 extension Variable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
+    }
+}
+
+extension Variable {
+    func isEqual(_ other: any Variable) -> Bool {
+        guard let other = other as? Self else {
+            return other.isExactlyEqual(self)
+        }
+        return self == other
+    }
+
+    private func isExactlyEqual(_ other: any Variable) -> Bool {
+        guard let other = other as? Self else {
+            return false
+        }
+        return self == other
+    }
+}
+
+extension [Variable] {
+    func isEqual(_ other: [any Variable]) -> Bool {
+        var equal = self.count == other.count
+        for idx in 0 ..< self.count {
+            equal = equal && self[idx].isEqual(other[idx])
+        }
+        return equal
+    }
+}
+
+extension [[Variable]] {
+    func isEqual(_ other: [[any Variable]]) -> Bool {
+        var equal = self.count == other.count
+        for idx in 0 ..< self.count {
+            equal = equal && self[idx].count == other[idx].count
+            equal = equal && self[idx].isEqual(other[idx])
+        }
+        return equal
     }
 }
