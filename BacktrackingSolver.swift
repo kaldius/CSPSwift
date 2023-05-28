@@ -7,7 +7,7 @@ public struct BacktrackingSolver {
     
     /// Returns the solvable in a solved state if it can be solved,
     /// returns `nil` otherwise.
-    public func backtrack(variableSet: VariableSet, constraints: Constraints) -> Bool {
+    public func backtrack(variableSet: VariableSet, constraints: ConstraintCollection) -> Bool {
         if variableSet.isCompletelyAssigned && constraints.allSatisfied {
             return true
         }
@@ -35,9 +35,5 @@ public struct BacktrackingSolver {
             }
         }
         return false
-    }
-    
-    private func checkAssignability(for variable: some Variable, to value: some Value) -> Bool {
-        variable.canAssign(to: value)
     }
 }

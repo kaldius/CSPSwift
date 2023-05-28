@@ -1,4 +1,4 @@
-enum CellState: Value, CaseIterable {
+public enum CellState: Value, CaseIterable {
     case water, air
 }
 

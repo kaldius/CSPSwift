@@ -1,8 +1,7 @@
 /**
- `Constraints` holds all the constraints for a given CSP.
+ `ConstraintCollection` holds all the constraints for a given CSP.
  */
-// TODO: rename to ConstraintSet
-public struct Constraints {
+public struct ConstraintCollection {
     private(set) var allConstraints: [any Constraint]
     
     public init(allConstraints: [any Constraint] = []) {

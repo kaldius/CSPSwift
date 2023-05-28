@@ -20,12 +20,13 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
          scaleA: Float,
          scaleB: Float,
          scaleC: Float,
-         add: Float) {
+         add: Float = 0) {
         self.ternaryVariable = ternaryVariable
         self.scaleA = scaleA
         self.scaleB = scaleB
         self.scaleC = scaleC
         self.add = add
+        addSelfToAllVariables()
     }
 
     var isSatisfied: Bool {
