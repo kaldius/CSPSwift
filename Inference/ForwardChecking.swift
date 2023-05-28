@@ -1,7 +1,6 @@
 /**
  A concrete implementation of the Forward Checking inference method.
  */
-
 public struct ForwardChecking: InferenceEngine {
     public var variables: [any Variable]
     public var constraints: Constraints

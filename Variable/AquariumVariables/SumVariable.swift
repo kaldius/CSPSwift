@@ -8,6 +8,7 @@ class SumVariable: Variable {
     var domainUndoStack: Stack<Set<[CellState]>>
     var internalAssignment: [CellState]?
     var constraints: [any Constraint]
+    var exampleValue: [CellState]
     
     init(name: String, size: Int) {
         self.size = size
@@ -17,6 +18,7 @@ class SumVariable: Variable {
         self.domainUndoStack = Stack()
         self.internalAssignment = nil
         self.constraints = []
+        self.exampleValue = [CellState.water]
     }
     
     var sum: Int? {

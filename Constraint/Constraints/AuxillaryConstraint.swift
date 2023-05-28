@@ -3,7 +3,6 @@
  associated with a dual `Variable`, `d`, the assignment for `v` is equal to the
  respective value in the assignment tuple of `d`.
  */
-
 struct AuxillaryConstraint: Constraint {
     let mainVariable: any Variable
     let dualVariable: any NaryVariable
@@ -12,7 +11,7 @@ struct AuxillaryConstraint: Constraint {
         [mainVariable, dualVariable]
     }
     
-    init?(mainVariable: some Variable, dualVariable: some NaryVariable) {
+    init?(mainVariable: any Variable, dualVariable: any NaryVariable) {
         guard dualVariable.isAssociated(with: mainVariable) else {
             return nil
         }

@@ -4,7 +4,6 @@
  Requires three other `AuxillaryConstraint`s to ensure the assignments for all three `Variable`s
  are equal to the respective values in the assignment tuple of the dual `Variable`.
  */
-
 class TernaryVariable: NaryVariable {
     var name: String
     var internalDomain: Set<NaryVariableValueType>
@@ -13,7 +12,7 @@ class TernaryVariable: NaryVariable {
 
     var associatedVariables: [any Variable]
 
-    init(name: String, variableA: some Variable, variableB: some Variable, variableC: some Variable) {
+    init(name: String, variableA: any Variable, variableB: any Variable, variableC: any Variable) {
         self.name = name
         self.associatedVariables = [variableA, variableB, variableC]
         self.internalAssignment = nil

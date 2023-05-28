@@ -1,10 +1,9 @@
 /**
- A constraint where `variableA` must be greater than `variableB`.
+A constraint where `variableA` must be equal to `varibleB`.
 
- Note: could theoretically work on any `ComparableVariable` but that has not been implemented.
+Note: could theoretically work on any `EquatableVariable` but that has not been implemented.
  */
-
-struct GreaterThanConstraint: Constraint {
+struct EqualToConstraint: Constraint {
     let variableA: IntVariable
     let variableB: IntVariable
 
@@ -12,10 +11,9 @@ struct GreaterThanConstraint: Constraint {
         [variableA, variableB]
     }
 
-    init(_ variableA: IntVariable, isGreaterThan variableB: IntVariable) {
+    init(_ variableA: IntVariable, isEqualTo variableB: IntVariable) {
         self.variableA = variableA
         self.variableB = variableB
-        addSelfToAllVariables()
     }
 
     var isSatisfied: Bool {
@@ -23,7 +21,7 @@ struct GreaterThanConstraint: Constraint {
               let valueB = variableB.assignment else {
             return false
         }
-        return valueA > valueB
+        return valueA == valueB
     }
 
     var isViolated: Bool {
@@ -31,6 +29,6 @@ struct GreaterThanConstraint: Constraint {
               let valueB = variableB.assignment else {
             return false
         }
-        return valueA <= valueB
+        return valueA != valueB
     }
 }

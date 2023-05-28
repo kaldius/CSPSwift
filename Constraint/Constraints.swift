@@ -1,7 +1,7 @@
 /**
  `Constraints` holds all the constraints for a given CSP.
  */
-
+// TODO: rename to ConstraintSet
 public struct Constraints {
     private(set) var allConstraints: [any Constraint]
     

@@ -1,7 +1,6 @@
 /**
  Represents a state of all `Variable`s domains.
  */
-
 public struct VariableDomainState {
     private var variableNameToDomain: [String: [any Value]]
     private var variableNameToVariable: [String: any Variable]

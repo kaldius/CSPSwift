@@ -1,7 +1,6 @@
 /**
  A `Variable` representing a `Cell`, whose domain is all the possible `CellState`s.
  */
-
 class CellVariable: Variable {
     public let row: Int
     public let col: Int
@@ -13,6 +12,7 @@ class CellVariable: Variable {
     public var domainUndoStack: Stack<Set<CellState>>
     public var internalAssignment: CellState?
     public var constraints: [any Constraint]
+    public let exampleValue: CellState
     
     public var isAir: Bool {
         assignment == .air
@@ -29,5 +29,6 @@ class CellVariable: Variable {
         self.domainUndoStack = Stack()
         self.internalAssignment = nil
         self.constraints = []
+        self.exampleValue = CellState.air
     }
 }

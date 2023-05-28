@@ -1,7 +1,6 @@
 /**
  A protocol followed by all dual `Variable`s which encode N variables at once.
  */
-
 protocol NaryVariable: Variable {
     associatedtype ValueType = NaryVariableValueType
 
