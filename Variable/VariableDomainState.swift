@@ -1,20 +1,23 @@
 /**
  Represents a state of all `Variable`s domains.
  */
+// TODO: TEST
 public struct VariableDomainState {
     private var variableNameToDomain: [String: [any Value]]
     private var variableNameToVariable: [String: any Variable]
+    // private var nameToVariable: [String: any Variable]
     
     init() {
         self.variableNameToDomain = [:]
         self.variableNameToVariable = [:]
     }
 
-    init(gettingCurrentStateFrom variables: [any Variable]) {
+    init(from variables: [any Variable]) {
         self.init()
         for variable in variables {
             variableNameToDomain[variable.name] = variable.domainAsArray
             variableNameToVariable[variable.name] = variable
+            // nameToVariable[variable.name] =
         }
     }
     
@@ -48,5 +51,13 @@ public struct VariableDomainState {
             return variable.domainAsArray
         }
         return domain
+    }
+
+    public func getDomainAsSet<Var: Variable>(for variable: Var) -> Set<Var.ValueType> {
+        guard let domain = variableNameToDomain[variable.name] else {
+            return variable.domain
+        }
+        // TODO: problem
+        return Set(domain as! [Var.ValueType])
     }
 }

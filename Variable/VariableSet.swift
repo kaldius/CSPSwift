@@ -2,6 +2,7 @@
  Holds a reference to all the `Variable`s in the CSP.
  Exposes queries required by the solver.
  */
+// TODO: TEST
 public class VariableSet {
     private var variables: [any Variable]
     
@@ -36,9 +37,8 @@ public class VariableSet {
     public func orderDomainValues(for variable: some Variable) -> [some Value] {
         var sortables = variable.domain.map({ domainValue in
             let priority = numConsistentDomainValues(ifSetting: variable, to: domainValue)
-            return Sortable(type(of: domainValue),
-                            value: domainValue,
-                            priority: priority)
+            return SortableValue(value: domainValue,
+                                 priority: priority)
         })
         sortables.removeAll(where: { $0.priority == 0 })
         sortables.sort(by: { $0.priority > $1.priority })
@@ -78,7 +78,7 @@ public class VariableSet {
     }
 
     private func saveCurrentDomainState() {
-        domainUndoStack.push(VariableDomainState(gettingCurrentStateFrom: variables))
+        domainUndoStack.push(VariableDomainState(from: variables))
     }
 
     private func setDomains(using state: VariableDomainState) {

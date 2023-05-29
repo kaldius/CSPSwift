@@ -11,7 +11,7 @@ public struct ForwardChecking: InferenceEngine {
     }
     
     public func makeNewInference() -> VariableDomainState {
-        var variableDomainState = VariableDomainState(gettingCurrentStateFrom: variables)
+        var variableDomainState = VariableDomainState(from: variables)
         for constraint in constraintCollection.allConstraints where constraint.containsAssignedVariable {
             for variable in constraint.variables where !variable.isAssigned {
                 let inferredDomain = inferDomain(for: variable, constraint: constraint)

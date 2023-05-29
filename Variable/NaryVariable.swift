@@ -15,7 +15,7 @@ extension NaryVariable {
     /// Returns an array of domains for each variable in `associatedVariables` where
     /// the order of the domains matches the order in `associatedVariables`.
     var associatedDomains: [[any Value]] {
-        associatedVariables.map({ $0.domainAsArray })
+        Self.getAssociatedDomains(from: associatedVariables)
     }
 
     func isAssociated(with variable: any Variable) -> Bool {
@@ -48,6 +48,10 @@ extension NaryVariable {
     static func createInternalDomain(from associatedDomains: [[any Value]]) -> Set<NaryVariableValueType> {
         let possibleAssignments = Array<any Value>.possibleAssignments(domains: associatedDomains)
         return Set(possibleAssignments.map({ NaryVariableValueType(value: $0) }))
+    }
+
+    static func getAssociatedDomains(from associatedVariables: [any Variable]) -> [[any Value]] {
+        associatedVariables.map({ $0.domainAsArray })
     }
 
     private func getIndex(of variable: any Variable) -> Int? {

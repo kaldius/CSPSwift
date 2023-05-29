@@ -12,14 +12,40 @@ class TernaryVariable: NaryVariable {
 
     var associatedVariables: [any Variable]
 
-    init(name: String, variableA: any Variable, variableB: any Variable, variableC: any Variable) {
+    convenience init(name: String,
+         variableA: any Variable,
+         variableB: any Variable,
+         variableC: any Variable) {
+        let associatedVariables = [variableA, variableB, variableC]
+        let associatedDomains = Self.getAssociatedDomains(from: associatedVariables)
+        let domain = Self.createInternalDomain(from: associatedDomains)
+        self.init(name: name,
+                  associatedVariables: associatedVariables,
+                  internalDomain: domain,
+                  internalAssignment: nil,
+                  constraints: [])
+    }
+
+    required init(name: String,
+                  associatedVariables: [any Variable],
+                  internalDomain: Set<NaryVariableValueType>,
+                  internalAssignment: NaryVariableValueType?,
+                  constraints: [any Constraint]) {
         self.name = name
-        self.associatedVariables = [variableA, variableB, variableC]
+        self.associatedVariables = associatedVariables
+        self.internalDomain = internalDomain
         self.internalAssignment = nil
         self.constraints = []
-
-        // need to initialize to the empty Set first before `associatedDomains` can be accessed
-        self.internalDomain = Set()
-        self.internalDomain = Self.createInternalDomain(from: associatedDomains)
     }
 }
+
+extension TernaryVariable: Copyable {
+    public func copy() -> Self {
+        return type(of: self).init(name: name,
+                                   associatedVariables: associatedVariables.copy(),
+                                   internalDomain: internalDomain,
+                                   internalAssignment: internalAssignment,
+                                   constraints: constraints)
+    }
+}
+

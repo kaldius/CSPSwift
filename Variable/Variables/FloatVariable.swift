@@ -4,10 +4,26 @@ public class FloatVariable: Variable {
     public var internalAssignment: Float?
     public var constraints: [any Constraint]
 
-    init(name: String, domain: Set<Float>) {
+    convenience init(name: String, domain: Set<Float>) {
+        self.init(name: name, internalDomain: domain, internalAssignment: nil, constraints: [])
+    }
+
+    required init(name: String,
+                  internalDomain: Set<Float>,
+                  internalAssignment: Float?,
+                  constraints: [any Constraint]) {
         self.name = name
-        self.internalDomain = domain
-        self.internalAssignment = nil
-        self.constraints = []
+        self.internalDomain = internalDomain
+        self.internalAssignment = internalAssignment
+        self.constraints = constraints
+    }
+}
+
+extension FloatVariable: Copyable {
+    public func copy() -> Self {
+        return type(of: self).init(name: name,
+                                   internalDomain: internalDomain,
+                                   internalAssignment: internalAssignment,
+                                   constraints: constraints)
     }
 }

@@ -3,7 +3,7 @@
  
  Reference semantics used here to ensure that any changes to `Variable` are seen by all.
  */
-public protocol Variable: AnyObject, Hashable {
+public protocol Variable: AnyObject, Hashable, Copyable {
     associatedtype ValueType: Value
     
     var name: String { get }
@@ -59,7 +59,14 @@ extension Variable {
         let castedNewAssignment = newAssignment as? ValueType
         return canAssign(to: castedNewAssignment)
     }
-    
+
+    public func canAssign(to newAssignment: ValueType?) -> Bool {
+        guard let unwrappedNewAssignment = newAssignment else {
+            return false
+        }
+        return assignment == nil && domain.contains(unwrappedNewAssignment)
+    }
+
     /// Another setter, but takes in value of type `any Value` and does the necessary
     /// casting before assignment. If assignment fails, throws error.
     public func assign(to newAssignment: any Value) {
@@ -78,7 +85,11 @@ extension Variable {
         }
         return canSetDomain(to: Set(newDomainAsValueType))
     }
-    
+
+    public func canSetDomain(to newDomain: Set<ValueType>) -> Bool {
+        Set(newDomain).isSubset(of: domain)
+    }
+
     /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.
     /// If casting fails for any element, throws error.
     public func createValueTypeSet(from array: [any Value]) -> Set<ValueType> {
@@ -97,18 +108,7 @@ extension Variable {
     public func add(constraint: any Constraint) {
         constraints.append(constraint)
     }
-    
-    private func canAssign(to newAssignment: ValueType?) -> Bool {
-        guard let unwrappedNewAssignment = newAssignment else {
-            return false
-        }
-        return assignment == nil && domain.contains(unwrappedNewAssignment)
-    }
-    
-    private func canSetDomain(to newDomain: Set<ValueType>) -> Bool {
-        Set(newDomain).isSubset(of: domain)
-    }
-    
+
     // MARK: convenience attributes
     public var domainAsArray: [ValueType] {
         Array(domain)
@@ -163,7 +163,7 @@ extension Variable {
     }
 }
 
-extension [Variable] {
+extension [any Variable] {
     func isEqual(_ other: [any Variable]) -> Bool {
         var equal = self.count == other.count
         for idx in 0 ..< self.count {
@@ -173,13 +173,8 @@ extension [Variable] {
     }
 }
 
-extension [[Variable]] {
-    func isEqual(_ other: [[any Variable]]) -> Bool {
-        var equal = self.count == other.count
-        for idx in 0 ..< self.count {
-            equal = equal && self[idx].count == other[idx].count
-            equal = equal && self[idx].isEqual(other[idx])
-        }
-        return equal
+extension [any Variable]: Copyable {
+    public func copy() -> [any Variable] {
+        self.map({ $0.copy() })
     }
 }

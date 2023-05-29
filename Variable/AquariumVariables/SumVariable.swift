@@ -1,26 +1,37 @@
 /**
  A `Varaible` representing the sum of all `CellVariable`s with water in them.
  */
+// TODO: TEST
 class SumVariable: Variable {
     let size: Int
     var name: String
     var internalDomain: Set<[CellState]>
-    var domainUndoStack: Stack<Set<[CellState]>>
     var internalAssignment: [CellState]?
     var constraints: [any Constraint]
-    var exampleValue: [CellState]
-    
-    init(name: String, size: Int) {
-        self.size = size
-        self.name = name
-        let cellDomains = [[CellState]](repeating: CellState.allCases, count: self.size)
-        self.internalDomain = Set(Array<CellState>.possibleAssignments(domains: cellDomains))
-        self.domainUndoStack = Stack()
-        self.internalAssignment = nil
-        self.constraints = []
-        self.exampleValue = [CellState.water]
+
+    convenience init(name: String, size: Int) {
+        let cellDomains = [[CellState]](repeating: CellState.allCases, count: size)
+        let domain = Set(Array<CellState>.possibleAssignments(domains: cellDomains))
+
+        self.init(name: name,
+                  size: size,
+                  internalDomain: domain,
+                  internalAssignment: nil,
+                  constraints: [])
     }
-    
+
+    required init(name: String,
+                  size: Int,
+                  internalDomain: Set<[CellState]>,
+                  internalAssignment: [CellState]?,
+                  constraints: [any Constraint]) {
+        self.name = name
+        self.size = size
+        self.internalDomain = internalDomain
+        self.internalAssignment = internalAssignment
+        self.constraints = constraints
+    }
+
     var sum: Int? {
         return assignment?.reduce(0, { prevResult, cellState in
             let cellHasWater = cellState == .water
@@ -30,5 +41,15 @@ class SumVariable: Variable {
     
     subscript(_ idx: Int) -> CellState? {
         assignment?[idx]
+    }
+}
+
+extension SumVariable: Copyable {
+    public func copy() -> Self {
+        return type(of: self).init(name: name,
+                                   size: size,
+                                   internalDomain: internalDomain,
+                                   internalAssignment: internalAssignment,
+                                   constraints: constraints)
     }
 }
