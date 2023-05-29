@@ -11,10 +11,6 @@ extension Constraint {
     var containsAssignedVariable: Bool {
         variables.contains(where: { $0.isAssigned })
     }
-
-    func addSelfToAllVariables() {
-        variables.forEach({ $0.add(constraint: self) })
-    }
 }
 
 extension [Constraint] {

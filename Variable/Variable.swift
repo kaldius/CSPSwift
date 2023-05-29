@@ -13,9 +13,6 @@ public protocol Variable: AnyObject, Hashable, Copyable {
 
     /// To be used by the computed variable `assignment`.
     var internalAssignment: ValueType? { get set }
-    
-    /// All constraints that involve this variable.
-    var constraints: [any Constraint] { get set }
 }
 
 extension Variable {
@@ -103,10 +100,6 @@ extension Variable {
     
     public func unassign() {
         internalAssignment = nil
-    }
-    
-    public func add(constraint: any Constraint) {
-        constraints.append(constraint)
     }
 
     // MARK: convenience attributes

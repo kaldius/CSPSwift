@@ -14,7 +14,6 @@ struct GreaterThanConstraint: Constraint {
     init(_ variableA: IntVariable, isGreaterThan variableB: IntVariable) {
         self.variableA = variableA
         self.variableB = variableB
-        addSelfToAllVariables()
     }
 
     var isSatisfied: Bool {

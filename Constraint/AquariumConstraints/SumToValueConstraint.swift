@@ -9,7 +9,6 @@ struct SumToValueConstraint: Constraint {
     init(sumVariable: SumVariable, goal: Int) {
         self.sumVariable = sumVariable
         self.goal = goal
-        addSelfToAllVariables()
     }
     
     var isSatisfied: Bool {

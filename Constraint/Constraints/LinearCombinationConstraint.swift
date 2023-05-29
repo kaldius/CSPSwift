@@ -26,7 +26,6 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
         self.scaleB = scaleB
         self.scaleC = scaleC
         self.add = add
-        addSelfToAllVariables()
     }
 
     var isSatisfied: Bool {

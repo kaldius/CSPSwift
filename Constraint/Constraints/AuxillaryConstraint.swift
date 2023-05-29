@@ -17,7 +17,6 @@ struct AuxillaryConstraint: Constraint {
         }
         self.mainVariable = mainVariable
         self.dualVariable = dualVariable
-        addSelfToAllVariables()
     }
     
     var isSatisfied: Bool {

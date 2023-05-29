@@ -9,7 +9,6 @@ struct FlowToNeighbourConstraint: Constraint {
     init(sourceCell: CellVariable, neighbourCell: CellVariable) {
         self.sourceCell = sourceCell
         self.neighbourCell = neighbourCell
-        addSelfToAllVariables()
     }
     
     var isSatisfied: Bool {
