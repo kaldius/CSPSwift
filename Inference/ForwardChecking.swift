@@ -39,3 +39,10 @@ public struct ForwardChecking: InferenceEngine {
         return Array(newDomain)
     }
 }
+
+extension ForwardChecking: Copyable {
+    public func copy() -> ForwardChecking {
+        type(of: self).init(variables: variables.copy(),
+                            constraintSet: constraintSet.copy())
+    }
+}

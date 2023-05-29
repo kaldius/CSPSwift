@@ -43,10 +43,10 @@ class CellVariable: Variable {
 
 extension CellVariable: Copyable {
     func copy() -> Self {
-        return type(of: self).init(row: row,
-                                   col: col,
-                                   internalDomain: internalDomain,
-                                   internalAssignment: internalAssignment,
-                                   constraints: constraints)
+        type(of: self).init(row: row,
+                            col: col,
+                            internalDomain: internalDomain,
+                            internalAssignment: internalAssignment,
+                            constraints: constraints)
     }
 }

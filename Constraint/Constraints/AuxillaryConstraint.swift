@@ -35,3 +35,9 @@ extension AuxillaryConstraint: Equatable {
         && lhs.dualVariable === rhs.dualVariable
     }
 }
+
+extension AuxillaryConstraint: Copyable {
+    func copy() -> AuxillaryConstraint {
+        self
+    }
+}

@@ -41,11 +41,11 @@ class TernaryVariable: NaryVariable {
 
 extension TernaryVariable: Copyable {
     public func copy() -> Self {
-        return type(of: self).init(name: name,
-                                   associatedVariables: associatedVariables.copy(),
-                                   internalDomain: internalDomain,
-                                   internalAssignment: internalAssignment,
-                                   constraints: constraints)
+        type(of: self).init(name: name,
+                            associatedVariables: associatedVariables.copy(),
+                            internalDomain: internalDomain,
+                            internalAssignment: internalAssignment,
+                            constraints: constraints)
     }
 }
 

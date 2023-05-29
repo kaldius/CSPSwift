@@ -24,9 +24,9 @@ public class IntVariable: Variable {
 
 extension IntVariable: Copyable {
     public func copy() -> Self {
-        return type(of: self).init(name: name,
-                                   internalDomain: internalDomain,
-                                   internalAssignment: internalAssignment,
-                                   constraints: constraints)
+        type(of: self).init(name: name,
+                            internalDomain: internalDomain,
+                            internalAssignment: internalAssignment,
+                            constraints: constraints)
     }
 }

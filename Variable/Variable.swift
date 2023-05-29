@@ -171,9 +171,7 @@ extension [any Variable] {
         }
         return equal
     }
-}
 
-extension [any Variable]: Copyable {
     public func copy() -> [any Variable] {
         self.map({ $0.copy() })
     }

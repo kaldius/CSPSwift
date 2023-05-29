@@ -45,3 +45,9 @@ struct FlowToOthersConstraint: Constraint {
     }
     // FIXME: this is not a binary constraint!!!!! use the 1100, 1110 shit!
 }
+
+extension FlowToOthersConstraint: Copyable {
+    func copy() -> FlowToOthersConstraint {
+        self
+    }
+}

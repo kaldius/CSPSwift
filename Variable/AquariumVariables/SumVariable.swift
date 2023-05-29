@@ -46,10 +46,10 @@ class SumVariable: Variable {
 
 extension SumVariable: Copyable {
     public func copy() -> Self {
-        return type(of: self).init(name: name,
-                                   size: size,
-                                   internalDomain: internalDomain,
-                                   internalAssignment: internalAssignment,
-                                   constraints: constraints)
+        type(of: self).init(name: name,
+                            size: size,
+                            internalDomain: internalDomain,
+                            internalAssignment: internalAssignment,
+                            constraints: constraints)
     }
 }

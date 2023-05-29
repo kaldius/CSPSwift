@@ -33,3 +33,9 @@ struct GreaterThanConstraint: Constraint {
         return valueA <= valueB
     }
 }
+
+extension GreaterThanConstraint: Copyable {
+    func copy() -> GreaterThanConstraint {
+        self
+    }
+}

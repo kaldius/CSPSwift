@@ -45,3 +45,9 @@ public struct Stack<T> {
         stackArray.reversed()
     }
 }
+
+extension Stack: Copyable {
+    public func copy() -> Stack<T> {
+        self
+    }
+}

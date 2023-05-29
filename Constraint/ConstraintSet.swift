@@ -16,3 +16,9 @@ public struct ConstraintSet {
         return allConstraints.allSatisfy({ $0.isSatisfied })
     }
 }
+
+extension ConstraintSet: Copyable {
+    public func copy() -> ConstraintSet {
+        type(of: self).init(allConstraints: allConstraints.copy())
+    }
+}

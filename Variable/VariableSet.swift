@@ -12,11 +12,19 @@ public class VariableSet {
     /// Stores `VariableDomainState`s used for the undo operation.
     private var domainUndoStack: Stack<VariableDomainState>
 
-    public init(variables: [any Variable],
-                inferenceEngine: InferenceEngine) {
+    required init(variables: [any Variable],
+                  inferenceEngine: InferenceEngine,
+                  domainUndoStack: Stack<VariableDomainState>) {
         self.variables = variables
         self.inferenceEngine = inferenceEngine
-        self.domainUndoStack = Stack()
+        self.domainUndoStack = domainUndoStack
+    }
+
+    convenience init(variables: [any Variable],
+                     inferenceEngine: InferenceEngine) {
+        self.init(variables: variables,
+                  inferenceEngine: inferenceEngine,
+                  domainUndoStack: Stack())
         saveCurrentDomainState()
     }
     
@@ -91,5 +99,13 @@ public class VariableSet {
     private func setDomain(for variable: some Variable, to newDomain: [any Value]) {
         let valueTypeSet = variable.createValueTypeSet(from: newDomain)
         variable.domain = valueTypeSet
+    }
+}
+
+extension VariableSet: Copyable {
+    public func copy() -> Self {
+        type(of: self).init(variables: variables.copy(),
+                            inferenceEngine: inferenceEngine.copy(),
+                            domainUndoStack: domainUndoStack.copy())
     }
 }

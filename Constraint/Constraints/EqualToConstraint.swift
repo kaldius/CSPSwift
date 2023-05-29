@@ -32,3 +32,9 @@ struct EqualToConstraint: Constraint {
         return valueA != valueB
     }
 }
+
+extension EqualToConstraint: Copyable {
+    func copy() -> EqualToConstraint {
+        self
+    }
+}

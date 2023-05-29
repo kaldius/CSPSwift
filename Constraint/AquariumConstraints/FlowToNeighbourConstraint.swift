@@ -21,3 +21,10 @@ struct FlowToNeighbourConstraint: Constraint {
         sourceCell.isWater && neighbourCell.isAir
     }
 }
+
+extension FlowToNeighbourConstraint: Copyable {
+    func copy() -> FlowToNeighbourConstraint {
+        type(of: self).init(sourceCell: sourceCell.copy(),
+                            neighbourCell: neighbourCell.copy())
+    }
+}
