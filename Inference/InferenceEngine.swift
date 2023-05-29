@@ -3,7 +3,7 @@
  */
 public protocol InferenceEngine {
     var variables: [any Variable] { get }
-    var constraintCollection: ConstraintCollection { get }
+    var constraintSet: ConstraintSet { get }
 
     func makeNewInference() -> VariableDomainState
 }

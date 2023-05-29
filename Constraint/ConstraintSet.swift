@@ -1,7 +1,7 @@
 /**
- `ConstraintCollection` holds all the constraints for a given CSP.
+ `ConstraintSet` holds all the constraints for a given CSP.
  */
-public struct ConstraintCollection {
+public struct ConstraintSet {
     private(set) var allConstraints: [any Constraint]
     
     public init(allConstraints: [any Constraint] = []) {

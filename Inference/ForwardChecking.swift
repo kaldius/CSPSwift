@@ -3,16 +3,16 @@
  */
 public struct ForwardChecking: InferenceEngine {
     public var variables: [any Variable]
-    public var constraintCollection: ConstraintCollection
+    public var constraintSet: ConstraintSet
     
-    public init(variables: [any Variable], constraintCollection: ConstraintCollection) {
+    public init(variables: [any Variable], constraintSet: ConstraintSet) {
         self.variables = variables
-        self.constraintCollection = constraintCollection
+        self.constraintSet = constraintSet
     }
     
     public func makeNewInference() -> VariableDomainState {
         var variableDomainState = VariableDomainState(from: variables)
-        for constraint in constraintCollection.allConstraints where constraint.containsAssignedVariable {
+        for constraint in constraintSet.allConstraints where constraint.containsAssignedVariable {
             for variable in constraint.variables where !variable.isAssigned {
                 let inferredDomain = inferDomain(for: variable, constraint: constraint)
                 variableDomainState.addDomain(for: variable, domain: inferredDomain)
