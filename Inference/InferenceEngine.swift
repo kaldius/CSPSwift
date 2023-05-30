@@ -5,5 +5,5 @@ public protocol InferenceEngine: Copyable {
     var variables: [any Variable] { get }
     var constraintSet: ConstraintSet { get }
 
-    func makeNewInference() -> VariableDomainState
+    func makeNewInference(from variableSet: SetOfVariables) -> SetOfVariables
 }

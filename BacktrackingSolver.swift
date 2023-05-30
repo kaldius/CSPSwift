@@ -7,6 +7,8 @@ public struct BacktrackingSolver {
     
     /// Returns the solvable in a solved state if it can be solved,
     /// returns `nil` otherwise.
+    // public func backtrack(csp: ConstraintSatisfactionProblem, state: SetOfVariables) {
+    /*
     public func backtrack(variableSet: VariableSet, constraints: ConstraintSet) -> Bool {
         if variableSet.isCompletelyAssigned && constraints.allSatisfied {
             return true
@@ -36,4 +38,5 @@ public struct BacktrackingSolver {
         }
         return false
     }
+     */
 }

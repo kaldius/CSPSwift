@@ -2,34 +2,30 @@
  A `Varaible` representing the sum of all `CellVariable`s with water in them.
  */
 // TODO: TEST
-class SumVariable: Variable {
+struct SumVariable: Variable {
     let size: Int
     var name: String
     var internalDomain: Set<[CellState]>
     var internalAssignment: [CellState]?
-    var constraints: [any Constraint]
 
-    convenience init(name: String, size: Int) {
+    init(name: String, size: Int) {
         let cellDomains = [[CellState]](repeating: CellState.allCases, count: size)
         let domain = Set(Array<CellState>.possibleAssignments(domains: cellDomains))
 
         self.init(name: name,
                   size: size,
                   internalDomain: domain,
-                  internalAssignment: nil,
-                  constraints: [])
+                  internalAssignment: nil)
     }
 
-    required init(name: String,
+    init(name: String,
                   size: Int,
                   internalDomain: Set<[CellState]>,
-                  internalAssignment: [CellState]?,
-                  constraints: [any Constraint]) {
+                  internalAssignment: [CellState]?) {
         self.name = name
         self.size = size
         self.internalDomain = internalDomain
         self.internalAssignment = internalAssignment
-        self.constraints = constraints
     }
 
     var sum: Int? {
@@ -49,7 +45,6 @@ extension SumVariable: Copyable {
         type(of: self).init(name: name,
                             size: size,
                             internalDomain: internalDomain,
-                            internalAssignment: internalAssignment,
-                            constraints: constraints)
+                            internalAssignment: internalAssignment)
     }
 }

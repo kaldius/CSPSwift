@@ -3,7 +3,7 @@
  */
 // TODO: TEST
 public struct VariableDomainState {
-    private var variableNameToDomain: [String: [any Value]]
+    public var variableNameToDomain: [String: [any Value]]
     private var variableNameToVariable: [String: any Variable]
     // private var nameToVariable: [String: any Variable]
     

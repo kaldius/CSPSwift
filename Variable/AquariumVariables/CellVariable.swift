@@ -1,12 +1,11 @@
 /**
  A `Variable` representing a `Cell`, whose domain is all the possible `CellState`s.
  */
-class CellVariable: Variable {
+struct CellVariable: Variable {
     public let row: Int
     public let col: Int
     public var internalDomain: Set<CellState>
     public var internalAssignment: CellState?
-    public var constraints: [any Constraint]
 
     public var name: String {
         "[\(row), \(col)]"
@@ -20,24 +19,21 @@ class CellVariable: Variable {
         assignment == .water
     }
 
-    required init(row: Int,
-                  col: Int,
-                  internalDomain: Set<CellState>,
-                  internalAssignment: CellState?,
-                  constraints: [any Constraint]) {
+    init(row: Int,
+         col: Int,
+         internalDomain: Set<CellState>,
+         internalAssignment: CellState?) {
         self.row = row
         self.col = col
         self.internalDomain = internalDomain
         self.internalAssignment = internalAssignment
-        self.constraints = constraints
     }
-
-    convenience init(row: Int, col: Int) {
+    
+    init(row: Int, col: Int) {
         self.init(row: row,
                   col: col,
                   internalDomain: Set(CellState.allCases),
-                  internalAssignment: nil,
-                  constraints: [])
+                  internalAssignment: nil)
     }
 }
 
@@ -46,7 +42,6 @@ extension CellVariable: Copyable {
         type(of: self).init(row: row,
                             col: col,
                             internalDomain: internalDomain,
-                            internalAssignment: internalAssignment,
-                            constraints: constraints)
+                            internalAssignment: internalAssignment)
     }
 }

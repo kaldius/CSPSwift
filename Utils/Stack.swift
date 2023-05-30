@@ -13,6 +13,7 @@ public struct Stack<T> {
 
     /// Removes the element at the top of the stack and return it.
     /// - Returns: element at the top of the stack
+    @discardableResult
     public mutating func pop() -> T? {
         stackArray.popLast()
     }

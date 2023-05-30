@@ -3,7 +3,7 @@
  
  Reference semantics used here to ensure that any changes to `Variable` are seen by all.
  */
-public protocol Variable: AnyObject, Hashable, Copyable {
+public protocol Variable: Hashable, Copyable {
     associatedtype ValueType: Value
     
     var name: String { get }
@@ -66,7 +66,7 @@ extension Variable {
 
     /// Another setter, but takes in value of type `any Value` and does the necessary
     /// casting before assignment. If assignment fails, throws error.
-    public func assign(to newAssignment: any Value) {
+    public mutating func assign(to newAssignment: any Value) {
         guard let castedNewAssignment = newAssignment as? ValueType,
               canAssign(to: castedNewAssignment) else {
             // TODO: throw error
@@ -87,6 +87,11 @@ extension Variable {
         Set(newDomain).isSubset(of: domain)
     }
 
+    // TODO: test
+    public mutating func setDomain(to newDomain: [any Value]) {
+        domain = createValueTypeSet(from: newDomain)
+    }
+
     /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.
     /// If casting fails for any element, throws error.
     public func createValueTypeSet(from array: [any Value]) -> Set<ValueType> {
@@ -98,7 +103,7 @@ extension Variable {
         return set
     }
     
-    public func unassign() {
+    public mutating func unassign() {
         internalAssignment = nil
     }
 

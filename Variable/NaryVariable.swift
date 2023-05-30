@@ -4,7 +4,12 @@
 protocol NaryVariable: Variable {
     associatedtype ValueType = NaryVariableValueType
 
-    var associatedVariables: [any Variable] { get }
+    var associatedVariableNames: [String] { get }
+    /*
+    /// An array of domains for each variable in `associatedVariableNames` where
+    /// the order of the domains matches the order in `associatedVariableNames`.
+    var associatedDomains: [[any Value]] { get }
+     */
     var assignment: NaryVariableValueType? { get set }
     var internalAssignment: NaryVariableValueType? { get set }
     var domain: Set<NaryVariableValueType> { get set }
@@ -12,14 +17,12 @@ protocol NaryVariable: Variable {
 }
 
 extension NaryVariable {
-    /// Returns an array of domains for each variable in `associatedVariables` where
-    /// the order of the domains matches the order in `associatedVariables`.
-    var associatedDomains: [[any Value]] {
-        Self.getAssociatedDomains(from: associatedVariables)
+    func isAssociated(with variable: any Variable) -> Bool {
+        associatedVariableNames.contains(where: { $0 == variable.name })
     }
 
-    func isAssociated(with variable: any Variable) -> Bool {
-        associatedVariables.contains(where: { $0 === variable})
+    func isAssociated(with variableName: String) -> Bool {
+        associatedVariableNames.contains(where: { $0 == variableName })
     }
 
     /// Checks that `variable`'s assignment is equal to self's assignment at
@@ -55,6 +58,6 @@ extension NaryVariable {
     }
 
     private func getIndex(of variable: any Variable) -> Int? {
-        associatedVariables.firstIndex(where: { $0 === variable })
+        associatedVariableNames.firstIndex(of: variable.name)
     }
 }

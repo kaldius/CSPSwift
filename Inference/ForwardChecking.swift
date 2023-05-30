@@ -9,34 +9,43 @@ public struct ForwardChecking: InferenceEngine {
         self.variables = variables
         self.constraintSet = constraintSet
     }
-    
-    public func makeNewInference() -> VariableDomainState {
-        var variableDomainState = VariableDomainState(from: variables)
+
+    public func makeNewInference(from variableSet: SetOfVariables) -> SetOfVariables {
+        var copiedVariableSet = variableSet
         for constraint in constraintSet.allConstraints where constraint.containsAssignedVariable {
             for variable in constraint.variables where !variable.isAssigned {
-                let inferredDomain = inferDomain(for: variable, constraint: constraint)
-                variableDomainState.addDomain(for: variable, domain: inferredDomain)
+                let inferredDomain = inferDomain(for: variable.name,
+                                                 constraint: constraint,
+                                                 variableSet: copiedVariableSet)
+                copiedVariableSet.setDomain(for: variable.name, to: inferredDomain)
             }
         }
-        return variableDomainState
+        return copiedVariableSet
     }
 
     // FIXME: BIG PROBLEM: after inferring a domain, we need to set it so that we can make further inferences
-    private func inferDomain(for variable: some Variable, constraint: some Constraint) -> [some Value] {
+    private func inferDomain(for variableName: String,
+                              constraint: some Constraint,
+                              variableSet: SetOfVariables) -> [any Value] {
+        guard let variable = variableSet.getVariable(name: variableName) else {
+            assert(false)
+        }
         if variable.isAssigned {
-            var newDomain = variable.emptyValueArray
-            newDomain.append(variable.assignment!)
-            return newDomain
+            // TODO: remove implicit unwrap
+            return [variable.assignment!]
         }
-        var newDomain = variable.domain
-        for domainValue in variable.domain {
-            variable.assign(to: domainValue)
+        var copiedVariableSet = variableSet
+        let domain = variableSet.getDomain(variableName: variableName)
+        var newDomain = domain
+        for domainValue in domain {
+            // FIXME: constraint should take in the whole setOfVariables to check isViolated
+            copiedVariableSet.assign(variableName, to: domainValue)
             if constraint.isViolated {
-                newDomain.remove(domainValue)
+                newDomain.removeAll(where: { $0.isEqual(domainValue) })
             }
-            variable.unassign()
+            copiedVariableSet.unassign(variableName)
         }
-        return Array(newDomain)
+        return newDomain
     }
 }
 

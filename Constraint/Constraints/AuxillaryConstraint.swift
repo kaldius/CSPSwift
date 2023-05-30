@@ -30,8 +30,8 @@ struct AuxillaryConstraint: Constraint {
 
 extension AuxillaryConstraint: Equatable {
     static func == (lhs: AuxillaryConstraint, rhs: AuxillaryConstraint) -> Bool {
-        lhs.mainVariable === rhs.mainVariable
-        && lhs.dualVariable === rhs.dualVariable
+        lhs.mainVariable.isEqual(rhs.mainVariable)
+        && lhs.dualVariable.isEqual(rhs.dualVariable)
     }
 }
 

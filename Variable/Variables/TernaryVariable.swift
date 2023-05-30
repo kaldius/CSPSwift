@@ -4,48 +4,44 @@
  Requires three other `AuxillaryConstraint`s to ensure the assignments for all three `Variable`s
  are equal to the respective values in the assignment tuple of the dual `Variable`.
  */
-class TernaryVariable: NaryVariable {
+struct TernaryVariable: NaryVariable {
     var name: String
     var internalDomain: Set<NaryVariableValueType>
     var internalAssignment: NaryVariableValueType?
-    var constraints: [any Constraint]
 
-    var associatedVariables: [any Variable]
+    var associatedVariableNames: [String]
 
-    convenience init(name: String,
+    init(name: String,
          variableA: any Variable,
          variableB: any Variable,
          variableC: any Variable) {
         let associatedVariables = [variableA, variableB, variableC]
+        let associatedVariableNames = associatedVariables.map { $0.name }
         let associatedDomains = Self.getAssociatedDomains(from: associatedVariables)
         let domain = Self.createInternalDomain(from: associatedDomains)
         self.init(name: name,
-                  associatedVariables: associatedVariables,
+                  associatedVariableNames: associatedVariableNames,
                   internalDomain: domain,
-                  internalAssignment: nil,
-                  constraints: [])
+                  internalAssignment: nil)
     }
 
-    required init(name: String,
-                  associatedVariables: [any Variable],
-                  internalDomain: Set<NaryVariableValueType>,
-                  internalAssignment: NaryVariableValueType?,
-                  constraints: [any Constraint]) {
+    init(name: String,
+         associatedVariableNames: [String],
+         internalDomain: Set<NaryVariableValueType>,
+         internalAssignment: NaryVariableValueType?) {
         self.name = name
-        self.associatedVariables = associatedVariables
+        self.associatedVariableNames = associatedVariableNames
         self.internalDomain = internalDomain
         self.internalAssignment = nil
-        self.constraints = []
     }
 }
 
 extension TernaryVariable: Copyable {
     public func copy() -> Self {
         type(of: self).init(name: name,
-                            associatedVariables: associatedVariables.copy(),
+                            associatedVariableNames: associatedVariableNames.copy(),
                             internalDomain: internalDomain,
-                            internalAssignment: internalAssignment,
-                            constraints: constraints)
+                            internalAssignment: internalAssignment)
     }
 }
 
