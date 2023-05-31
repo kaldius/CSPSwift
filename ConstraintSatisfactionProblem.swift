@@ -1,11 +1,11 @@
 /**
  Represents the entire CSP, with `Variable`s and `Constraint`s.
  */
-class ConstraintSatisfactionProblem {
+struct ConstraintSatisfactionProblem {
     let variableSet: VariableSet
     var constraintSet: ConstraintSet
 
-    required init(variableSet: VariableSet, constraintSet: ConstraintSet) {
+    init(variableSet: VariableSet, constraintSet: ConstraintSet) {
         self.variableSet = variableSet
         self.constraintSet = constraintSet
     }

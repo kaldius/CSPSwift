@@ -12,22 +12,23 @@ public struct ForwardChecking: InferenceEngine {
 
     public func makeNewInference(from variableSet: SetOfVariables) -> SetOfVariables {
         var copiedVariableSet = variableSet
-        for constraint in constraintSet.allConstraints where constraint.containsAssignedVariable {
-            for variable in constraint.variables where !variable.isAssigned {
-                let inferredDomain = inferDomain(for: variable.name,
+        for constraint in constraintSet.allConstraints where constraint.containsAssignedVariable(state: copiedVariableSet) {
+            for variableName in constraint.variableNames {
+                let inferredDomain = inferDomain(for: variableName,
                                                  constraint: constraint,
                                                  variableSet: copiedVariableSet)
-                copiedVariableSet.setDomain(for: variable.name, to: inferredDomain)
+                copiedVariableSet.setDomain(for: variableName, to: inferredDomain)
             }
         }
         return copiedVariableSet
     }
 
     // FIXME: BIG PROBLEM: after inferring a domain, we need to set it so that we can make further inferences
+    // should be solved, just test now...
     private func inferDomain(for variableName: String,
                               constraint: some Constraint,
                               variableSet: SetOfVariables) -> [any Value] {
-        guard let variable = variableSet.getVariable(name: variableName) else {
+        guard let variable = variableSet.getVariable(variableName) else {
             assert(false)
         }
         if variable.isAssigned {
@@ -35,12 +36,11 @@ public struct ForwardChecking: InferenceEngine {
             return [variable.assignment!]
         }
         var copiedVariableSet = variableSet
-        let domain = variableSet.getDomain(variableName: variableName)
+        let domain = variableSet.getDomain(variableName)
         var newDomain = domain
         for domainValue in domain {
-            // FIXME: constraint should take in the whole setOfVariables to check isViolated
             copiedVariableSet.assign(variableName, to: domainValue)
-            if constraint.isViolated {
+            if constraint.isViolated(state: copiedVariableSet) {
                 newDomain.removeAll(where: { $0.isEqual(domainValue) })
             }
             copiedVariableSet.unassign(variableName)

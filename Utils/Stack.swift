@@ -1,5 +1,5 @@
 /**
- A generic `Stack` class whose elements are last-in, first-out.
+ A generic `Stack` whose elements are last-in, first-out.
  */
 public struct Stack<T> {
 

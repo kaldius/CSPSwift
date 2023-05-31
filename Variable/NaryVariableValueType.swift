@@ -2,7 +2,7 @@
  Takes the place of `Variable.ValueType` in an `NaryVariable`.
  This wrapper exists because `[any Value]` cannot conform to `Value`.
  */
-struct NaryVariableValueType {
+public struct NaryVariableValueType {
     var value: [any Value]
     
     init(value: [any Value]) {
@@ -14,10 +14,27 @@ struct NaryVariableValueType {
     }
 }
 
-extension NaryVariableValueType: Value {}
+extension NaryVariableValueType: Value {
+    public static func < (lhs: NaryVariableValueType, rhs: NaryVariableValueType) -> Bool {
+        var lhsValue = lhs.value
+        var rhsValue = rhs.value
+        guard lhsValue.count == rhsValue.count,
+              !lhsValue.isEmpty,
+              !rhsValue.isEmpty else {
+            return false
+        }
+        if lhsValue.isEqual(rhsValue) {
+            lhsValue.removeFirst()
+            rhsValue.removeFirst()
+            return NaryVariableValueType(value: lhsValue) < NaryVariableValueType(value: rhsValue)
+        } else {
+            return lhsValue[0].isLessThan(rhsValue[0])
+        }
+    }
+}
 
 extension NaryVariableValueType: Equatable {
-    static func == (lhs: NaryVariableValueType, rhs: NaryVariableValueType) -> Bool {
+    public static func == (lhs: NaryVariableValueType, rhs: NaryVariableValueType) -> Bool {
         lhs.value.isEqual(rhs.value)
     }
 }
@@ -29,7 +46,7 @@ extension NaryVariableValueType: Hashable {
 }
 
 extension NaryVariableValueType: Copyable {
-    func copy() -> NaryVariableValueType {
+    public func copy() -> NaryVariableValueType {
         type(of: self).init(value: value.copy())
     }
 }

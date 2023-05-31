@@ -2,7 +2,7 @@
  All domain values that are assignable to the variables used in this solver
  have to conform to this protocol.
  */
-public protocol Value: Hashable, Copyable {
+public protocol Value: Hashable, Comparable, Copyable {
     func isEqual(_ other: any Value) -> Bool
 }
 
@@ -11,6 +11,18 @@ extension Value {
         let selfAsEquatable = self as any Equatable
         let otherAsEquatable = other as any Equatable
         return selfAsEquatable.isEqual(otherAsEquatable)
+    }
+
+    public func isGreaterThan(_ other: any Value) -> Bool {
+        let selfAsComparable = self as any Comparable
+        let otherAsComparable = other as any Comparable
+        return selfAsComparable.isGreaterThan(otherAsComparable)
+    }
+
+    public func isLessThan(_ other: any Value) -> Bool {
+        let selfAsComparable = self as any Comparable
+        let otherAsComparable = other as any Comparable
+        return selfAsComparable.isLessThan(otherAsComparable)
     }
 }
 

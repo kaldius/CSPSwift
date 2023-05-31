@@ -107,6 +107,10 @@ extension Variable {
         internalAssignment = nil
     }
 
+    public func getSelf() -> Self {
+        self
+    }
+
     // MARK: convenience attributes
     public var domainAsArray: [ValueType] {
         Array(domain)

@@ -4,29 +4,28 @@ A constraint where `variableA` must be equal to `varibleB`.
 Note: could theoretically work on any `EquatableVariable` but that has not been implemented.
  */
 struct EqualToConstraint: Constraint {
-    let variableA: IntVariable
-    let variableB: IntVariable
-
-    var variables: [any Variable] {
-        [variableA, variableB]
+    let variableAName: String
+    let variableBName: String
+    var variableNames: [String] {
+        [variableAName, variableBName]
     }
 
     init(_ variableA: IntVariable, isEqualTo variableB: IntVariable) {
-        self.variableA = variableA
-        self.variableB = variableB
+        self.variableAName = variableA.name
+        self.variableBName = variableB.name
     }
 
-    var isSatisfied: Bool {
-        guard let valueA = variableA.assignment,
-              let valueB = variableB.assignment else {
+    func isSatisfied(state: SetOfVariables) -> Bool {
+        guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
+              let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
         }
         return valueA == valueB
     }
 
-    var isViolated: Bool {
-        guard let valueA = variableA.assignment,
-              let valueB = variableB.assignment else {
+    func isViolated(state: SetOfVariables) -> Bool {
+        guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
+              let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
         }
         return valueA != valueB

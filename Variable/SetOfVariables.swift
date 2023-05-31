@@ -2,11 +2,9 @@
 public struct SetOfVariables {
     var nameToVariable: [String: any Variable]
 
-    init(from: [any Variable]) {
+    init(from variables: [any Variable]) {
         self.nameToVariable = [:]
-        for variable in variables {
-            insert(variable)
-        }
+        variables.forEach({ insert($0) })
     }
 
     public var variables: [any Variable] {
@@ -34,7 +32,7 @@ public struct SetOfVariables {
         })
     }
 
-    public mutating func insert(_ variable: some Variable) {
+    public mutating func insert<Var: Variable>(_ variable: Var) {
         guard nameToVariable[variable.name] == nil else {
             // TODO: throw error
             assert(false)
@@ -42,40 +40,52 @@ public struct SetOfVariables {
         nameToVariable[variable.name] = variable
     }
 
-    public func getVariable(name: String) -> (any Variable)? {
+    public func getVariable(_ name: String) -> (any Variable)? {
         nameToVariable[name]
     }
 
-    public func exists(_ variableName: String) -> Bool {
-        nameToVariable[variableName] != nil
+    public func getVariable<V: Variable>(_ name: String, type: V.Type) -> V? {
+        nameToVariable[name] as? V
     }
 
-    public func getAssignment(for variableName: String) -> (any Value)? {
-        guard exists(variableName) else {
+    public func exists(_ name: String) -> Bool {
+        nameToVariable[name] != nil
+    }
+
+    public func isAssigned(_ name: String) -> Bool {
+        guard let variable = nameToVariable[name] else {
             // TODO: throw error
             assert(false)
         }
-        return nameToVariable[variableName]?.assignment
+        return variable.isAssigned
     }
 
-    public mutating func assign(_ variableName: String, to assignment: some Value) {
-        guard exists(variableName) else {
+    public func getAssignment<V: Variable>(_ name: String, type: V.Type) -> V.ValueType? {
+        guard exists(name) else {
             // TODO: throw error
             assert(false)
         }
-        nameToVariable[variableName]?.assign(to: assignment)
+        return nameToVariable[name]?.assignment as? V.ValueType
     }
 
-    public mutating func unassign(_ variableName: String) {
-        nameToVariable[variableName]?.unassign()
-    }
-
-    public mutating func setDomain(for variableName: String, to newDomain: [any Value]) {
-        guard exists(variableName) else {
+    public mutating func assign(_ name: String, to assignment: some Value) {
+        guard exists(name) else {
             // TODO: throw error
             assert(false)
         }
-        nameToVariable[variableName]?.setDomain(to: newDomain)
+        nameToVariable[name]?.assign(to: assignment)
+    }
+
+    public mutating func unassign(_ name: String) {
+        nameToVariable[name]?.unassign()
+    }
+
+    public mutating func setDomain(for name: String, to newDomain: [any Value]) {
+        guard exists(name) else {
+            // TODO: throw error
+            assert(false)
+        }
+        nameToVariable[name]?.setDomain(to: newDomain)
     }
 
     public mutating func setAllDomains(using state: VariableDomainState) {
@@ -84,11 +94,20 @@ public struct SetOfVariables {
         }
     }
 
-    public func getDomain(variableName: String) -> [any Value] {
-        guard let variable = nameToVariable[variableName] else {
+    public func getDomain(_ name: String) -> [any Value] {
+        guard let variable = nameToVariable[name] else {
             // TODO: throw error
             assert(false)
         }
         return variable.domainAsArray
+    }
+
+    public func getDomain<V: Variable>(_ name: String, type: V.Type) -> [V.ValueType] {
+        guard let variable = nameToVariable[name] else {
+            // TODO: throw error
+            assert(false)
+        }
+        // TODO: fix implicit unwrap
+        return variable.domainAsArray as! [V.ValueType]
     }
 }

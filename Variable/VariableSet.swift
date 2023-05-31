@@ -92,7 +92,7 @@ public struct VariableSet {
     private func numConsistentDomainValues(ifSetting variableName: String,
                                            to value: some Value) -> Int {
         var copiedVariableSet = setOfVariables
-        guard let variable = setOfVariables.getVariable(name: variableName),
+        guard let variable = setOfVariables.getVariable(variableName),
               variable.canAssign(to: value) else {
             return 0
         }

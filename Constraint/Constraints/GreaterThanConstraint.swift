@@ -4,32 +4,32 @@
  Note: could theoretically work on any `ComparableVariable` but that has not been implemented.
  */
 struct GreaterThanConstraint: Constraint {
-    let variableA: IntVariable
-    let variableB: IntVariable
+    let variableAName: String
+    let variableBName: String
 
-    var variables: [any Variable] {
-        [variableA, variableB]
+    var variableNames: [String] {
+        [variableAName, variableBName]
     }
 
     init(_ variableA: IntVariable, isGreaterThan variableB: IntVariable) {
-        self.variableA = variableA
-        self.variableB = variableB
+        self.variableAName = variableA.name
+        self.variableBName = variableB.name
     }
 
-    var isSatisfied: Bool {
-        guard let valueA = variableA.assignment,
-              let valueB = variableB.assignment else {
+    func isSatisfied(state: SetOfVariables) -> Bool {
+        guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
+              let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
         }
-        return valueA > valueB
+        return valueA.isGreaterThan(valueB)
     }
 
-    var isViolated: Bool {
-        guard let valueA = variableA.assignment,
-              let valueB = variableB.assignment else {
+    func isViolated(state: SetOfVariables) -> Bool {
+        guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
+              let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
         }
-        return valueA <= valueB
+        return valueA.isLessThan(valueB)
     }
 }
 

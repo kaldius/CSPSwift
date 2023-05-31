@@ -11,9 +11,9 @@ public struct ConstraintSet {
     public mutating func add(constraint: any Constraint) {
         allConstraints.append(constraint)
     }
-    
-    public var allSatisfied: Bool {
-        return allConstraints.allSatisfy({ $0.isSatisfied })
+
+    public func allSatisfied(state: SetOfVariables) -> Bool {
+        allConstraints.allSatisfy({ $0.isSatisfied(state: state) })
     }
 }
 

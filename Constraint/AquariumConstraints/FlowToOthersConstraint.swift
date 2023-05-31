@@ -1,4 +1,5 @@
 /// Represents the constraint where water flows from `mainCell` to `adjacentCells`.
+/*
 struct FlowToOthersConstraint: Constraint {
     let mainCell: CellVariable
     let adjacentCells: [CellVariable]
@@ -50,3 +51,4 @@ extension FlowToOthersConstraint: Copyable {
         self
     }
 }
+*/

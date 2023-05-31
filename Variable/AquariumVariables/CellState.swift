@@ -7,4 +7,11 @@ extension CellState: Copyable {
     }
 }
 
+extension Array: Comparable where Element: Comparable {
+    public static func < (lhs: Array<Element>, rhs: Array<Element>) -> Bool {
+        // TODO: implement
+        false
+    }
+}
+
 extension [CellState]: Value {}
