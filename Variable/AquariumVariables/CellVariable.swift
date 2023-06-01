@@ -39,9 +39,6 @@ struct CellVariable: Variable {
 
 extension CellVariable: Copyable {
     func copy() -> Self {
-        type(of: self).init(row: row,
-                            col: col,
-                            internalDomain: internalDomain,
-                            internalAssignment: internalAssignment)
+        self
     }
 }

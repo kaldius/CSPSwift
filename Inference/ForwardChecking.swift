@@ -12,7 +12,7 @@ public struct ForwardChecking: InferenceEngine {
 
     public func makeNewInference(from variableSet: SetOfVariables) -> SetOfVariables {
         var copiedVariableSet = variableSet
-        for constraint in constraintSet.allConstraints where constraint.containsAssignedVariable(state: copiedVariableSet) {
+        for constraint in constraintSet.allConstraints {
             for variableName in constraint.variableNames {
                 let inferredDomain = inferDomain(for: variableName,
                                                  constraint: constraint,
@@ -23,8 +23,6 @@ public struct ForwardChecking: InferenceEngine {
         return copiedVariableSet
     }
 
-    // FIXME: BIG PROBLEM: after inferring a domain, we need to set it so that we can make further inferences
-    // should be solved, just test now...
     private func inferDomain(for variableName: String,
                               constraint: some Constraint,
                               variableSet: SetOfVariables) -> [any Value] {

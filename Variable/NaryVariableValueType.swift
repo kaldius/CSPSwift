@@ -33,6 +33,12 @@ extension NaryVariableValueType: Value {
     }
 }
 
+extension NaryVariableValueType: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        value.debugDescription
+    }
+}
+
 extension NaryVariableValueType: Equatable {
     public static func == (lhs: NaryVariableValueType, rhs: NaryVariableValueType) -> Bool {
         lhs.value.isEqual(rhs.value)

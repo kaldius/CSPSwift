@@ -139,7 +139,9 @@ extension Variable {
 
 extension Variable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.name == rhs.name && lhs.assignment == rhs.assignment
+        lhs.name == rhs.name
+        && lhs.assignment == rhs.assignment
+        && lhs.domain == rhs.domain
     }
 }
 

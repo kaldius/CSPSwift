@@ -5,11 +5,6 @@ public protocol NaryVariable: Variable {
     associatedtype ValueType = NaryVariableValueType
 
     var associatedVariableNames: [String] { get }
-    /*
-    /// An array of domains for each variable in `associatedVariableNames` where
-    /// the order of the domains matches the order in `associatedVariableNames`.
-    var associatedDomains: [[any Value]] { get }
-     */
     var assignment: NaryVariableValueType? { get set }
     var internalAssignment: NaryVariableValueType? { get set }
     var domain: Set<NaryVariableValueType> { get set }

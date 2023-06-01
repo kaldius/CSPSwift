@@ -29,7 +29,7 @@ struct GreaterThanConstraint: Constraint {
               let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
         }
-        return valueA.isLessThan(valueB)
+        return valueA.isLessThan(valueB) || valueA.isEqual(valueB)
     }
 }
 
