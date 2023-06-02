@@ -97,8 +97,7 @@ public struct VariableSet {
             return 0
         }
         copiedVariableSet.assign(variableName, to: value)
-        let newInference = inferenceEngine.makeNewInference(from: copiedVariableSet)
-        if newInference.containsEmptyDomain {
+        guard let newInference = inferenceEngine.makeNewInference(from: copiedVariableSet) else {
             return 0
         }
         return newInference.numConsistentDomainValues

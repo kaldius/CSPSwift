@@ -3,7 +3,7 @@
 
  Note: could theoretically work on any `ComparableVariable` but that has not been implemented.
  */
-struct GreaterThanConstraint: Constraint {
+struct GreaterThanConstraint: BinaryConstraint {
     let variableAName: String
     let variableBName: String
 
@@ -30,6 +30,11 @@ struct GreaterThanConstraint: Constraint {
             return false
         }
         return valueA.isLessThan(valueB) || valueA.isEqual(valueB)
+    }
+
+    func depends(on variableName: String) -> Bool {
+        variableName == variableAName
+        || variableName == variableBName
     }
 }
 

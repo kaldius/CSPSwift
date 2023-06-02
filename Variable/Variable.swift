@@ -61,7 +61,10 @@ extension Variable {
         guard let unwrappedNewAssignment = newAssignment else {
             return false
         }
-        return assignment == nil && domain.contains(unwrappedNewAssignment)
+        let a = assignment == nil
+        let b = domain.contains(unwrappedNewAssignment)
+        return a && b
+        // return assignment == nil && domain.contains(unwrappedNewAssignment)
     }
 
     /// Another setter, but takes in value of type `any Value` and does the necessary

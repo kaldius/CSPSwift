@@ -2,21 +2,23 @@
  A concrete implementation of the Forward Checking inference method.
  */
 public struct ForwardChecking: InferenceEngine {
-    public var variables: [any Variable]
     public var constraintSet: ConstraintSet
     
-    public init(variables: [any Variable], constraintSet: ConstraintSet) {
-        self.variables = variables
+    public init(constraintSet: ConstraintSet) {
         self.constraintSet = constraintSet
     }
 
-    public func makeNewInference(from variableSet: SetOfVariables) -> SetOfVariables {
-        var copiedVariableSet = variableSet
+    public func makeNewInference(from state: SetOfVariables) -> SetOfVariables? {
+        var copiedVariableSet = state
         for constraint in constraintSet.allConstraints {
             for variableName in constraint.variableNames {
                 let inferredDomain = inferDomain(for: variableName,
                                                  constraint: constraint,
                                                  variableSet: copiedVariableSet)
+                if inferredDomain.isEmpty {
+                    // impossible to carry on
+                    return nil
+                }
                 copiedVariableSet.setDomain(for: variableName, to: inferredDomain)
             }
         }
@@ -49,7 +51,6 @@ public struct ForwardChecking: InferenceEngine {
 
 extension ForwardChecking: Copyable {
     public func copy() -> ForwardChecking {
-        type(of: self).init(variables: variables.copy(),
-                            constraintSet: constraintSet.copy())
+        self
     }
 }

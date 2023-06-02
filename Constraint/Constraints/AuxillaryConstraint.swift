@@ -3,14 +3,14 @@
  associated with a dual `Variable`, `d`, the assignment for `v` is equal to the
  respective value in the assignment tuple of `d`.
  */
-struct AuxillaryConstraint: Constraint {
+struct AuxillaryConstraint: BinaryConstraint {
     let mainVariableName: String
     let dualVariableName: String
 
     var variableNames: [String] {
         [mainVariableName, dualVariableName]
     }
-    
+
     init?(mainVariable: any Variable, dualVariable: TernaryVariable) {
         guard dualVariable.isAssociated(with: mainVariable) else {
             return nil
@@ -33,6 +33,11 @@ struct AuxillaryConstraint: Constraint {
             return false
         }
         return dualVariable.assignmentViolated(for: mainVariable)
+    }
+
+    func depends(on variableName: String) -> Bool {
+        variableName == mainVariableName
+        || variableName == dualVariableName
     }
 }
 
