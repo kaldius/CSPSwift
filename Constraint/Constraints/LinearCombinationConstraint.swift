@@ -46,7 +46,6 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
     }
 
     func isViolated(state: SetOfVariables) -> Bool {
-        let assignment = state.getAssignment(variableName, type: TernaryVariable.self)
         guard let assignment = state.getAssignment(variableName, type: TernaryVariable.self),
               let variableA = Float(assignment[0]),
               let variableB = Float(assignment[1]),

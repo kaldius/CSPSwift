@@ -9,15 +9,15 @@ extension UnaryConstraint {
             return state
         }
         var copiedState = state
-        var newDomain = variable.domainAsArray
+        var newDomain = variable.domain
         for domainValue in variable.domain {
             copiedState.assign(variableName, to: domainValue)
             if isViolated(state: copiedState) {
-                newDomain.removeAll(where: { $0.isEqual(domainValue) })
+                newDomain.remove(domainValue)
             }
             copiedState.unassign(variableName)
         }
-        copiedState.setDomain(for: variableName, to: newDomain)
+        copiedState.setDomain(for: variableName, to: Array(newDomain))
         return copiedState
     }
 }
