@@ -111,3 +111,22 @@ public struct SetOfVariables {
         return variable.domainAsArray as! [V.ValueType]
     }
 }
+
+extension SetOfVariables: Equatable {
+    public static func == (lhs: SetOfVariables, rhs: SetOfVariables) -> Bool {
+        lhs.nameToVariable.keys == rhs.nameToVariable.keys
+        && Array(lhs.nameToVariable.values).isEqual(Array(rhs.nameToVariable.values))
+    }
+}
+
+extension SetOfVariables: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        var outputString = ""
+        for name in nameToVariable.keys {
+            outputString += "[" + name + ": "
+            let domain = getDomain(name)
+            outputString += domain.description + "]\n"
+        }
+        return outputString
+    }
+}

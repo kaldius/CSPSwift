@@ -10,14 +10,14 @@
  `TernaryVariable` hold some number type.
  */
 struct LinearCombinationConstraint: TernaryVariableConstraint {
-    let ternaryVariableName: String
+    let variableName: String
     let scaleA: Float
     let scaleB: Float
     let scaleC: Float
     let add: Float
 
     var variableNames: [String] {
-        [ternaryVariableName]
+        [variableName]
     }
 
     init(_ ternaryVariable: TernaryVariable,
@@ -25,7 +25,7 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
          scaleB: Float,
          scaleC: Float,
          add: Float = 0) {
-        self.ternaryVariableName = ternaryVariable.name
+        self.variableName = ternaryVariable.name
         self.scaleA = scaleA
         self.scaleB = scaleB
         self.scaleC = scaleC
@@ -33,7 +33,7 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
     }
 
     func isSatisfied(state: SetOfVariables) -> Bool {
-        guard let assignment = state.getAssignment(ternaryVariableName, type: TernaryVariable.self),
+        guard let assignment = state.getAssignment(variableName, type: TernaryVariable.self),
               let variableA = Float(assignment[0]),
               let variableB = Float(assignment[1]),
               let variableC = Float(assignment[2]) else {
@@ -46,7 +46,8 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
     }
 
     func isViolated(state: SetOfVariables) -> Bool {
-        guard let assignment = state.getAssignment(ternaryVariableName, type: TernaryVariable.self),
+        let assignment = state.getAssignment(variableName, type: TernaryVariable.self)
+        guard let assignment = state.getAssignment(variableName, type: TernaryVariable.self),
               let variableA = Float(assignment[0]),
               let variableB = Float(assignment[1]),
               let variableC = Float(assignment[2]) else {

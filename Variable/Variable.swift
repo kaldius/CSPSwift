@@ -3,7 +3,7 @@
  
  Reference semantics used here to ensure that any changes to `Variable` are seen by all.
  */
-public protocol Variable: Hashable, Copyable {
+public protocol Variable: Hashable, CustomDebugStringConvertible, Copyable {
     associatedtype ValueType: Value
     
     var name: String { get }
@@ -181,5 +181,11 @@ extension [any Variable] {
 
     public func copy() -> [any Variable] {
         self.map({ $0.copy() })
+    }
+}
+
+extension Variable {
+    public var debugDescription: String {
+        domain.debugDescription
     }
 }
