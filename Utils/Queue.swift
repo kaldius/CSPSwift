@@ -61,7 +61,8 @@ public struct Queue<T> {
 
 extension Queue<Arc> {
     init(given constraintSet: ConstraintSet) {
-        let arcs = constraintSet.allConstraints.compactMap({ Arc(from: $0) })
+        let arcs = constraintSet.allConstraints.flatMap({ [Arc(from: $0), Arc(from: $0, reverse: true)] })
+            .compactMap({ $0 })
         self.init(from: arcs)
     }
 }

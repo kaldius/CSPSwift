@@ -61,6 +61,7 @@ extension Variable {
         guard let unwrappedNewAssignment = newAssignment else {
             return false
         }
+        // TODO: remove
         let a = assignment == nil
         let b = domain.contains(unwrappedNewAssignment)
         return a && b
@@ -70,8 +71,7 @@ extension Variable {
     /// Another setter, but takes in value of type `any Value` and does the necessary
     /// casting before assignment. If assignment fails, throws error.
     public mutating func assign(to newAssignment: any Value) {
-        guard let castedNewAssignment = newAssignment as? ValueType,
-              canAssign(to: castedNewAssignment) else {
+        guard let castedNewAssignment = newAssignment as? ValueType else {
             // TODO: throw error
             assert(false)
         }

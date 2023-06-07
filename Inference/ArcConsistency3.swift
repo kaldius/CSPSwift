@@ -3,22 +3,24 @@ public struct ArcConsistency3: InferenceEngine {
     public var constraintSet: ConstraintSet
 
     public func makeNewInference(from state: SetOfVariables) -> SetOfVariables? {
+        var copiedState = state
         var arcs = Queue<Arc>(given: constraintSet)
 
         while !arcs.isEmpty {
             guard let arc = arcs.dequeue() else {
                 assert(false)
             }
-            if let newVariableIDomain = arc.revise(state: state) {
+            if let newVariableIDomain = arc.revise(state: copiedState) {
                 if newVariableIDomain.isEmpty {
                     // impossible to carry on 
                     return nil
                 }
+                copiedState.setDomain(for: arc.variableIName, to: newVariableIDomain)
                 let newArcs = arcsFromNeighbours(of: arc.variableIName, except: arc.variableJName)
                 arcs.enqueueAll(in: newArcs)
             }
         }
-        return state
+        return copiedState
     }
 
     // TODO: check that it returns reverse arcs
@@ -30,7 +32,11 @@ public struct ArcConsistency3: InferenceEngine {
                   !binConstraint.depends(on: excludedVarName) else {
                 continue
             }
-            arcs.append(Arc(from: binConstraint))
+            let otherVarName = binConstraint.variableName(otherThan: variableName)
+            guard let newArc = Arc(from: binConstraint, variableIName: otherVarName) else {
+                continue
+            }
+            arcs.append(newArc)
         }
         return arcs
     }
