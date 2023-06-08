@@ -119,9 +119,3 @@ public struct ConstraintSatisfactionProblem {
         setOfVariables.setAllDomains(using: state)
     }
 }
-
-extension ConstraintSatisfactionProblem: Copyable {
-    public func copy() -> Self {
-        self
-    }
-}

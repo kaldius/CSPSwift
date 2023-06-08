@@ -36,9 +36,3 @@ struct CellVariable: Variable {
                   internalAssignment: nil)
     }
 }
-
-extension CellVariable: Copyable {
-    func copy() -> Self {
-        self
-    }
-}

@@ -1,7 +1,7 @@
 /**
  All constraints used for this solver must conform to this protocol.
  */
-public protocol Constraint: Equatable, Copyable {
+public protocol Constraint: Equatable {
     var variableNames: [String] { get }
     func isSatisfied(state: SetOfVariables) -> Bool
     func isViolated(state: SetOfVariables) -> Bool
@@ -14,11 +14,5 @@ extension Constraint {
             let variable = state.getVariable(name)
             return variable?.isAssigned ?? false
         })
-    }
-}
-
-extension [Constraint] {
-    func copy() -> [any Constraint] {
-        self.map({ $0.copy() })
     }
 }

@@ -35,13 +35,3 @@ struct TernaryVariable: NaryVariable {
         self.internalAssignment = nil
     }
 }
-
-extension TernaryVariable: Copyable {
-    public func copy() -> Self {
-        type(of: self).init(name: name,
-                            associatedVariableNames: associatedVariableNames.copy(),
-                            internalDomain: internalDomain,
-                            internalAssignment: internalAssignment)
-    }
-}
-

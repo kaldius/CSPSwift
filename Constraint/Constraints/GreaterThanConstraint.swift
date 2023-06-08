@@ -37,9 +37,3 @@ struct GreaterThanConstraint: BinaryConstraint {
         || variableName == variableBName
     }
 }
-
-extension GreaterThanConstraint: Copyable {
-    func copy() -> GreaterThanConstraint {
-        self
-    }
-}

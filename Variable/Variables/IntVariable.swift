@@ -17,11 +17,3 @@ public struct IntVariable: Variable {
         self.internalAssignment = internalAssignment
     }
 }
-
-extension IntVariable: Copyable {
-    public func copy() -> Self {
-        type(of: self).init(name: name,
-                            internalDomain: internalDomain,
-                            internalAssignment: internalAssignment)
-    }
-}

@@ -15,11 +15,3 @@ public struct FloatVariable: Variable {
         self.internalAssignment = internalAssignment
     }
 }
-
-extension FloatVariable: Copyable {
-    public func copy() -> Self {
-        type(of: self).init(name: name,
-                            internalDomain: internalDomain,
-                            internalAssignment: internalAssignment)
-    }
-}

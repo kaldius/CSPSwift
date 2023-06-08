@@ -6,6 +6,7 @@ Note: could theoretically work on any `EquatableVariable` but that has not been 
 struct EqualToConstraint: BinaryConstraint {
     let variableAName: String
     let variableBName: String
+    
     var variableNames: [String] {
         [variableAName, variableBName]
     }
@@ -34,11 +35,5 @@ struct EqualToConstraint: BinaryConstraint {
     func depends(on variableName: String) -> Bool {
         variableName == variableAName
         || variableName == variableBName
-    }
-}
-
-extension EqualToConstraint: Copyable {
-    func copy() -> EqualToConstraint {
-        self
     }
 }

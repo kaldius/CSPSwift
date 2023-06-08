@@ -34,9 +34,3 @@ struct FlowToNeighbourConstraint: Constraint {
         return sourceCell.isWater && neighbourCell.isAir
     }
 }
-
-extension FlowToNeighbourConstraint: Copyable {
-    func copy() -> FlowToNeighbourConstraint {
-        self
-    }
-}

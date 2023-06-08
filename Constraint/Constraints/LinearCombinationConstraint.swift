@@ -58,9 +58,3 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
         return scaledVariableA + scaledVariableB + scaledVariableC + add != 0
     }
 }
-
-extension LinearCombinationConstraint: Copyable {
-    func copy() -> LinearCombinationConstraint {
-        self
-    }
-}

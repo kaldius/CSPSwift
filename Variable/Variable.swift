@@ -3,7 +3,7 @@
  
  Reference semantics used here to ensure that any changes to `Variable` are seen by all.
  */
-public protocol Variable: Hashable, CustomDebugStringConvertible, Copyable {
+public protocol Variable: Hashable, CustomDebugStringConvertible {
     associatedtype ValueType: Value
     
     var name: String { get }
@@ -173,10 +173,6 @@ extension [any Variable] {
             equal = equal && self[idx].isEqual(other[idx])
         }
         return equal
-    }
-
-    public func copy() -> [any Variable] {
-        self.map({ $0.copy() })
     }
 
     func containsSameValues(as array: [any Variable]) -> Bool {

@@ -26,9 +26,3 @@ struct SumToValueConstraint: Constraint {
         return sum != nil && sum != goal
     }
 }
-
-extension SumToValueConstraint: Copyable {
-    func copy() -> SumToValueConstraint {
-        self
-    }
-}

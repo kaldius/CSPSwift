@@ -48,9 +48,3 @@ public struct ForwardChecking: InferenceEngine {
         return newDomain
     }
 }
-
-extension ForwardChecking: Copyable {
-    public func copy() -> ForwardChecking {
-        self
-    }
-}

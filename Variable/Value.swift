@@ -2,7 +2,7 @@
  All domain values that are assignable to the variables used in this solver
  have to conform to this protocol.
  */
-public protocol Value: Hashable, Comparable, Copyable {
+public protocol Value: Hashable, Comparable {
     func isEqual(_ other: any Value) -> Bool
 }
 
@@ -32,10 +32,6 @@ extension [any Value] {
             return false
         }
         return (0 ..< self.count).allSatisfy({ self[$0].isEqual(other[$0]) })
-    }
-
-    func copy() -> [any Value] {
-        self.map({ $0.copy() })
     }
 
     func containsSameValues(as array: [any Value]) -> Bool {

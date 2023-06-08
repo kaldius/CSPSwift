@@ -50,9 +50,3 @@ extension NaryVariableValueType: Hashable {
         value.forEach({ hasher.combine($0) })
     }
 }
-
-extension NaryVariableValueType: Copyable {
-    public func copy() -> NaryVariableValueType {
-        type(of: self).init(value: value.copy())
-    }
-}

@@ -35,9 +35,3 @@ public struct ConstraintSet {
         allConstraints = allConstraints.filter({ !($0 is any UnaryConstraint) })
     }
 }
-
-extension ConstraintSet: Copyable {
-    public func copy() -> ConstraintSet {
-        type(of: self).init(allConstraints: allConstraints.copy())
-    }
-}

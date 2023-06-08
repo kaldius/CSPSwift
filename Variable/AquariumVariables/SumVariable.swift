@@ -17,11 +17,11 @@ struct SumVariable: Variable {
                   internalDomain: domain,
                   internalAssignment: nil)
     }
-
+    
     init(name: String,
-                  size: Int,
-                  internalDomain: Set<[CellState]>,
-                  internalAssignment: [CellState]?) {
+         size: Int,
+         internalDomain: Set<[CellState]>,
+         internalAssignment: [CellState]?) {
         self.name = name
         self.size = size
         self.internalDomain = internalDomain
@@ -37,14 +37,5 @@ struct SumVariable: Variable {
     
     subscript(_ idx: Int) -> CellState? {
         assignment?[idx]
-    }
-}
-
-extension SumVariable: Copyable {
-    public func copy() -> Self {
-        type(of: self).init(name: name,
-                            size: size,
-                            internalDomain: internalDomain,
-                            internalAssignment: internalAssignment)
     }
 }

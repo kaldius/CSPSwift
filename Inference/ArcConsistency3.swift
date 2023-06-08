@@ -41,9 +41,3 @@ public struct ArcConsistency3: InferenceEngine {
         return arcs
     }
 }
-
-extension ArcConsistency3: Copyable {
-    public func copy() -> ArcConsistency3 {
-        self
-    }
-}
