@@ -61,11 +61,7 @@ extension Variable {
         guard let unwrappedNewAssignment = newAssignment else {
             return false
         }
-        // TODO: remove
-        let a = assignment == nil
-        let b = domain.contains(unwrappedNewAssignment)
-        return a && b
-        // return assignment == nil && domain.contains(unwrappedNewAssignment)
+        return assignment == nil && domain.contains(unwrappedNewAssignment)
     }
 
     /// Another setter, but takes in value of type `any Value` and does the necessary
@@ -181,6 +177,14 @@ extension [any Variable] {
 
     public func copy() -> [any Variable] {
         self.map({ $0.copy() })
+    }
+
+    func containsSameValues(as array: [any Variable]) -> Bool {
+        var correct = self.count == array.count
+        for value in self {
+            correct = correct && array.contains(where: { $0.isEqual(value) })
+        }
+        return correct
     }
 }
 

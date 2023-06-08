@@ -2,11 +2,11 @@
  Represents a state of all `Variable`s domains.
  */
 // TODO: TEST
+// TODO: compare use of VDS vs just copying variableSets
 public struct VariableDomainState {
     public var variableNameToDomain: [String: [any Value]]
     private var variableNameToVariable: [String: any Variable]
-    // private var nameToVariable: [String: any Variable]
-    
+
     init() {
         self.variableNameToDomain = [:]
         self.variableNameToVariable = [:]
@@ -17,7 +17,6 @@ public struct VariableDomainState {
         for variable in variables {
             variableNameToDomain[variable.name] = variable.domainAsArray
             variableNameToVariable[variable.name] = variable
-            // nameToVariable[variable.name] =
         }
     }
     
@@ -44,20 +43,35 @@ public struct VariableDomainState {
         variableNameToDomain[variableName] = domain
         variableNameToVariable[variableName] = variable
     }
+
+    public mutating func addDomain(for variableName: String, domain: [any Value]) {
+        guard let variable = variableNameToVariable[variableName] else {
+            assert(false)
+        }
+        addDomain(for: variable, domain: domain)
+    }
     
     /// Returns the inferred domain for a given `Variable`.
-    public func getDomain(for variable: some Variable) -> [any Value] {
+    public func getDomain(for variable: some Variable) -> [any Value]? {
         guard let domain = variableNameToDomain[variable.name] else {
-            return variable.domainAsArray
+            return nil
         }
         return domain
     }
 
-    public func getDomainAsSet<Var: Variable>(for variable: Var) -> Set<Var.ValueType> {
-        guard let domain = variableNameToDomain[variable.name] else {
-            return variable.domain
+    public func getDomain(for variableName: String) -> [any Value]? {
+        guard let domain = variableNameToDomain[variableName] else {
+            return nil
         }
-        // TODO: problem
-        return Set(domain as! [Var.ValueType])
+        return domain
+    }
+}
+
+extension VariableDomainState: Equatable {
+    public static func == (lhs: VariableDomainState, rhs: VariableDomainState) -> Bool {
+        lhs.variableNameToDomain.keys == rhs.variableNameToDomain.keys
+        && Array(lhs.variableNameToDomain.values).containsSameValues(as: Array(rhs.variableNameToDomain.values))
+        && lhs.variableNameToVariable.keys == rhs.variableNameToVariable.keys
+        && Array(lhs.variableNameToVariable.values).containsSameValues(as: Array(rhs.variableNameToVariable.values))
     }
 }

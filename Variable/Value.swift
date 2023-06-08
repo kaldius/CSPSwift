@@ -37,6 +37,14 @@ extension [any Value] {
     func copy() -> [any Value] {
         self.map({ $0.copy() })
     }
+
+    func containsSameValues(as array: [any Value]) -> Bool {
+        var correct = self.count == array.count
+        for value in self {
+            correct = correct && array.contains(where: { $0.isEqual(value) })
+        }
+        return correct
+    }
 }
 
 extension [[any Value]] {
@@ -47,5 +55,13 @@ extension [[any Value]] {
             equal = equal && self[idx].isEqual(other[idx])
         }
         return equal
+    }
+
+    func containsSameValues(as array: [[any Value]]) -> Bool {
+        var correct = self.count == array.count
+        for valueArray in self {
+            correct = correct && array.contains(where: { $0.containsSameValues(as: valueArray) })
+        }
+        return correct
     }
 }
