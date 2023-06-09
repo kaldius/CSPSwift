@@ -1,4 +1,4 @@
-public struct BacktrackingSolver {
+public struct CSPSolver {
     let inferenceEngine: InferenceEngine
     
     init(inferenceEngine: InferenceEngine) {
