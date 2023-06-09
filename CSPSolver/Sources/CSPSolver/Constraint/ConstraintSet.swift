@@ -20,7 +20,6 @@ public struct ConstraintSet {
         allConstraints.allSatisfy({ $0.isSatisfied(state: state) })
     }
 
-    // TODO: test
     public func applyUnaryConstraints(to state: SetOfVariables) -> SetOfVariables {
         // unaryConstraints.reduce(state, { $1.restrictDomain(state: $0) })
         var copiedState = state
@@ -30,7 +29,6 @@ public struct ConstraintSet {
         return copiedState
     }
 
-    // TODO: test
     public mutating func removeUnaryConstraints() {
         allConstraints = allConstraints.filter({ !($0 is any UnaryConstraint) })
     }
