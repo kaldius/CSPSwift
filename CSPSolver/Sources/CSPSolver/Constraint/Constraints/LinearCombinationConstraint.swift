@@ -16,10 +16,6 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
     let scaleC: Float
     let add: Float
 
-    var variableNames: [String] {
-        [variableName]
-    }
-
     init(_ ternaryVariable: TernaryVariable,
          scaleA: Float,
          scaleB: Float,

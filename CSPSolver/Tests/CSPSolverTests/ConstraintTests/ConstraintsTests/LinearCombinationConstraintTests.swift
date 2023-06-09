@@ -31,14 +31,7 @@ final class LinearCombinationConstraintTests: XCTestCase {
                                                                   scaleC: -1,
                                                                   add: -7.591)
     }
-
     // MARK: testing methods/attributes inherited from Constraint
-    func testVariableNames_returnsAllVariableNames() {
-        let expectedVariableNames: [String] = [ternaryVariable.name]
-        let actualVariableNames = linearCombinationConstraint.variableNames
-        XCTAssertTrue(actualVariableNames == expectedVariableNames)
-    }
-
     func testContainsAssignedVariable_allUnassigned_returnsFalse() {
         XCTAssertFalse(linearCombinationConstraint.containsAssignedVariable(state: variableSet))
     }
@@ -53,6 +46,38 @@ final class LinearCombinationConstraintTests: XCTestCase {
         XCTAssertTrue(linearCombinationConstraint.containsAssignedVariable(state: variableSet))
     }
 
+    // MARK: testing methods/attributes inherited from UnaryConstraint
+    func testRestrictDomain_returnsCorrectlyRestrictedDomain() {
+        let floatB: Float = 6.789
+        let floatC: Float = 7.987
+
+        // preparing expected result
+        var copiedVariableSet = variableSet!
+        let newAssignment = NaryVariableValueType(value: [2, floatB, floatC])
+        copiedVariableSet.assign(ternaryVariable.name, to: newAssignment)
+        let expectedTernaryVariableDomain = copiedVariableSet.getDomain(ternaryVariable.name,
+                                                                        type: TernaryVariable.self)
+
+        // getting result
+        let restrictedVariableSet = linearCombinationConstraint.restrictDomain(state: variableSet)
+        let actualTernaryVariableDomain = restrictedVariableSet.getDomain(ternaryVariable.name,
+                                                                          type: TernaryVariable.self)
+
+        measure {
+            _ = linearCombinationConstraint.restrictDomain(state: variableSet)
+        }
+
+        XCTAssertEqual(actualTernaryVariableDomain, expectedTernaryVariableDomain)
+    }
+    
+    // MARK: testing methods/attributes inherited from TernaryVariableConstraint
+    func testVariableNames_returnsAllVariableNames() {
+        let expectedVariableNames: [String] = [ternaryVariable.name]
+        let actualVariableNames = linearCombinationConstraint.variableNames
+        XCTAssertTrue(actualVariableNames == expectedVariableNames)
+    }
+
+    // MARK: testing methods/attributes declared in LinearCombinationConstraint
     // MARK: tests for isSatisfied
     func testIsSatisfied_unassigned_returnsFalse() {
         XCTAssertFalse(linearCombinationConstraint.isSatisfied(state: variableSet))
@@ -104,34 +129,6 @@ final class LinearCombinationConstraintTests: XCTestCase {
         let ternaryVariableAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryVariableAssignment, newAssignment)
 
-        measure {
-            _ = linearCombinationConstraint.isViolated(state: variableSet)
-        }
-
         XCTAssertTrue(linearCombinationConstraint.isViolated(state: variableSet))
-    }
-
-    // MARK: testing methods/attributes inherited from UnaryConstraint
-    func testRestrictDomain_returnsCorrectlyRestrictedDomain() {
-        let floatB: Float = 6.789
-        let floatC: Float = 7.987
-
-        // preparing expected result
-        var copiedVariableSet = variableSet!
-        let newAssignment = NaryVariableValueType(value: [2, floatB, floatC])
-        copiedVariableSet.assign(ternaryVariable.name, to: newAssignment)
-        let expectedTernaryVariableDomain = copiedVariableSet.getDomain(ternaryVariable.name,
-                                                                        type: TernaryVariable.self)
-
-        // getting result
-        let restrictedVariableSet = linearCombinationConstraint.restrictDomain(state: variableSet)
-        let actualTernaryVariableDomain = restrictedVariableSet.getDomain(ternaryVariable.name,
-                                                                          type: TernaryVariable.self)
-
-        measure {
-            _ = linearCombinationConstraint.restrictDomain(state: variableSet)
-        }
-
-        XCTAssertEqual(actualTernaryVariableDomain, expectedTernaryVariableDomain)
     }
 }

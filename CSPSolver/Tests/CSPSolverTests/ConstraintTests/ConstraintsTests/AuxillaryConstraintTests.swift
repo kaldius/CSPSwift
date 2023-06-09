@@ -46,6 +46,43 @@ final class AuxillaryConstraintTests: XCTestCase {
         allConstraints = [auxillaryConstraintA, auxillaryConstraintB, auxillaryConstraintC]
     }
 
+    // MARK: Testing methods/attributes inherited from Constraint
+    func testContainsAssignedVariable_allUnassigned_returnsFalse() {
+        for constraint in allConstraints {
+            XCTAssertFalse(constraint.containsAssignedVariable(state: variableSet))
+        }
+    }
+
+    func testContainsAssignedVariable_mainVariableAssigned_returnsTrue() {
+        // auxillaryConstraintA
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
+        XCTAssertTrue(auxillaryConstraintA.containsAssignedVariable(state: variableSet))
+
+        // auxillaryConstraintB
+        variableSet.assign(intVariableB.name, to: 5)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 5)
+        XCTAssertTrue(auxillaryConstraintB.containsAssignedVariable(state: variableSet))
+
+        // auxillaryConstraintC
+        variableSet.assign(strVariableC.name, to: "y")
+        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
+        XCTAssertEqual(assignmentC, "y")
+        XCTAssertTrue(auxillaryConstraintC.containsAssignedVariable(state: variableSet))
+    }
+
+    func testContainsAssignedVariable_dualVariableAssigned_returnsTrue() {
+        let newAssignment = NaryVariableValueType(value: [2, 5, "z"])
+        variableSet.assign(dualVariable.name, to: newAssignment)
+        XCTAssertTrue(variableSet.isAssigned(dualVariable.name))
+
+        for constraint in allConstraints {
+            XCTAssertTrue(constraint.containsAssignedVariable(state: variableSet))
+        }
+    }
+
     // MARK: Testing methods/attributes inherited from BinaryConstraint
     func testDependsOn_validVariableName_returnsTrue() {
         XCTAssertTrue(auxillaryConstraintA.depends(on: intVariableA.name))
@@ -93,42 +130,6 @@ final class AuxillaryConstraintTests: XCTestCase {
             let actualVariableNames = constraint.variableNames
 
             XCTAssertTrue(actualVariableNames == expectedVariableNames)
-        }
-    }
-
-    func testContainsAssignedVariable_allUnassigned_returnsFalse() {
-        for constraint in allConstraints {
-            XCTAssertFalse(constraint.containsAssignedVariable(state: variableSet))
-        }
-    }
-
-    func testContainsAssignedVariable_mainVariableAssigned_returnsTrue() {
-        // auxillaryConstraintA
-        variableSet.assign(intVariableA.name, to: 1)
-        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentA, 1)
-        XCTAssertTrue(auxillaryConstraintA.containsAssignedVariable(state: variableSet))
-
-        // auxillaryConstraintB
-        variableSet.assign(intVariableB.name, to: 5)
-        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentB, 5)
-        XCTAssertTrue(auxillaryConstraintB.containsAssignedVariable(state: variableSet))
-
-        // auxillaryConstraintC
-        variableSet.assign(strVariableC.name, to: "y")
-        let assignmentC = variableSet.getAssignment(strVariableC.name, type: StringVariable.self)
-        XCTAssertEqual(assignmentC, "y")
-        XCTAssertTrue(auxillaryConstraintC.containsAssignedVariable(state: variableSet))
-    }
-
-    func testContainsAssignedVariable_dualVariableAssigned_returnsTrue() {
-        let newAssignment = NaryVariableValueType(value: [2, 5, "z"])
-        variableSet.assign(dualVariable.name, to: newAssignment)
-        XCTAssertTrue(variableSet.isAssigned(dualVariable.name))
-
-        for constraint in allConstraints {
-            XCTAssertTrue(constraint.containsAssignedVariable(state: variableSet))
         }
     }
 

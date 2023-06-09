@@ -19,6 +19,27 @@ final class GreaterThanConstraintTests: XCTestCase {
         aGreaterThanBConstraint = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
     }
 
+    // MARK: Testing methods/attributes inherited from Constraint
+    func testContainsAssignedVariable_allUnassigned_returnsFalse() {
+        XCTAssertFalse(aGreaterThanBConstraint.containsAssignedVariable(state: variableSet))
+    }
+
+    func testContainsAssignedVariable_someAssigned_returnsTrue() {
+        // assign A
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
+
+        XCTAssertTrue(aGreaterThanBConstraint.containsAssignedVariable(state: variableSet))
+
+        // assign B
+        variableSet.assign(intVariableB.name, to: 2)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 2)
+
+        XCTAssertTrue(aGreaterThanBConstraint.containsAssignedVariable(state: variableSet))
+    }
+
     // MARK: Testing methods/attributes inherited from BinaryConstraint
     func testDependsOn_validVariableName_returnsTrue() {
         XCTAssertTrue(aGreaterThanBConstraint.depends(on: intVariableA.name))
@@ -48,26 +69,6 @@ final class GreaterThanConstraintTests: XCTestCase {
         let expectedVariableNames: [String] = [intVariableA.name, intVariableB.name]
         let actualVariableNames = aGreaterThanBConstraint.variableNames
         XCTAssertTrue(actualVariableNames == expectedVariableNames)
-    }
-
-    func testContainsAssignedVariable_allUnassigned_returnsFalse() {
-        XCTAssertFalse(aGreaterThanBConstraint.containsAssignedVariable(state: variableSet))
-    }
-
-    func testContainsAssignedVariable_someAssigned_returnsTrue() {
-        // assign A
-        variableSet.assign(intVariableA.name, to: 1)
-        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentA, 1)
-
-        XCTAssertTrue(aGreaterThanBConstraint.containsAssignedVariable(state: variableSet))
-
-        // assign B
-        variableSet.assign(intVariableB.name, to: 2)
-        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentB, 2)
-
-        XCTAssertTrue(aGreaterThanBConstraint.containsAssignedVariable(state: variableSet))
     }
 
     // MARK: tests for isSatisfied

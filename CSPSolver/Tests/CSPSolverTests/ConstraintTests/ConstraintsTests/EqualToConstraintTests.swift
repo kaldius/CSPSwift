@@ -19,6 +19,25 @@ final class EqualToConstraintTests: XCTestCase {
         aEqualToBConstraint = EqualToConstraint(intVariableA, isEqualTo: intVariableB)
     }
 
+    // MARK: Testing methods/attributes inherited from Constraint
+    func testContainsAssignedVariable_allUnassigned_returnsFalse() {
+        XCTAssertFalse(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
+    }
+
+    func testContainsAssignedVariable_someAssigned_returnsFalse() {
+        // assign A
+        variableSet.assign(intVariableA.name, to: 1)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 1)
+        XCTAssertTrue(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
+
+        // assign B
+        variableSet.assign(intVariableB.name, to: 2)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 2)
+        XCTAssertTrue(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
+    }
+
     // MARK: Testing methods/attributes inherited from BinaryConstraint
     func testDependsOn_validVariableName_returnsTrue() {
         XCTAssertTrue(aEqualToBConstraint.depends(on: intVariableA.name))
@@ -51,24 +70,6 @@ final class EqualToConstraintTests: XCTestCase {
         for expectedVariableName in expectedVariableNames {
             XCTAssertTrue(actualVariableNames.contains(where: { $0 == expectedVariableName }))
         }
-    }
-
-    func testContainsAssignedVariable_allUnassigned_returnsFalse() {
-        XCTAssertFalse(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
-    }
-
-    func testContainsAssignedVariable_someAssigned_returnsFalse() {
-        // assign A
-        variableSet.assign(intVariableA.name, to: 1)
-        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentA, 1)
-        XCTAssertTrue(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
-
-        // assign B
-        variableSet.assign(intVariableB.name, to: 2)
-        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentB, 2)
-        XCTAssertTrue(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
     }
 
     // MARK: tests for isSatisfied
