@@ -3,7 +3,7 @@
  */
 public struct ForwardChecking: InferenceEngine {
     public var constraintSet: ConstraintSet
-    
+
     public init(constraintSet: ConstraintSet) {
         self.constraintSet = constraintSet
     }
@@ -26,8 +26,8 @@ public struct ForwardChecking: InferenceEngine {
     }
 
     private func inferDomain(for variableName: String,
-                              constraint: some Constraint,
-                              variableSet: SetOfVariables) -> [any Value] {
+                             constraint: some Constraint,
+                             variableSet: SetOfVariables) -> [any Value] {
         guard let variable = variableSet.getVariable(variableName) else {
             assert(false)
         }

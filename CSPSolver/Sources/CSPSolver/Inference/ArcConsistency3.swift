@@ -1,4 +1,3 @@
-
 public struct ArcConsistency3: InferenceEngine {
     public var constraintSet: ConstraintSet
 

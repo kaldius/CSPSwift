@@ -5,8 +5,9 @@ import XCTest
 final class IntVariableTests: XCTestCase {
     var intVariableDomain: Set<Int>!
     var intVariable: IntVariable!
-    
+
     override func setUp() {
+        super.setUp()
         intVariableDomain = [1, 2, 3]
         intVariable = IntVariable(name: "int", domain: intVariableDomain)
     }
@@ -24,14 +25,14 @@ final class IntVariableTests: XCTestCase {
     func testDomain_setter_validNewDomain_setsDomainCorrectly() {
         let newDomain = Set([1, 2])
         intVariable.domain = newDomain
-        
+
         XCTAssertEqual(intVariable.domain, newDomain)
     }
-    
+
     func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
-        
+
     }
-    
+
     func testAssignment_getter_initialAssignmentNil() {
         XCTAssertNil(intVariable.assignment)
     }
@@ -43,27 +44,27 @@ final class IntVariableTests: XCTestCase {
             XCTAssertEqual(intVariable.assignment, domainValue)
         }
     }
-    
+
     func testAssignment_setter_currentAssignmentNotNil_throwsError() {
-        
+
     }
-    
+
     func testAssignment_setter_newAssignmentNotInDomain_throwsError() {
-        
+
     }
-    
+
     func testCanAssign_possibleValue_returnsTrue() {
         for domainValue in intVariableDomain {
             XCTAssertTrue(intVariable.canAssign(to: domainValue))
         }
     }
-    
+
     func testCanAssign_impossibleValue_returnsFalse() {
         XCTAssertFalse(intVariable.canAssign(to: 4))
         XCTAssertFalse(intVariable.canAssign(to: "success"))
         XCTAssertFalse(intVariable.canAssign(to: true))
     }
-    
+
     func testAssignTo_possibleValue_getsAssigned() throws {
         for domainValue in intVariableDomain {
             intVariable.assign(to: domainValue)
@@ -72,7 +73,7 @@ final class IntVariableTests: XCTestCase {
             intVariable.unassign()
         }
     }
-    
+
     func testAssignTo_impossibleValue_throwsError() throws {
         /*
         XCTAssertFalse(intVariable.assign(to: 4))
@@ -98,7 +99,7 @@ final class IntVariableTests: XCTestCase {
         let newDomain = [2, 3, 4]
         XCTAssertFalse(intVariable.canSetDomain(to: newDomain))
     }
-    
+
     func testUnassign_assignmentSetToNil() throws {
         intVariable.assignment = 2
         let intValue = try XCTUnwrap(intVariable.assignment)

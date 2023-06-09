@@ -1,7 +1,7 @@
 public struct SortableValue<T: Value> {
     public var value: T
     public var priority: Int
-    
+
     init(value: T, priority: Int = 0) {
         self.value = value
         self.priority = priority

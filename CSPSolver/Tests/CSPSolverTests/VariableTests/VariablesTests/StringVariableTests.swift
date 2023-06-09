@@ -5,8 +5,9 @@ import XCTest
 final class StringVariableTests: XCTestCase {
     var stringVariableDomain: Set<String>!
     var stringVariable: StringVariable!
-    
+
     override func setUp() {
+        super.setUp()
         stringVariableDomain = ["a", "b", "c"]
         stringVariable = StringVariable(name: "string", domain: stringVariableDomain)
     }
@@ -15,7 +16,7 @@ final class StringVariableTests: XCTestCase {
     func testDomain_getter() {
         XCTAssertEqual(stringVariable.domain, stringVariableDomain)
     }
-    
+
     func testDomain_getter_variableAssigned_returnsOnlyOneValue() {
         stringVariable.assignment = "b"
         XCTAssertEqual(stringVariable.domain, ["b"])
@@ -24,18 +25,18 @@ final class StringVariableTests: XCTestCase {
     func testDomain_setter_validNewDomain_setsDomainCorrectly() {
         let newDomain = Set(["b", "c"])
         stringVariable.domain = newDomain
-        
+
         XCTAssertEqual(stringVariable.domain, newDomain)
     }
-    
+
     func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
-        
+
     }
-    
+
     func testAssignment_getter_initialAssignmentNil() {
         XCTAssertNil(stringVariable.assignment)
     }
-    
+
     func testAssignment_setter_validNewAssignment() {
         for domainValue in stringVariableDomain {
             stringVariable.unassign()
@@ -43,27 +44,27 @@ final class StringVariableTests: XCTestCase {
             XCTAssertEqual(stringVariable.assignment, domainValue)
         }
     }
-    
+
     func testAssignment_setter_currentAssignmentNotNil_throwsError() {
-        
+
     }
-    
+
     func testAssignment_setter_newAssignmentNotInDomain_throwsError() {
-        
+
     }
-    
+
     func testCanAssign_possibleValue_returnsTrue() {
         for domainValue in stringVariableDomain {
             XCTAssertTrue(stringVariable.canAssign(to: domainValue))
         }
     }
-    
+
     func testCanAssign_impossibleValue_returnsFalse() {
         XCTAssertFalse(stringVariable.canAssign(to: "e"))
         XCTAssertFalse(stringVariable.canAssign(to: 4))
         XCTAssertFalse(stringVariable.canAssign(to: true))
     }
-    
+
     func testAssignTo_possibleValue_getsAssigned() throws {
         for domainValue in stringVariableDomain {
             stringVariable.unassign()
@@ -72,7 +73,7 @@ final class StringVariableTests: XCTestCase {
             XCTAssertEqual(assignment, domainValue)
         }
     }
-    
+
     func testAssignTo_impossibleValue_throwsError() throws {
         /*
         XCTAssertFalse(stringVariable.assign(to: "e"))
@@ -83,7 +84,7 @@ final class StringVariableTests: XCTestCase {
         XCTAssertEqual(stringValue, "c")
          */
     }
-    
+
     func testCanSetDomain_validNewDomain_returnsTrue() {
         let newDomain = ["b", "c"]
         XCTAssertTrue(stringVariable.canSetDomain(to: newDomain))

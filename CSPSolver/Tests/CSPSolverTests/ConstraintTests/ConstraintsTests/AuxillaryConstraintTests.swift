@@ -21,6 +21,7 @@ final class AuxillaryConstraintTests: XCTestCase {
     var allConstraints: [any Constraint]!
 
     override func setUp() {
+        super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3]))
         intVariableB = IntVariable(name: "intB", domain: Set([4, 5, 6]))
         strVariableC = StringVariable(name: "strC", domain: Set(["x", "y", "z"]))
@@ -33,8 +34,8 @@ final class AuxillaryConstraintTests: XCTestCase {
                                        variableB: intVariableB,
                                        variableC: strVariableC)
 
-        let possibleAssignments = Array<any Value>.possibleAssignments(domains: allAssociatedDomains)
-        expectedDualVariableDomain = Set(possibleAssignments.map( {NaryVariableValueType(value: $0) }))
+        let possibleAssignments = [any Value].possibleAssignments(domains: allAssociatedDomains)
+        expectedDualVariableDomain = Set(possibleAssignments.map({ NaryVariableValueType(value: $0) }))
 
         variableSet = SetOfVariables(from: [intVariableA, intVariableB, strVariableC, dualVariable])
 

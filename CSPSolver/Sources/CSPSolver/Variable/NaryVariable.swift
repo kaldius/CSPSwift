@@ -44,7 +44,7 @@ extension NaryVariable {
 
     /// Initializes `internalDomain`, setting it to all possible assignments from `associatedDomains`.
     static func createInternalDomain(from associatedDomains: [[any Value]]) -> Set<NaryVariableValueType> {
-        let possibleAssignments = Array<any Value>.possibleAssignments(domains: associatedDomains)
+        let possibleAssignments = [any Value].possibleAssignments(domains: associatedDomains)
         return Set(possibleAssignments.map({ NaryVariableValueType(value: $0) }))
     }
 

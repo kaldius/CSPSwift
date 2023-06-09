@@ -7,11 +7,11 @@ public struct ConstraintSet {
     var unaryConstraints: [any UnaryConstraint] {
         allConstraints.compactMap({ $0 as? any UnaryConstraint })
     }
-    
+
     public init(allConstraints: [any Constraint] = []) {
         self.allConstraints = allConstraints
     }
-    
+
     public mutating func add(constraint: any Constraint) {
         allConstraints.append(constraint)
     }

@@ -108,7 +108,9 @@ public struct SetOfVariables {
             assert(false)
         }
         // TODO: fix implicit unwrap
+        // swiftlint:disable force_cast
         return variable.domainAsArray as! [V.ValueType]
+        // swiftlint:enable force_cast
     }
 }
 

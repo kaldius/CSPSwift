@@ -4,9 +4,13 @@ extension Float: Value {
     init?(_ value: any Value) {
         switch value {
         case is Int:
+            // swiftlint:disable force_cast
             self.init(value as! Int)
+            // swiftlint:enable force_cast
         case is Float:
+            // swiftlint:disable force_cast
             self.init(value as! Float)
+            // swiftlint:enable force_cast
         default:
             return nil
         }

@@ -37,11 +37,11 @@ public struct ConstraintSatisfactionProblem {
                   domainUndoStack: Stack())
         saveCurrentDomainState()
     }
-    
+
     public var isCompletelyAssigned: Bool {
         setOfVariables.isCompletelyAssigned
     }
-    
+
     /// Selects the next Variable to assign using the Minimum Remaining Values heuristic.
     public var nextUnassignedVariable: (any Variable)? {
         setOfVariables.nextUnassignedVariable
@@ -54,7 +54,7 @@ public struct ConstraintSatisfactionProblem {
         }
         return state
     }
-    
+
     /// Orders domain values for a given Variable using the Least Constraining Value heuristic
     /// i.e. Returns an array of Values, sorted by `r` from greatest to smallest, where
     /// `r` is the total number of remaining consistent domain values for all Variables.

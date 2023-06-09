@@ -4,7 +4,7 @@
  */
 public struct NaryVariableValueType {
     var value: [any Value]
-    
+
     init(value: [any Value]) {
         self.value = value
     }

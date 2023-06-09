@@ -5,7 +5,7 @@ extension Equatable {
         }
         return self == other
     }
-    
+
     private func isExactlyEqual(_ other: any Equatable) -> Bool {
         guard let other = other as? Self else {
             return false

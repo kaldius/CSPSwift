@@ -10,6 +10,7 @@ final class GreaterThanConstraintTests: XCTestCase {
     var aGreaterThanBConstraint: GreaterThanConstraint!
 
     override func setUp() {
+        super.setUp()
         intVariableA = IntVariable(name: "intA", domain: [1, 4, 5])
         intVariableB = IntVariable(name: "intB", domain: [1, 2, 3])
 
@@ -139,7 +140,6 @@ final class GreaterThanConstraintTests: XCTestCase {
         variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
-
 
         // assign B
         variableSet.assign(intVariableB.name, to: 2)

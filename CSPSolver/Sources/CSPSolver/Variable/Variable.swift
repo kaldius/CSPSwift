@@ -5,9 +5,9 @@
  */
 public protocol Variable: Hashable, CustomDebugStringConvertible {
     associatedtype ValueType: Value
-    
+
     var name: String { get }
-    
+
     /// To be used by the computed variable `domain`.
     var internalDomain: Set<ValueType> { get set }
 
@@ -36,7 +36,7 @@ extension Variable {
             internalDomain = newDomain
         }
     }
-    
+
     public var assignment: ValueType? {
         get {
             internalAssignment
@@ -49,7 +49,7 @@ extension Variable {
             internalAssignment = newAssignment
         }
     }
-    
+
     /// Returns true if this variable can be set to `newAssignment`,
     /// false otherwise.
     public func canAssign(to newAssignment: some Value) -> Bool {
@@ -101,7 +101,7 @@ extension Variable {
         }
         return set
     }
-    
+
     public mutating func unassign() {
         internalAssignment = nil
     }
@@ -114,23 +114,23 @@ extension Variable {
     public var domainAsArray: [ValueType] {
         Array(domain)
     }
-    
+
     public var domainSize: Int {
         domain.count
     }
-    
+
     public var isAssigned: Bool {
         assignment != nil
     }
-    
+
     public var assignmentAsAnyValue: (any Value)? {
         assignment
     }
-    
+
     public var emptyValueSet: Set<ValueType> {
         Set<ValueType>()
     }
-    
+
     public var emptyValueArray: [ValueType] {
         [ValueType]()
     }

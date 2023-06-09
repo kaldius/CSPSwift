@@ -10,6 +10,7 @@ final class EqualToConstraintTests: XCTestCase {
     var aEqualToBConstraint: EqualToConstraint!
 
     override func setUp() {
+        super.setUp()
         intVariableA = IntVariable(name: "intA", domain: [1, 4, 5])
         intVariableB = IntVariable(name: "intB", domain: [1, 2, 3])
 

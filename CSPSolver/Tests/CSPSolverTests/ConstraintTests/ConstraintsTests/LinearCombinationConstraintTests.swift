@@ -13,6 +13,7 @@ final class LinearCombinationConstraintTests: XCTestCase {
     var linearCombinationConstraint: LinearCombinationConstraint!
 
     override func setUp() {
+        super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3]))
         floatVariableB = FloatVariable(name: "floatB", domain: Set([4.123, 5.456, 6.789]))
         floatVariableC = FloatVariable(name: "floatC", domain: Set([7.987, 8.654, 9.321]))
@@ -119,11 +120,13 @@ final class LinearCombinationConstraintTests: XCTestCase {
         var copiedVariableSet = variableSet!
         let newAssignment = NaryVariableValueType(value: [2, floatB, floatC])
         copiedVariableSet.assign(ternaryVariable.name, to: newAssignment)
-        let expectedTernaryVariableDomain = copiedVariableSet.getDomain(ternaryVariable.name, type: TernaryVariable.self)
+        let expectedTernaryVariableDomain = copiedVariableSet.getDomain(ternaryVariable.name,
+                                                                        type: TernaryVariable.self)
 
         // getting result
         let restrictedVariableSet = linearCombinationConstraint.restrictDomain(state: variableSet)
-        let actualTernaryVariableDomain = restrictedVariableSet.getDomain(ternaryVariable.name, type: TernaryVariable.self)
+        let actualTernaryVariableDomain = restrictedVariableSet.getDomain(ternaryVariable.name,
+                                                                          type: TernaryVariable.self)
 
         measure {
             _ = linearCombinationConstraint.restrictDomain(state: variableSet)

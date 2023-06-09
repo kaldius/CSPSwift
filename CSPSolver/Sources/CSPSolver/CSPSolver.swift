@@ -1,10 +1,10 @@
 public struct CSPSolver {
     let inferenceEngine: InferenceEngine
-    
+
     init(inferenceEngine: InferenceEngine) {
         self.inferenceEngine = inferenceEngine
     }
-    
+
     /// Returns the solvable in a solved state if it can be solved,
     /// returns `nil` otherwise.
     // public func backtrack(csp: ConstraintSatisfactionProblem, state: SetOfVariables) {

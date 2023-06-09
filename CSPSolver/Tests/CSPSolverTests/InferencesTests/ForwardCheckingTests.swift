@@ -59,6 +59,7 @@ final class ForwardCheckingTests: XCTestCase {
     var inferenceEngines: [InferenceEngine]!
 
     override func setUp() {
+        super.setUp()
         intVariableT = IntVariable(name: "T", domain: Set(1 ... 9))
         intVariableW = IntVariable(name: "W", domain: Set(0 ... 9))
         intVariableO = IntVariable(name: "O", domain: Set(0 ... 9))
@@ -174,9 +175,9 @@ final class ForwardCheckingTests: XCTestCase {
                                                        scaleB: 1,
                                                        scaleC: -1)
         constraintO_F_Y = LinearCombinationConstraint(dualVariableO_F_Y,
-                                                       scaleA: 1,
-                                                       scaleB: 10,
-                                                       scaleC: -1)
+                                                      scaleA: 1,
+                                                      scaleB: 10,
+                                                      scaleC: -1)
 
         allConstraints = [auxillaryConstraintT,
                           auxillaryConstraintW,
@@ -207,7 +208,7 @@ final class ForwardCheckingTests: XCTestCase {
     private func createAllEnginePermutations(allConstraints: [any Constraint]) -> [any InferenceEngine] {
         var inferenceEngines = [any InferenceEngine]()
 
-        let constraintPermutations = Array<any Constraint>.permutations(allConstraints)
+        let constraintPermutations = [any Constraint].permutations(allConstraints)
 
         for constraintPerm in constraintPermutations {
             let constraintSet = ConstraintSet(allConstraints: constraintPerm)

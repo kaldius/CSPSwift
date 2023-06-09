@@ -1,10 +1,10 @@
 extension Array: Comparable where Element: Comparable {
-    public static func < (lhs: Array<Element>, rhs: Array<Element>) -> Bool {
+    public static func < (lhs: [Element], rhs: [Element]) -> Bool {
         if lhs.count != rhs.count {
             return false
         }
-        return (0 ..< lhs.count).reduce(true, { result, idx in
-            result && lhs[idx] < rhs[idx]
+        return (0 ..< lhs.count).allSatisfy({ idx in
+            lhs[idx] < rhs[idx]
         })
     }
 }

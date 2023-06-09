@@ -13,6 +13,7 @@ final class TernaryVariableTests: XCTestCase {
     var expectedTernaryVariableDomain: Set<NaryVariableValueType>!
 
     override func setUp() {
+        super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3]))
         intVariableB = IntVariable(name: "intB", domain: Set([4, 5, 6]))
         intVariableC = IntVariable(name: "intC", domain: Set([7, 8, 9]))
@@ -25,8 +26,8 @@ final class TernaryVariableTests: XCTestCase {
                                           variableB: intVariableB,
                                           variableC: intVariableC)
 
-        let possibleAssignments = Array<any Value>.possibleAssignments(domains: allAssociatedDomains)
-        expectedTernaryVariableDomain = Set(possibleAssignments.map( {NaryVariableValueType(value: $0) }))
+        let possibleAssignments = [any Value].possibleAssignments(domains: allAssociatedDomains)
+        expectedTernaryVariableDomain = Set(possibleAssignments.map({ NaryVariableValueType(value: $0) }))
     }
 
     // MARK: Testing methods/attributes inherited from NaryVariable
@@ -203,7 +204,7 @@ final class TernaryVariableTests: XCTestCase {
                                                   [2, 5, "x"],
                                                   [2, 5, "y"]]
 
-        let expectedDomain = Set(possibleAssignments.map( {NaryVariableValueType(value: $0) }))
+        let expectedDomain = Set(possibleAssignments.map({ NaryVariableValueType(value: $0) }))
         let actualDomain = TernaryVariable.createInternalDomain(from: associatedDomains)
 
         XCTAssertEqual(actualDomain, expectedDomain)
@@ -220,8 +221,10 @@ final class TernaryVariableTests: XCTestCase {
 
         XCTAssertEqual(actualAssociatedDomains.count, expectedAssociatedDomains.count)
         for idx in 0 ..< expectedAssociatedDomains.count {
+            // swiftlint:disable force_cast
             let expected = Set(expectedAssociatedDomains[idx] as! [Int])
             let actual = Set(actualAssociatedDomains[idx] as! [Int])
+            // swiftlint:enable force_cast
             XCTAssertEqual(actual, expected)
         }
     }

@@ -4,7 +4,7 @@ import XCTest
 final class VariableDomainStateTests: XCTestCase {
     var intVariableDomain: Set<Int>!
     var intVariable: IntVariable!
-    
+
     var stringVariableDomain: Set<String>!
     var stringVariable: StringVariable!
 
@@ -12,13 +12,14 @@ final class VariableDomainStateTests: XCTestCase {
     var floatVariable: FloatVariable!
 
     var ternaryVariable: TernaryVariable!
-    
+
     var variableDomainState: VariableDomainState!
-    
+
     override func setUp() {
+        super.setUp()
         intVariableDomain = [1, 2, 3]
         intVariable = IntVariable(name: "int", domain: intVariableDomain)
-        
+
         stringVariableDomain = ["a", "b", "c"]
         stringVariable = StringVariable(name: "string", domain: stringVariableDomain)
 
@@ -29,7 +30,7 @@ final class VariableDomainStateTests: XCTestCase {
                                           variableA: intVariable,
                                           variableB: stringVariable,
                                           variableC: floatVariable)
-        
+
         variableDomainState = VariableDomainState()
         variableDomainState.addDomain(for: intVariable, domain: Array(intVariableDomain))
         variableDomainState.addDomain(for: stringVariable, domain: Array(stringVariableDomain))
@@ -41,18 +42,18 @@ final class VariableDomainStateTests: XCTestCase {
         let newState = VariableDomainState(from: [intVariable, stringVariable, floatVariable, ternaryVariable])
         XCTAssertEqual(newState, variableDomainState)
     }
-    
+
     func testContainsEmptyDomain_allVariablesHaveNonEmptyDomains_returnsFalse() {
         XCTAssertFalse(variableDomainState.containsEmptyDomain)
     }
-    
+
     func testContainsEmptyDomain_includesVariableWithEmptyDomain_returnsTrue() {
         let emptyDomain = Set<Int>()
         let testIntVariable = IntVariable(name: "test", domain: emptyDomain)
         variableDomainState.addDomain(for: testIntVariable, domain: Array(emptyDomain))
         XCTAssertTrue(variableDomainState.containsEmptyDomain)
     }
-    
+
     func testNumConsistentDomainValues() {
         var expectedValue = intVariable.domainSize
                           + stringVariable.domainSize
@@ -60,14 +61,14 @@ final class VariableDomainStateTests: XCTestCase {
                           + ternaryVariable.domainSize
         var actualValue = variableDomainState.numConsistentDomainValues
         XCTAssertEqual(actualValue, expectedValue)
-        
+
         // reduce intVariable domain size (from 3 to 2)
         let newIntVariableDomain = Set([1, 2])
         variableDomainState.addDomain(for: intVariable, domain: Array(newIntVariableDomain))
         expectedValue -= 1
         actualValue = variableDomainState.numConsistentDomainValues
         XCTAssertEqual(actualValue, expectedValue)
-        
+
         // reduce ternaryVariable domain size (from 27 to 2)
         let ternaryVariableDomainValueA: [any Value] = [1, "a", Float(1.987)]
         let ternaryVariableDomainValueB: [any Value] = [2, "c", Float(1.987)]

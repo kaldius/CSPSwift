@@ -6,7 +6,7 @@ Note: could theoretically work on any `EquatableVariable` but that has not been 
 struct EqualToConstraint: BinaryConstraint {
     let variableAName: String
     let variableBName: String
-    
+
     var variableNames: [String] {
         [variableAName, variableBName]
     }

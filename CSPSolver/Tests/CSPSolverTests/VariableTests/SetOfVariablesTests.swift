@@ -12,6 +12,7 @@ final class SetOfVariablesTests: XCTestCase {
     var variableSet: SetOfVariables!
 
     override func setUp() {
+        super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3]))
         floatVariableB = FloatVariable(name: "floatB", domain: Set([4.123, 5.456, 6.789]))
         floatVariableC = FloatVariable(name: "floatC", domain: Set([7.987, 8.654, 9.321]))

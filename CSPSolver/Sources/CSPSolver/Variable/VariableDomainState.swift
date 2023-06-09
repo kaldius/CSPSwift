@@ -19,19 +19,19 @@ public struct VariableDomainState {
             variableNameToVariable[variable.name] = variable
         }
     }
-    
+
     public var containsEmptyDomain: Bool {
         variableNameToDomain.contains(where: { keyValuePair in
             keyValuePair.value.isEmpty })
     }
-    
+
     /// Returns the total number of consistent domain values for all variables.
     public var numConsistentDomainValues: Int {
         variableNameToDomain.reduce(0, { countSoFar, keyValuePair in
             countSoFar + keyValuePair.value.count
         })
     }
-    
+
     /// Inserts a domain for a given `Variable`. Overwrites if a domain already exists for
     /// that `Variable`.
     public mutating func addDomain(for variable: some Variable, domain: [any Value]) {
@@ -50,7 +50,7 @@ public struct VariableDomainState {
         }
         addDomain(for: variable, domain: domain)
     }
-    
+
     /// Returns the inferred domain for a given `Variable`.
     public func getDomain(for variable: some Variable) -> [any Value]? {
         guard let domain = variableNameToDomain[variable.name] else {
