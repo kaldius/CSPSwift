@@ -31,9 +31,4 @@ struct EqualToConstraint: BinaryConstraint {
         }
         return valueA != valueB
     }
-
-    func depends(on variableName: String) -> Bool {
-        variableName == variableAName
-        || variableName == variableBName
-    }
 }

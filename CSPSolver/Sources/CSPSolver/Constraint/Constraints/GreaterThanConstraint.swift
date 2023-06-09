@@ -31,9 +31,4 @@ struct GreaterThanConstraint: BinaryConstraint {
         }
         return valueA.isLessThan(valueB) || valueA.isEqual(valueB)
     }
-
-    func depends(on variableName: String) -> Bool {
-        variableName == variableAName
-        || variableName == variableBName
-    }
 }

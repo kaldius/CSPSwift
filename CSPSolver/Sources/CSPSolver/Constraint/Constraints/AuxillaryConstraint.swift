@@ -34,11 +34,6 @@ struct AuxillaryConstraint: BinaryConstraint {
         }
         return dualVariable.assignmentViolated(for: mainVariable)
     }
-
-    func depends(on variableName: String) -> Bool {
-        variableName == mainVariableName
-        || variableName == dualVariableName
-    }
 }
 
 extension AuxillaryConstraint: Equatable {

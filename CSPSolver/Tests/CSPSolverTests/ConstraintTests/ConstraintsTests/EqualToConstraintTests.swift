@@ -19,6 +19,31 @@ final class EqualToConstraintTests: XCTestCase {
         aEqualToBConstraint = EqualToConstraint(intVariableA, isEqualTo: intVariableB)
     }
 
+    // MARK: Testing methods/attributes inherited from BinaryConstraint
+    func testDependsOn_validVariableName_returnsTrue() {
+        XCTAssertTrue(aEqualToBConstraint.depends(on: intVariableA.name))
+        XCTAssertTrue(aEqualToBConstraint.depends(on: intVariableB.name))
+    }
+
+    func testDependsOn_invalidVariableName_returnsFalse() {
+        XCTAssertFalse(aEqualToBConstraint.depends(on: "nonExistentVariableName"))
+    }
+
+    func testVariableNameOtherThan_validVariableNames_returnsOtherVariableName() {
+        var expected = intVariableA.name
+        var actual = aEqualToBConstraint.variableName(otherThan: intVariableB.name)
+        XCTAssertEqual(actual, expected)
+
+        expected = intVariableB.name
+        actual = aEqualToBConstraint.variableName(otherThan: intVariableA.name)
+        XCTAssertEqual(actual, expected)
+    }
+
+    func testVariableNameOtherThan_invalidVariableName_returnsNil() {
+        XCTAssertNil(aEqualToBConstraint.variableName(otherThan: "nonExistentVariableName"))
+    }
+
+    // MARK: Testing methods/attributes declared in EqualToConstraint
     func testVariableNames_returnsAllVariableNames() {
         let expectedVariableNames = [intVariableA.name, intVariableB.name]
         let actualVariableNames = aEqualToBConstraint.variableNames

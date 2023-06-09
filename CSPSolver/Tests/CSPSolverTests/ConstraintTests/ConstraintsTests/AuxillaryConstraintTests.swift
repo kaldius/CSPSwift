@@ -47,6 +47,21 @@ final class AuxillaryConstraintTests: XCTestCase {
     }
 
     // MARK: Testing methods/attributes inherited from BinaryConstraint
+    func testDependsOn_validVariableName_returnsTrue() {
+        XCTAssertTrue(auxillaryConstraintA.depends(on: intVariableA.name))
+        XCTAssertTrue(auxillaryConstraintA.depends(on: dualVariable.name))
+
+        XCTAssertTrue(auxillaryConstraintB.depends(on: intVariableB.name))
+        XCTAssertTrue(auxillaryConstraintB.depends(on: dualVariable.name))
+
+        XCTAssertTrue(auxillaryConstraintC.depends(on: strVariableC.name))
+        XCTAssertTrue(auxillaryConstraintC.depends(on: dualVariable.name))
+    }
+
+    func testDependsOn_invalidVariableName_returnsFalse() {
+        XCTAssertFalse(auxillaryConstraintA.depends(on: intVariableB.name))
+    }
+
     func testVariableNameOtherThan_validVariableNames_returnsOtherVariableName() {
         var expected = intVariableA.name
         var actual = auxillaryConstraintA.variableName(otherThan: dualVariable.name)
@@ -287,20 +302,5 @@ final class AuxillaryConstraintTests: XCTestCase {
         for constraint in allConstraints {
             XCTAssertTrue(constraint.isViolated(state: variableSet))
         }
-    }
-
-    func testDependsOn_validVariableName_returnsTrue() {
-        XCTAssertTrue(auxillaryConstraintA.depends(on: intVariableA.name))
-        XCTAssertTrue(auxillaryConstraintA.depends(on: dualVariable.name))
-
-        XCTAssertTrue(auxillaryConstraintB.depends(on: intVariableB.name))
-        XCTAssertTrue(auxillaryConstraintB.depends(on: dualVariable.name))
-
-        XCTAssertTrue(auxillaryConstraintC.depends(on: strVariableC.name))
-        XCTAssertTrue(auxillaryConstraintC.depends(on: dualVariable.name))
-    }
-
-    func testDependsOn_invalidVariableName_returnsFalse() {
-        XCTAssertFalse(auxillaryConstraintA.depends(on: intVariableB.name))
     }
 }

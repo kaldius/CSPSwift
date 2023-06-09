@@ -19,6 +19,31 @@ final class GreaterThanConstraintTests: XCTestCase {
         aGreaterThanBConstraint = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
     }
 
+    // MARK: Testing methods/attributes inherited from BinaryConstraint
+    func testDependsOn_validVariableName_returnsTrue() {
+        XCTAssertTrue(aGreaterThanBConstraint.depends(on: intVariableA.name))
+        XCTAssertTrue(aGreaterThanBConstraint.depends(on: intVariableB.name))
+    }
+
+    func testDependsOn_invalidVariableName_returnsFalse() {
+        XCTAssertFalse(aGreaterThanBConstraint.depends(on: "nonExistentVariableName"))
+    }
+
+    func testVariableNameOtherThan_validVariableNames_returnsOtherVariableName() {
+        var expected = intVariableA.name
+        var actual = aGreaterThanBConstraint.variableName(otherThan: intVariableB.name)
+        XCTAssertEqual(actual, expected)
+
+        expected = intVariableB.name
+        actual = aGreaterThanBConstraint.variableName(otherThan: intVariableA.name)
+        XCTAssertEqual(actual, expected)
+    }
+
+    func testVariableNameOtherThan_invalidVariableName_returnsNil() {
+        XCTAssertNil(aGreaterThanBConstraint.variableName(otherThan: "nonExistentVariableName"))
+    }
+
+    // MARK: Testing methods/attributes declared in GreaterThanConstraint
     func testVariableNames_returnsAllVariableNames() {
         let expectedVariableNames: [String] = [intVariableA.name, intVariableB.name]
         let actualVariableNames = aGreaterThanBConstraint.variableNames
