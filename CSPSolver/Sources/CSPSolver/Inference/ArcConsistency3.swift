@@ -31,8 +31,8 @@ public struct ArcConsistency3: InferenceEngine {
                   !binConstraint.depends(on: excludedVarName) else {
                 continue
             }
-            let otherVarName = binConstraint.variableName(otherThan: variableName)
-            guard let newArc = Arc(from: binConstraint, variableIName: otherVarName) else {
+            guard let otherVarName = binConstraint.variableName(otherThan: variableName),
+                  let newArc = Arc(from: binConstraint, variableIName: otherVarName) else {
                 continue
             }
             arcs.append(newArc)

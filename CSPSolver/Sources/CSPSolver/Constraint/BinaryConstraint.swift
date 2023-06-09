@@ -3,11 +3,13 @@ public protocol BinaryConstraint: Constraint {
 }
 
 extension BinaryConstraint {
-    func variableName(otherThan variableName: String) -> String {
+    func variableName(otherThan variableName: String) -> String? {
         if variableName == variableNames[0] {
             return variableNames[1]
-        } else {
+        } else if variableName == variableNames[1] {
             return variableNames[0]
+        } else {
+            return nil
         }
     }
 }

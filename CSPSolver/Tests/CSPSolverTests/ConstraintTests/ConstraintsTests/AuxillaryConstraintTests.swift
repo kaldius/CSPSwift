@@ -46,6 +46,22 @@ final class AuxillaryConstraintTests: XCTestCase {
         allConstraints = [auxillaryConstraintA, auxillaryConstraintB, auxillaryConstraintC]
     }
 
+    // MARK: Testing methods/attributes inherited from BinaryConstraint
+    func testVariableNameOtherThan_validVariableNames_returnsOtherVariableName() {
+        var expected = intVariableA.name
+        var actual = auxillaryConstraintA.variableName(otherThan: dualVariable.name)
+        XCTAssertEqual(actual, expected)
+
+        expected = dualVariable.name
+        actual = auxillaryConstraintC.variableName(otherThan: strVariableC.name)
+        XCTAssertEqual(actual, expected)
+    }
+
+    func testVariableNameOtherThan_invalidVariableName_returnsNil() {
+        XCTAssertNil(auxillaryConstraintA.variableName(otherThan: "nonExistentVariableName"))
+    }
+
+    // MARK: Testing methods/attributes declared in AuxillaryConstraint
     func testInit_dualVariableNotAssociatedWithMainVariable_returnsNil() {
         let unassociatedVariable = IntVariable(name: "unassociatedVariable", domain: Set([11, 22, 33]))
         let failedAuxillaryConstraint = AuxillaryConstraint(mainVariable: unassociatedVariable,
@@ -271,5 +287,20 @@ final class AuxillaryConstraintTests: XCTestCase {
         for constraint in allConstraints {
             XCTAssertTrue(constraint.isViolated(state: variableSet))
         }
+    }
+
+    func testDependsOn_validVariableName_returnsTrue() {
+        XCTAssertTrue(auxillaryConstraintA.depends(on: intVariableA.name))
+        XCTAssertTrue(auxillaryConstraintA.depends(on: dualVariable.name))
+
+        XCTAssertTrue(auxillaryConstraintB.depends(on: intVariableB.name))
+        XCTAssertTrue(auxillaryConstraintB.depends(on: dualVariable.name))
+
+        XCTAssertTrue(auxillaryConstraintC.depends(on: strVariableC.name))
+        XCTAssertTrue(auxillaryConstraintC.depends(on: dualVariable.name))
+    }
+
+    func testDependsOn_invalidVariableName_returnsFalse() {
+        XCTAssertFalse(auxillaryConstraintA.depends(on: intVariableB.name))
     }
 }

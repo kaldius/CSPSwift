@@ -15,12 +15,13 @@ public struct Arc {
     }
 
     init?(from binaryConstraint: any BinaryConstraint, variableIName: String) {
-        guard binaryConstraint.depends(on: variableIName) else {
+        guard binaryConstraint.depends(on: variableIName),
+              let variableJName = binaryConstraint.variableName(otherThan: variableIName) else {
             return nil
         }
         self.constraintIJ = binaryConstraint
         self.variableIName = variableIName
-        self.variableJName = binaryConstraint.variableName(otherThan: variableIName)
+        self.variableJName = variableJName
     }
 
     init?(from constraint: any Constraint, reverse: Bool = false) {
