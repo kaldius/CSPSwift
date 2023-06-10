@@ -30,10 +30,10 @@ final class ConstraintSetTests: XCTestCase {
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
         cGreaterThanA = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableA)
         linearCombinationConstraint = LinearCombinationConstraint(ternaryVariable,
-                                                                  scaleA: 1,
+                                                                  scaleA: 3,
                                                                   scaleB: 1,
-                                                                  scaleC: 1,
-                                                                  add: -8)
+                                                                  scaleC: 6,
+                                                                  add: -45)
 
         constraintSet = ConstraintSet(allConstraints: [aGreaterThanB, cGreaterThanA, linearCombinationConstraint])
     }
@@ -123,9 +123,9 @@ final class ConstraintSetTests: XCTestCase {
         let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
         XCTAssertEqual(assignmentC, 4)
 
-        variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [3, 1, 4]))
+        variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [4, 3, 5]))
         let ternaryAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
-        XCTAssertEqual(ternaryAssignment, NaryVariableValueType(value: [3, 1, 4]))
+        XCTAssertEqual(ternaryAssignment, NaryVariableValueType(value: [4, 3, 5]))
 
         XCTAssertTrue(aGreaterThanB.isSatisfied(state: variableSet))
         XCTAssertTrue(cGreaterThanA.isSatisfied(state: variableSet))
@@ -135,22 +135,22 @@ final class ConstraintSetTests: XCTestCase {
 
     func testApplyUnaryConstraints() {
         // only testing unary constraint, so only ternaryVariable domain should be restricted
-        let expectedIntVariableADomain = [1, 3, 4, 5]
-        let expectedIntVariableBDomain = [1, 2, 3]
-        let expectedIntVariableCDomain = [2, 3, 4, 5]
-        let expectedTernaryVariableDomain = [NaryVariableValueType(value: [3, 1, 4])]
+        let expectedIntVariableADomain: [any Value] = [1, 3, 4, 5]
+        let expectedIntVariableBDomain: [any Value] = [1, 2, 3]
+        let expectedIntVariableCDomain: [any Value] = [2, 3, 4, 5]
+        let expectedTernaryVariableDomain: [any Value] = [NaryVariableValueType(value: [4, 3, 5])]
 
         let newVariableSet = constraintSet.applyUnaryConstraints(to: variableSet)
 
-        let actualIntVariableADomain = newVariableSet.getDomain(intVariableA.name, type: IntVariable.self)
-        let actualIntVariableBDomain = newVariableSet.getDomain(intVariableB.name, type: IntVariable.self)
-        let actualIntVariableCDomain = newVariableSet.getDomain(intVariableC.name, type: IntVariable.self)
-        let actualTernaryVariableDomain = newVariableSet.getDomain(ternaryVariable.name, type: TernaryVariable.self)
+        let actualIntVariableADomain = newVariableSet.getDomain(intVariableA.name)
+        let actualIntVariableBDomain = newVariableSet.getDomain(intVariableB.name)
+        let actualIntVariableCDomain = newVariableSet.getDomain(intVariableC.name)
+        let actualTernaryVariableDomain = newVariableSet.getDomain(ternaryVariable.name)
 
-        XCTAssertEqual(actualIntVariableADomain, actualIntVariableADomain)
-        XCTAssertEqual(actualIntVariableBDomain, actualIntVariableBDomain)
-        XCTAssertEqual(actualIntVariableCDomain, actualIntVariableCDomain)
-        XCTAssertEqual(actualTernaryVariableDomain, actualTernaryVariableDomain)
+        XCTAssertTrue(actualIntVariableADomain.containsSameValues(as: expectedIntVariableADomain))
+        XCTAssertTrue(actualIntVariableBDomain.containsSameValues(as: expectedIntVariableBDomain))
+        XCTAssertTrue(actualIntVariableCDomain.containsSameValues(as: expectedIntVariableCDomain))
+        XCTAssertTrue(actualTernaryVariableDomain.containsSameValues(as: expectedTernaryVariableDomain))
     }
 
     func testRemoveUnaryConstraints() {
