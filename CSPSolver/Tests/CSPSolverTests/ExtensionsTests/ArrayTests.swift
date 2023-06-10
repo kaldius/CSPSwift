@@ -2,12 +2,12 @@ import XCTest
 @testable import CSPSolver
 
 final class ArrayTests: XCTestCase {
-    func testPossibleAssignments_emptyDomains() {
+    func testPossibleAssignments_emptyDomains_returnsEmptyArrayOfArray() {
         let allDomains = [[Int]]()
         XCTAssertEqual(Array<Int>.possibleAssignments(domains: allDomains), [[Int]]())
     }
 
-    func testPossibleAssignments_onlyOneOutcome() {
+    func testPossibleAssignments_onlyOneOutcome_returnsCorrectOutcome() {
         let domainA = [1]
         let domainB = [2]
         let domainC = [3]
@@ -22,7 +22,7 @@ final class ArrayTests: XCTestCase {
         XCTAssertEqual(actualPossibleAssignments, expectedPossibleAssignments)
     }
 
-    func testPossibleAssignments_fourOutcomes() {
+    func testPossibleAssignments_fourOutcomes_returnsAllOutcomes() {
         let domainA = [1]
         let domainB = [2, 22]
         let domainC = ["c"]
@@ -55,20 +55,20 @@ final class ArrayTests: XCTestCase {
         }
     }
 
-    func testPermutations_emptyArray() {
+    func testPermutations_emptyArray_returnsArrayOfEmptyArray() {
         let emptyArray = [Int]()
         let result = emptyArray.permutations()
         XCTAssertEqual(result.count, 1)
         XCTAssertTrue(result[0].isEmpty)
     }
 
-    func testPermutations_singleElement() {
+    func testPermutations_singleElement_returnsArrayOfArrayOfSingleElement() {
         let array = [1]
         let result = array.permutations()
         XCTAssertEqual(result, [[1]])
     }
 
-    func testPermutations_multipleElements() {
+    func testPermutations_multipleElements_returnsCorrectPermutations() {
         let array = [1, 2, 3]
         let expectedResult = [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
         let actualResult = array.permutations()
@@ -81,5 +81,29 @@ final class ArrayTests: XCTestCase {
         measure {
             _ = array.permutations()
         }
+    }
+
+    func testLessThan_differentLengthArrays_returnsFalse() {
+        let arrayA = [1, 2, 3]
+        let arrayB = [4, 5]
+
+        XCTAssertFalse(arrayA < arrayB)
+        XCTAssertFalse(arrayB < arrayA)
+    }
+
+    func testLessThan_sameLengthArrays_notAllLess_returnsFalse() {
+        let arrayA = [1, 2, 3]
+        let arrayB = [4, 5, 3]
+
+        XCTAssertFalse(arrayA < arrayB)
+        XCTAssertFalse(arrayB < arrayA)
+    }
+
+    func testLessThan_sameLengthArrays_allLess_returnsALessThanB() {
+        let arrayA = [1, 2, 3]
+        let arrayB = [4, 4, 4]
+
+        XCTAssertTrue(arrayA < arrayB)
+        XCTAssertFalse(arrayB < arrayA)
     }
 }
