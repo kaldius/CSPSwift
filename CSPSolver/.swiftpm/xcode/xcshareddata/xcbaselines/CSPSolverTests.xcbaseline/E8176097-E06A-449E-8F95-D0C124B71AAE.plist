@@ -4,6 +4,29 @@
 <dict>
 	<key>classNames</key>
 	<dict>
+		<key>ArrayTests</key>
+		<dict>
+			<key>testPermutations_stressTest()</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.023074</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
+			</dict>
+			<key>testPossibleAssignments_stressTest()</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.001286</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
+			</dict>
+		</dict>
 		<key>LinearCombinationConstraintTests</key>
 		<dict>
 			<key>testRestrictDomain_returnsCorrectlyRestrictedDomain()</key>

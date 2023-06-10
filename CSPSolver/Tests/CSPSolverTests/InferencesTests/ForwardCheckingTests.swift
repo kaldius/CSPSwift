@@ -208,7 +208,7 @@ final class ForwardCheckingTests: XCTestCase {
     private func createAllEnginePermutations(allConstraints: [any Constraint]) -> [any InferenceEngine] {
         var inferenceEngines = [any InferenceEngine]()
 
-        let constraintPermutations = [any Constraint].permutations(allConstraints)
+        let constraintPermutations = allConstraints.permutations()
 
         for constraintPerm in constraintPermutations {
             let constraintSet = ConstraintSet(allConstraints: constraintPerm)

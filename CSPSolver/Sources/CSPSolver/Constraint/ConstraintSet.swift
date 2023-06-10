@@ -21,12 +21,7 @@ public struct ConstraintSet {
     }
 
     public func applyUnaryConstraints(to state: SetOfVariables) -> SetOfVariables {
-        // unaryConstraints.reduce(state, { $1.restrictDomain(state: $0) })
-        var copiedState = state
-        for constraint in unaryConstraints {
-            copiedState = constraint.restrictDomain(state: copiedState)
-        }
-        return copiedState
+        return unaryConstraints.reduce(state, { $1.restrictDomain(state: $0) })
     }
 
     public mutating func removeUnaryConstraints() {
