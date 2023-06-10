@@ -99,7 +99,7 @@ final class ArrayTests: XCTestCase {
         XCTAssertFalse(arrayB < arrayA)
     }
 
-    func testLessThan_sameLengthArrays_allLess_returnsALessThanB() {
+    func testLessThan_sameLengthArrays_allLess_returnsCorrectResult() {
         let arrayA = [1, 2, 3]
         let arrayB = [4, 4, 4]
 
