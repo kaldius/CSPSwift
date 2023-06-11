@@ -110,7 +110,7 @@ public struct ConstraintSatisfactionProblem {
                                                                   constraintSet: constraintSet) else {
             return 0
         }
-        return newInference.numConsistentDomainValues
+        return newInference.totalDomainValueCount
     }
 
     private mutating func saveCurrentDomainState() {

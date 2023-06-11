@@ -1,5 +1,5 @@
 public struct VariableSet {
-    var nameToVariable: [String: any Variable]
+    private var nameToVariable: [String: any Variable]
 
     init(from variables: [any Variable]) {
         self.nameToVariable = [:]
@@ -25,7 +25,7 @@ public struct VariableSet {
     }
 
     /// Returns the total number of consistent domain values for all variables.
-    public var numConsistentDomainValues: Int {
+    public var totalDomainValueCount: Int {
         variables.reduce(0, { countSoFar, variable in
             countSoFar + variable.domainSize
         })
@@ -106,10 +106,11 @@ public struct VariableSet {
             // TODO: throw error
             assert(false)
         }
-        // TODO: fix implicit unwrap
-        // swiftlint:disable force_cast
-        return variable.domainAsArray as! [V.ValueType]
-        // swiftlint:enable force_cast
+        guard let castedDomain =  variable.domainAsArray as? [V.ValueType] else {
+            // TODO: throw different error
+            assert(false)
+        }
+        return castedDomain
     }
 }
 
