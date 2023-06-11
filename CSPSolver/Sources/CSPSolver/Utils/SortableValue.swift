@@ -1,4 +1,3 @@
-// TODO: test
 public struct SortableValue<T: Value> {
     public var value: T
     public var priority: Int
