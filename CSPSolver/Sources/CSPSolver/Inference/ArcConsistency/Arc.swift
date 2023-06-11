@@ -2,7 +2,7 @@
 public struct Arc {
     let variableIName: String
     let variableJName: String
-    let constraintIJ: any BinaryConstraint
+    private let constraintIJ: any BinaryConstraint
 
     init(from binaryConstraint: any BinaryConstraint, reverse: Bool = false) {
         self.constraintIJ = binaryConstraint
@@ -36,37 +36,48 @@ public struct Arc {
         variableName == variableIName || variableName == variableJName
     }
 
+    /// Revise the domain for `variableI` to only include values that have at least one
+    /// supporting `variableJ` value.
+    ///
+    /// - Returns: an array representing the revised domain for `variableI`, or nil if no revision occured.
     public func revise(state: SetOfVariables) -> [any Value]? {
         guard !state.isAssigned(variableIName) else {
             return nil
         }
         let variableIDomain = state.getDomain(variableIName)
         var variableIDomainCopy = variableIDomain
-        for iDomainValue in variableIDomain {
-            var copiedState = state
-            // assign I value
-            copiedState.assign(variableIName, to: iDomainValue)
-            var allJValuesViolateConstraint = false
-            if copiedState.isAssigned(variableJName) {
-                allJValuesViolateConstraint = constraintIJ.isViolated(state: copiedState)
-            } else {
-                let variableJDomain = state.getDomain(variableJName)
-                // check if all values in J domain violate constraint
-                allJValuesViolateConstraint = variableJDomain.allSatisfy({ jDomainValue in
-                    copiedState.assign(variableJName, to: jDomainValue)
-                    let violated = constraintIJ.isViolated(state: copiedState)
-                    copiedState.unassign(variableJName)
-                    return violated
-                })
-            }
-            if allJValuesViolateConstraint {
-                variableIDomainCopy.removeAll(where: { $0.isEqual(iDomainValue) })
-            }
+        for iDomainValue in variableIDomain where canBeRemoved(iDomainValue, state: state) {
+            // TODO: optimize?
+            variableIDomainCopy.removeAll(where: { $0.isEqual(iDomainValue) })
         }
         if variableIDomainCopy.isEqual(variableIDomain) {
             return nil
         } else {
             return variableIDomainCopy
         }
+    }
+
+    /// Checks if the given `iDomainValue` can be removed from the domain of `variableI`.
+    private func canBeRemoved(_ iDomainValue: any Value, state: SetOfVariables) -> Bool {
+        var copiedState = state
+        copiedState.assign(variableIName, to: iDomainValue)
+        if copiedState.isAssigned(variableJName) {
+            return !constraintIJ.isSatisfied(state: copiedState)
+        }
+        let variableJDomain = state.getDomain(variableJName)
+        return !containsSatisfactoryJValue(domain: variableJDomain, state: copiedState)
+    }
+
+    /// Checks if the provided `domain` contains an assignment for `variableJ` such that
+    /// `constraintIJ` is satisfied.
+    private func containsSatisfactoryJValue(domain: [any Value], state: SetOfVariables) -> Bool {
+        var copiedState = state
+        // look for a domainValue that satisfies the constraint
+        return domain.contains(where: { jDomainValue in
+            copiedState.assign(variableJName, to: jDomainValue)
+            let satisfied = constraintIJ.isSatisfied(state: copiedState)
+            copiedState.unassign(variableJName)
+            return satisfied
+        })
     }
 }
