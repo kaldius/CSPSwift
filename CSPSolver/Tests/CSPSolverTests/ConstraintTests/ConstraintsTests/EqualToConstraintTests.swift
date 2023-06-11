@@ -5,7 +5,7 @@ final class EqualToConstraintTests: XCTestCase {
     var intVariableA: IntVariable!
     var intVariableB: IntVariable!
 
-    var variableSet: SetOfVariables!
+    var variableSet: VariableSet!
 
     var aEqualToBConstraint: EqualToConstraint!
 
@@ -14,7 +14,7 @@ final class EqualToConstraintTests: XCTestCase {
         intVariableA = IntVariable(name: "intA", domain: [1, 4, 5])
         intVariableB = IntVariable(name: "intB", domain: [1, 2, 3])
 
-        variableSet = SetOfVariables(from: [intVariableA, intVariableB])
+        variableSet = VariableSet(from: [intVariableA, intVariableB])
 
         aEqualToBConstraint = EqualToConstraint(intVariableA, isEqualTo: intVariableB)
     }

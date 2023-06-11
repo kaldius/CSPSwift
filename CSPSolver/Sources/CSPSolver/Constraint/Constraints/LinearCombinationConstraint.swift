@@ -28,7 +28,7 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
         self.add = add
     }
 
-    func isSatisfied(state: SetOfVariables) -> Bool {
+    func isSatisfied(state: VariableSet) -> Bool {
         guard let assignment = state.getAssignment(variableName, type: TernaryVariable.self),
               let variableA = Float(assignment[0]),
               let variableB = Float(assignment[1]),
@@ -41,7 +41,7 @@ struct LinearCombinationConstraint: TernaryVariableConstraint {
         return scaledVariableA + scaledVariableB + scaledVariableC + add == 0
     }
 
-    func isViolated(state: SetOfVariables) -> Bool {
+    func isViolated(state: VariableSet) -> Bool {
         guard let assignment = state.getAssignment(variableName, type: TernaryVariable.self),
               let variableA = Float(assignment[0]),
               let variableB = Float(assignment[1]),

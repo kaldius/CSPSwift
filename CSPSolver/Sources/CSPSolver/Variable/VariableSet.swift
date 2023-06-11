@@ -1,5 +1,4 @@
-// TODO: rename to VariableSet
-public struct SetOfVariables {
+public struct VariableSet {
     var nameToVariable: [String: any Variable]
 
     init(from variables: [any Variable]) {
@@ -114,14 +113,14 @@ public struct SetOfVariables {
     }
 }
 
-extension SetOfVariables: Equatable {
-    public static func == (lhs: SetOfVariables, rhs: SetOfVariables) -> Bool {
+extension VariableSet: Equatable {
+    public static func == (lhs: VariableSet, rhs: VariableSet) -> Bool {
         lhs.nameToVariable.keys == rhs.nameToVariable.keys
         && Array(lhs.nameToVariable.values).isEqual(Array(rhs.nameToVariable.values))
     }
 }
 
-extension SetOfVariables: CustomDebugStringConvertible {
+extension VariableSet: CustomDebugStringConvertible {
     public var debugDescription: String {
         var outputString = ""
         for name in nameToVariable.keys {

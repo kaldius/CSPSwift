@@ -1,4 +1,3 @@
-// TODO: test
 public struct Arc {
     let variableIName: String
     let variableJName: String
@@ -40,7 +39,7 @@ public struct Arc {
     /// supporting `variableJ` value.
     ///
     /// - Returns: an array representing the revised domain for `variableI`, or nil if no revision occured.
-    public func revise(state: SetOfVariables) -> [any Value]? {
+    public func revise(state: VariableSet) -> [any Value]? {
         guard !state.isAssigned(variableIName) else {
             return nil
         }
@@ -58,7 +57,7 @@ public struct Arc {
     }
 
     /// Checks if the given `iDomainValue` can be removed from the domain of `variableI`.
-    private func canBeRemoved(_ iDomainValue: any Value, state: SetOfVariables) -> Bool {
+    private func canBeRemoved(_ iDomainValue: any Value, state: VariableSet) -> Bool {
         var copiedState = state
         copiedState.assign(variableIName, to: iDomainValue)
         if copiedState.isAssigned(variableJName) {
@@ -70,7 +69,7 @@ public struct Arc {
 
     /// Checks if the provided `domain` contains an assignment for `variableJ` such that
     /// `constraintIJ` is satisfied.
-    private func containsSatisfactoryJValue(domain: [any Value], state: SetOfVariables) -> Bool {
+    private func containsSatisfactoryJValue(domain: [any Value], state: VariableSet) -> Bool {
         var copiedState = state
         // look for a domainValue that satisfies the constraint
         return domain.contains(where: { jDomainValue in

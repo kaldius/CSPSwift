@@ -4,7 +4,7 @@
  */
 // TODO: TEST
 public struct ConstraintSatisfactionProblem {
-    var setOfVariables: SetOfVariables
+    var variableSet: VariableSet
     var constraintSet: ConstraintSet
 
     /// Required for `orderDomainValues`.
@@ -13,11 +13,11 @@ public struct ConstraintSatisfactionProblem {
     /// Stores `VariableDomainState`s used for the undo operation.
     private var domainUndoStack: Stack<VariableDomainState>
 
-    init(setOfVariables: SetOfVariables,
+    init(variableSet: VariableSet,
          constraintSet: ConstraintSet,
          inferenceEngine: InferenceEngine,
          domainUndoStack: Stack<VariableDomainState>) {
-        self.setOfVariables = setOfVariables
+        self.variableSet = variableSet
         self.constraintSet = constraintSet
         self.inferenceEngine = inferenceEngine
         self.domainUndoStack = domainUndoStack
@@ -26,12 +26,12 @@ public struct ConstraintSatisfactionProblem {
     init(variables: [any Variable],
          constraints: [any Constraint],
          inferenceEngine: InferenceEngine) {
-        let variableSet = SetOfVariables(from: variables)
+        let variableSet = VariableSet(from: variables)
         var constraintSet = ConstraintSet(allConstraints: constraints)
         let finalVariableSet = constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 
-        self.init(setOfVariables: finalVariableSet,
+        self.init(variableSet: finalVariableSet,
                   constraintSet: constraintSet,
                   inferenceEngine: inferenceEngine,
                   domainUndoStack: Stack())
@@ -39,13 +39,13 @@ public struct ConstraintSatisfactionProblem {
     }
 
     public var isCompletelyAssigned: Bool {
-        setOfVariables.isCompletelyAssigned
+        variableSet.isCompletelyAssigned
     }
 
     /// Selects the next Variable to assign using the Minimum Remaining Values heuristic.
     // TODO: pull out as a separate protocol to allow flexible heuristics
     public var nextUnassignedVariable: (any Variable)? {
-        setOfVariables.nextUnassignedVariable
+        variableSet.nextUnassignedVariable
     }
 
     public var latestDomainState: VariableDomainState {
@@ -100,24 +100,25 @@ public struct ConstraintSatisfactionProblem {
     /// Returns 0 if setting this value will lead to failure.
     private func numConsistentDomainValues(ifSetting variableName: String,
                                            to value: some Value) -> Int {
-        var copiedVariableSet = setOfVariables
-        guard let variable = setOfVariables.getVariable(variableName),
+        var copiedVariableSet = variableSet
+        guard let variable = variableSet.getVariable(variableName),
               variable.canAssign(to: value) else {
             return 0
         }
         copiedVariableSet.assign(variableName, to: value)
-        guard let newInference = inferenceEngine.makeNewInference(from: copiedVariableSet) else {
+        guard let newInference = inferenceEngine.makeNewInference(from: copiedVariableSet,
+                                                                  constraintSet: constraintSet) else {
             return 0
         }
         return newInference.numConsistentDomainValues
     }
 
     private mutating func saveCurrentDomainState() {
-        let variables = setOfVariables.variables
+        let variables = variableSet.variables
         domainUndoStack.push(VariableDomainState(from: variables))
     }
 
     private mutating func setDomains(using state: VariableDomainState) {
-        setOfVariables.setAllDomains(using: state)
+        variableSet.setAllDomains(using: state)
     }
 }

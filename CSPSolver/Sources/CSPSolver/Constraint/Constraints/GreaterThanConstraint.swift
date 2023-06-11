@@ -16,7 +16,7 @@ struct GreaterThanConstraint: BinaryConstraint {
         self.variableBName = variableB.name
     }
 
-    func isSatisfied(state: SetOfVariables) -> Bool {
+    func isSatisfied(state: VariableSet) -> Bool {
         guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
               let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
@@ -24,7 +24,7 @@ struct GreaterThanConstraint: BinaryConstraint {
         return valueA.isGreaterThan(valueB)
     }
 
-    func isViolated(state: SetOfVariables) -> Bool {
+    func isViolated(state: VariableSet) -> Bool {
         guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
               let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
             return false

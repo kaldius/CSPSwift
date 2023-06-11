@@ -30,7 +30,7 @@ final class ArcConsistency3Tests: XCTestCase {
     var allDualVariables: [TernaryVariable]!
     var allVariables: [any Variable]!
 
-    var variableSet: SetOfVariables!
+    var variableSet: VariableSet!
 
     var auxillaryConstraintT: AuxillaryConstraint!
     var auxillaryConstraintW: AuxillaryConstraint!
@@ -128,7 +128,7 @@ final class ArcConsistency3Tests: XCTestCase {
                         dualVariableO_F_Y
         ]
 
-        variableSet = SetOfVariables(from: allVariables)
+        variableSet = VariableSet(from: allVariables)
 
         auxillaryConstraintT = AuxillaryConstraint(mainVariable: intVariableT,
                                                    dualVariable: dualVariableT_C2_Y)
@@ -208,7 +208,7 @@ final class ArcConsistency3Tests: XCTestCase {
         variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 
-        inferenceEngine = ArcConsistency3(constraintSet: constraintSet)
+        inferenceEngine = ArcConsistency3()
     }
 
     func testMakeNewInference_settingFTo1() {
@@ -223,11 +223,11 @@ final class ArcConsistency3Tests: XCTestCase {
         XCTAssertEqual(assignmentO, 6)
 
         measure {
-            _ = inferenceEngine.makeNewInference(from: variableSet)!
+            _ = inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
         }
 
         // make a new inference
-        let inference = inferenceEngine.makeNewInference(from: variableSet)!
+        let inference = inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
 
         // get all domains from inference
         let inferredIntVarDomains = allIntVariables.map({ variable in

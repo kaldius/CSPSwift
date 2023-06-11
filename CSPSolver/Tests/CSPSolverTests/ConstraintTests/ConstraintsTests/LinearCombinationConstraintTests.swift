@@ -8,7 +8,7 @@ final class LinearCombinationConstraintTests: XCTestCase {
 
     var ternaryVariable: TernaryVariable!
 
-    var variableSet: SetOfVariables!
+    var variableSet: VariableSet!
 
     var linearCombinationConstraint: LinearCombinationConstraint!
 
@@ -23,7 +23,7 @@ final class LinearCombinationConstraintTests: XCTestCase {
                                           variableB: floatVariableB,
                                           variableC: floatVariableC)
 
-        variableSet = SetOfVariables(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
+        variableSet = VariableSet(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
 
         linearCombinationConstraint = LinearCombinationConstraint(ternaryVariable,
                                                                   scaleA: 1,

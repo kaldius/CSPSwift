@@ -7,7 +7,7 @@ final class ConstraintSetTests: XCTestCase {
     var intVariableC: IntVariable!
     var ternaryVariable: TernaryVariable!
 
-    var variableSet: SetOfVariables!
+    var variableSet: VariableSet!
 
     var aGreaterThanB: GreaterThanConstraint!
     var cGreaterThanA: GreaterThanConstraint!
@@ -25,7 +25,7 @@ final class ConstraintSetTests: XCTestCase {
                                           variableB: intVariableB,
                                           variableC: intVariableC)
 
-        variableSet = SetOfVariables(from: [intVariableA, intVariableB, intVariableC, ternaryVariable])
+        variableSet = VariableSet(from: [intVariableA, intVariableB, intVariableC, ternaryVariable])
 
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
         cGreaterThanA = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableA)

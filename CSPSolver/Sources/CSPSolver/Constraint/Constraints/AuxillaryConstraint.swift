@@ -19,7 +19,7 @@ struct AuxillaryConstraint: BinaryConstraint {
         self.dualVariableName = dualVariable.name
     }
 
-    func isSatisfied(state: SetOfVariables) -> Bool {
+    func isSatisfied(state: VariableSet) -> Bool {
         guard let mainVariable = state.getVariable(mainVariableName),
               let dualVariable = state.getVariable(dualVariableName, type: TernaryVariable.self) else {
             return false
@@ -27,7 +27,7 @@ struct AuxillaryConstraint: BinaryConstraint {
         return dualVariable.assignmentSatisfied(for: mainVariable)
     }
 
-    func isViolated(state: SetOfVariables) -> Bool {
+    func isViolated(state: VariableSet) -> Bool {
         guard let mainVariable = state.getVariable(mainVariableName),
               let dualVariable = state.getVariable(dualVariableName, type: TernaryVariable.self) else {
             return false

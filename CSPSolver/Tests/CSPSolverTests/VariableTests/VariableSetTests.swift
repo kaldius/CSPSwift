@@ -2,14 +2,14 @@ import XCTest
 @testable import CSPSolver
 
 // TODO: test cases ending with "throwsError" should be implemented after errors are implemented!!!
-final class SetOfVariablesTests: XCTestCase {
+final class VariableSetTests: XCTestCase {
     var intVariableA: IntVariable!
     var floatVariableB: FloatVariable!
     var floatVariableC: FloatVariable!
 
     var ternaryVariable: TernaryVariable!
 
-    var variableSet: SetOfVariables!
+    var variableSet: VariableSet!
 
     override func setUp() {
         super.setUp()
@@ -22,7 +22,7 @@ final class SetOfVariablesTests: XCTestCase {
                                           variableB: floatVariableB,
                                           variableC: floatVariableC)
 
-        variableSet = SetOfVariables(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
+        variableSet = VariableSet(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
     }
 
     // TODO: all testcases

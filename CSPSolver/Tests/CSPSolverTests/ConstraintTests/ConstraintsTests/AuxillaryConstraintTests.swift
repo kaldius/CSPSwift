@@ -12,7 +12,7 @@ final class AuxillaryConstraintTests: XCTestCase {
     var dualVariable: TernaryVariable!
     var expectedDualVariableDomain: Set<NaryVariableValueType>!
 
-    var variableSet: SetOfVariables!
+    var variableSet: VariableSet!
 
     var auxillaryConstraintA: AuxillaryConstraint!
     var auxillaryConstraintB: AuxillaryConstraint!
@@ -37,7 +37,7 @@ final class AuxillaryConstraintTests: XCTestCase {
         let possibleAssignments = [any Value].possibleAssignments(domains: allAssociatedDomains)
         expectedDualVariableDomain = Set(possibleAssignments.map({ NaryVariableValueType(value: $0) }))
 
-        variableSet = SetOfVariables(from: [intVariableA, intVariableB, strVariableC, dualVariable])
+        variableSet = VariableSet(from: [intVariableA, intVariableB, strVariableC, dualVariable])
 
         auxillaryConstraintA = AuxillaryConstraint(mainVariable: intVariableA, dualVariable: dualVariable)
         auxillaryConstraintB = AuxillaryConstraint(mainVariable: intVariableB, dualVariable: dualVariable)

@@ -7,7 +7,7 @@ final class ArcTests: XCTestCase {
     var intVariableBDomain: Set<Int>!
     var intVariableB: IntVariable!
 
-    var variableSet: SetOfVariables!
+    var variableSet: VariableSet!
 
     var aEqualToB: EqualToConstraint!
     var aGreaterThanB: GreaterThanConstraint!
@@ -24,7 +24,7 @@ final class ArcTests: XCTestCase {
         intVariableBDomain = Set([3, 4, 5, 6, 7])
         intVariableB = IntVariable(name: "intB", domain: intVariableBDomain)
 
-        variableSet = SetOfVariables(from: [intVariableA, intVariableB])
+        variableSet = VariableSet(from: [intVariableA, intVariableB])
 
         aEqualToB = EqualToConstraint(intVariableA, isEqualTo: intVariableB)
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)

@@ -1,7 +1,5 @@
 public struct ArcConsistency3: InferenceEngine {
-    public var constraintSet: ConstraintSet
-
-    public func makeNewInference(from state: SetOfVariables) -> SetOfVariables? {
+    public func makeNewInference(from state: VariableSet, constraintSet: ConstraintSet) -> VariableSet? {
         var copiedState = state
         var arcs = Queue<Arc>(given: constraintSet)
 
@@ -15,15 +13,18 @@ public struct ArcConsistency3: InferenceEngine {
                     return nil
                 }
                 copiedState.setDomain(for: arc.variableIName, to: newVariableIDomain)
-                let newArcs = arcsFromNeighbours(of: arc.variableIName, except: arc.variableJName)
+                let newArcs = arcsFromNeighbours(of: arc.variableIName,
+                                                 except: arc.variableJName,
+                                                 constraintSet: constraintSet)
                 arcs.enqueueAll(in: newArcs)
             }
         }
         return copiedState
     }
 
-    // TODO: check that it returns reverse arcs
-    private func arcsFromNeighbours(of variableName: String, except excludedVarName: String) -> [Arc] {
+    private func arcsFromNeighbours(of variableName: String,
+                                    except excludedVarName: String,
+                                    constraintSet: ConstraintSet) -> [Arc] {
         var arcs = [Arc]()
         for constraint in constraintSet.allConstraints {
             guard let binConstraint = constraint as? any BinaryConstraint,

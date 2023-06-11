@@ -4,7 +4,7 @@ public protocol UnaryConstraint: Constraint {
 
 extension UnaryConstraint {
     // TODO: test
-    func restrictDomain(state: SetOfVariables) -> SetOfVariables {
+    func restrictDomain(state: VariableSet) -> VariableSet {
         guard let variable = state.getVariable(variableName, type: TernaryVariable.self) else {
             return state
         }

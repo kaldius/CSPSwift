@@ -16,11 +16,11 @@ public struct ConstraintSet {
         allConstraints.append(constraint)
     }
 
-    public func allSatisfied(state: SetOfVariables) -> Bool {
+    public func allSatisfied(state: VariableSet) -> Bool {
         allConstraints.allSatisfy({ $0.isSatisfied(state: state) })
     }
 
-    public func applyUnaryConstraints(to state: SetOfVariables) -> SetOfVariables {
+    public func applyUnaryConstraints(to state: VariableSet) -> VariableSet {
         return unaryConstraints.reduce(state, { $1.restrictDomain(state: $0) })
     }
 
