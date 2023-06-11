@@ -58,7 +58,7 @@ final class ArcConsistency3Tests: XCTestCase {
 
     var constraintSet: ConstraintSet!
 
-    var inferenceEngines: [InferenceEngine]!
+    var inferenceEngine: InferenceEngine!
 
     override func setUp() {
         super.setUp()
@@ -208,26 +208,8 @@ final class ArcConsistency3Tests: XCTestCase {
         variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 
-        inferenceEngines = [ArcConsistency3(constraintSet: constraintSet)]
+        inferenceEngine = ArcConsistency3(constraintSet: constraintSet)
     }
-
-    // Since Constraints are in ordered arrays, need to create all possible permutations
-    // and ensure that we arrive at the same inferences.
-    /*
-    private func createAllEnginePermutations(allConstraints: [any Constraint]) -> [any InferenceEngine] {
-        var inferenceEngines = [any InferenceEngine]()
-
-        let constraintPermutations = Array<any Constraint>.permutations(allConstraints)
-
-        for constraintPerm in constraintPermutations {
-            let constraintSet = ConstraintSet(allConstraints: constraintPerm)
-            inferenceEngines.append(ForwardChecking(constraintSet: constraintSet))
-        }
-
-        print("num inference engines: \(inferenceEngines.count)")
-        return inferenceEngines
-    }
-     */
 
     func testMakeNewInference_settingFTo1() {
         // assign F to 1
@@ -240,65 +222,67 @@ final class ArcConsistency3Tests: XCTestCase {
         let assignmentO = variableSet.getAssignment(intVariableO.name, type: IntVariable.self)
         XCTAssertEqual(assignmentO, 6)
 
-        for engine in inferenceEngines {
-            // make a new inference
-            let inference = engine.makeNewInference(from: variableSet)!
+        measure {
+            _ = inferenceEngine.makeNewInference(from: variableSet)!
+        }
 
-            // get all domains from inference
-            let inferredIntVarDomains = allIntVariables.map({ variable in
-                Set(inference.getDomain(variable.name, type: IntVariable.self))
-            })
-            let inferredDualVarDomains = allDualVariables.map({ variable in
-                Set(inference.getDomain(variable.name, type: TernaryVariable.self))
-            })
+        // make a new inference
+        let inference = inferenceEngine.makeNewInference(from: variableSet)!
 
-            // define expected domains
-            let expectedDomainT = Set([8])
-            let expectedDomainW = Set(0 ... 4)
-            let expectedDomainO = Set([6])
-            let expectedDomainF = Set([1])
-            let expectedDomainU = Set([1, 3, 5, 7, 9])
-            let expectedDomainR = Set([2])
-            let expectedDomainX = Set([1, 3, 5, 7, 9])
-            let expectedDomainY = Set([16])
-            let expectedDomainC1 = Set([1])
-            let expectedDomainC2 = Set([0])
+        // get all domains from inference
+        let inferredIntVarDomains = allIntVariables.map({ variable in
+            Set(inference.getDomain(variable.name, type: IntVariable.self))
+        })
+        let inferredDualVarDomains = allDualVariables.map({ variable in
+            Set(inference.getDomain(variable.name, type: TernaryVariable.self))
+        })
 
-            let expectedDomainO_R_C1 = Set([NaryVariableValueType(value: [6, 2, 1])])
-            let expectedDomainW_C1_X = Set([[0, 1, 1], [1, 1, 3], [2, 1, 5], [3, 1, 7], [4, 1, 9]]
-                .map({ NaryVariableValueType(value: $0) }))
-            let expectedDomainU_C2_X = Set([[1, 0, 1], [3, 0, 3], [5, 0, 5], [7, 0, 7], [9, 0, 9]]
-                .map({ NaryVariableValueType(value: $0) }))
-            let expectedDomainT_C2_Y = Set([NaryVariableValueType(value: [8, 0, 16])])
-            let expectedDomainO_F_Y = Set([NaryVariableValueType(value: [6, 1, 16])])
+        // define expected domains
+        let expectedDomainT = Set([8])
+        let expectedDomainW = Set(0 ... 4)
+        let expectedDomainO = Set([6])
+        let expectedDomainF = Set([1])
+        let expectedDomainU = Set([1, 3, 5, 7, 9])
+        let expectedDomainR = Set([2])
+        let expectedDomainX = Set([1, 3, 5, 7, 9])
+        let expectedDomainY = Set([16])
+        let expectedDomainC1 = Set([1])
+        let expectedDomainC2 = Set([0])
 
-            let expectedIntVarDomains = [expectedDomainT,
-                                         expectedDomainW,
-                                         expectedDomainO,
-                                         expectedDomainF,
-                                         expectedDomainU,
-                                         expectedDomainR,
-                                         expectedDomainX,
-                                         expectedDomainY,
-                                         expectedDomainC1,
-                                         expectedDomainC2]
+        let expectedDomainO_R_C1 = Set([NaryVariableValueType(value: [6, 2, 1])])
+        let expectedDomainW_C1_X = Set([[0, 1, 1], [1, 1, 3], [2, 1, 5], [3, 1, 7], [4, 1, 9]]
+            .map({ NaryVariableValueType(value: $0) }))
+        let expectedDomainU_C2_X = Set([[1, 0, 1], [3, 0, 3], [5, 0, 5], [7, 0, 7], [9, 0, 9]]
+            .map({ NaryVariableValueType(value: $0) }))
+        let expectedDomainT_C2_Y = Set([NaryVariableValueType(value: [8, 0, 16])])
+        let expectedDomainO_F_Y = Set([NaryVariableValueType(value: [6, 1, 16])])
 
-            let expectedDualVarDomains = [expectedDomainO_R_C1,
-                                          expectedDomainW_C1_X,
-                                          expectedDomainU_C2_X,
-                                          expectedDomainT_C2_Y,
-                                          expectedDomainO_F_Y]
+        let expectedIntVarDomains = [expectedDomainT,
+                                     expectedDomainW,
+                                     expectedDomainO,
+                                     expectedDomainF,
+                                     expectedDomainU,
+                                     expectedDomainR,
+                                     expectedDomainX,
+                                     expectedDomainY,
+                                     expectedDomainC1,
+                                     expectedDomainC2]
 
-            for idx in 0 ..< expectedIntVarDomains.count {
-                XCTAssertEqual(inferredIntVarDomains[idx],
-                               expectedIntVarDomains[idx],
-                               "\(allIntVariables[idx].name)")
-            }
-            for idx in 0 ..< expectedDualVarDomains.count {
-                XCTAssertEqual(inferredDualVarDomains[idx],
-                               expectedDualVarDomains[idx],
-                               "\(allDualVariables[idx].name)")
-            }
+        let expectedDualVarDomains = [expectedDomainO_R_C1,
+                                      expectedDomainW_C1_X,
+                                      expectedDomainU_C2_X,
+                                      expectedDomainT_C2_Y,
+                                      expectedDomainO_F_Y]
+
+        for idx in 0 ..< expectedIntVarDomains.count {
+            XCTAssertEqual(inferredIntVarDomains[idx],
+                           expectedIntVarDomains[idx],
+                           "\(allIntVariables[idx].name)")
+        }
+        for idx in 0 ..< expectedDualVarDomains.count {
+            XCTAssertEqual(inferredDualVarDomains[idx],
+                           expectedDualVarDomains[idx],
+                           "\(allDualVariables[idx].name)")
         }
     }
 }

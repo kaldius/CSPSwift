@@ -1,6 +1,7 @@
 /**
  A concrete implementation of the Forward Checking inference method.
  */
+// TODO: can delete?
 public struct ForwardChecking: InferenceEngine {
     public var constraintSet: ConstraintSet
 

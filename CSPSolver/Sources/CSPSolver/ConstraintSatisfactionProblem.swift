@@ -43,6 +43,7 @@ public struct ConstraintSatisfactionProblem {
     }
 
     /// Selects the next Variable to assign using the Minimum Remaining Values heuristic.
+    // TODO: pull out as a separate protocol to allow flexible heuristics
     public var nextUnassignedVariable: (any Variable)? {
         setOfVariables.nextUnassignedVariable
     }
@@ -58,6 +59,7 @@ public struct ConstraintSatisfactionProblem {
     /// Orders domain values for a given Variable using the Least Constraining Value heuristic
     /// i.e. Returns an array of Values, sorted by `r` from greatest to smallest, where
     /// `r` is the total number of remaining consistent domain values for all Variables.
+    // TODO: pull out as a separate protocol to allow flexible heuristics
     // TODO: optimizations?
     // TODO: restrict return type
     public func orderDomainValues(for variable: some Variable) -> [some Value] {

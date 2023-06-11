@@ -75,7 +75,6 @@ final class ArrayTests: XCTestCase {
         XCTAssertEqual(Set(actualResult), Set(expectedResult))
     }
 
-    // 0.0231
     func testPermutations_stressTest() {
         let array = Array(0 ... 7)
         measure {
