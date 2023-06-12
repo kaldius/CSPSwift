@@ -125,8 +125,7 @@ final class ArcConsistency3Tests: XCTestCase {
                         dualVariableW_C1_X,
                         dualVariableU_C2_X,
                         dualVariableT_C2_Y,
-                        dualVariableO_F_Y
-        ]
+                        dualVariableO_F_Y]
 
         variableSet = VariableSet(from: allVariables)
 
@@ -211,7 +210,7 @@ final class ArcConsistency3Tests: XCTestCase {
         inferenceEngine = ArcConsistency3()
     }
 
-    func testMakeNewInference_settingFTo1() {
+    func testMakeNewInference_settingFTo1AndOTo6() {
         // assign F to 1
         variableSet.assign(intVariableF.name, to: 1)
         let assignmentF = variableSet.getAssignment(intVariableF.name, type: IntVariable.self)

@@ -2,7 +2,6 @@
  Holds a reference to all the `Variable`s in the CSP.
  Exposes queries required by the solver.
  */
-// TODO: TEST
 public struct ConstraintSatisfactionProblem {
     var variableSet: VariableSet
     var constraintSet: ConstraintSet
@@ -32,8 +31,12 @@ public struct ConstraintSatisfactionProblem {
         saveCurrentState()
     }
 
-    public var isCompletelyAssigned: Bool {
+    public var variablesCompletelyAssigned: Bool {
         variableSet.isCompletelyAssigned
+    }
+
+    public var allConstraintsSatisfied: Bool {
+        constraintSet.allSatisfied(state: variableSet)
     }
 
     // TODO: delete?
@@ -43,6 +46,16 @@ public struct ConstraintSatisfactionProblem {
             assert(false)
         }
         return state
+    }
+
+    public mutating func canAssign(_ variableName: String, to value: some Value) -> Bool {
+        guard variableSet.canAssign(variableName, to: value) else {
+            return false
+        }
+        variableSet.assign(variableName, to: value)
+        let anyViolated = constraintSet.anyViolated(state: variableSet)
+        variableSet.unassign(variableName)
+        return !anyViolated
     }
 
     /// Given a `VariableSet`, save the current state and set the domains

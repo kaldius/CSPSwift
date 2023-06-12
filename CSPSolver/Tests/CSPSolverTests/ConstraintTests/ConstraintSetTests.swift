@@ -29,6 +29,7 @@ final class ConstraintSetTests: XCTestCase {
 
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
         cGreaterThanA = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableA)
+        // correct answer: [4, 3, 5]
         linearCombinationConstraint = LinearCombinationConstraint(ternaryVariable,
                                                                   scaleA: 3,
                                                                   scaleB: 1,
@@ -111,17 +112,17 @@ final class ConstraintSetTests: XCTestCase {
     }
 
     func testAllSatisfied_allSatisfied_returnsTrue() {
-        variableSet.assign(intVariableA.name, to: 3)
+        variableSet.assign(intVariableA.name, to: 4)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentA, 3)
+        XCTAssertEqual(assignmentA, 4)
 
-        variableSet.assign(intVariableB.name, to: 1)
+        variableSet.assign(intVariableB.name, to: 3)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentB, 1)
+        XCTAssertEqual(assignmentB, 3)
 
-        variableSet.assign(intVariableC.name, to: 4)
+        variableSet.assign(intVariableC.name, to: 5)
         let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
-        XCTAssertEqual(assignmentC, 4)
+        XCTAssertEqual(assignmentC, 5)
 
         variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [4, 3, 5]))
         let ternaryAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
@@ -131,6 +132,52 @@ final class ConstraintSetTests: XCTestCase {
         XCTAssertTrue(cGreaterThanA.isSatisfied(state: variableSet))
 
         XCTAssertTrue(constraintSet.allSatisfied(state: variableSet))
+    }
+
+    func testAnyViolated_allUnassigned_returnsFalse() {
+        XCTAssertFalse(constraintSet.anyViolated(state: variableSet))
+    }
+
+    func testAnyViolated_oneViolated_returnsTrue() {
+        variableSet.assign(intVariableA.name, to: 4)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 4)
+
+        variableSet.assign(intVariableB.name, to: 3)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 3)
+
+        variableSet.assign(intVariableC.name, to: 2)
+        let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentC, 2)
+
+        XCTAssertFalse(aGreaterThanB.isViolated(state: variableSet))
+        XCTAssertTrue(cGreaterThanA.isViolated(state: variableSet))
+
+        XCTAssertTrue(constraintSet.anyViolated(state: variableSet))
+    }
+
+    func testAnyViolated_allSatisfied_returnsFalse() {
+        variableSet.assign(intVariableA.name, to: 4)
+        let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentA, 4)
+
+        variableSet.assign(intVariableB.name, to: 3)
+        let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentB, 3)
+
+        variableSet.assign(intVariableC.name, to: 5)
+        let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
+        XCTAssertEqual(assignmentC, 5)
+
+        variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [4, 3, 5]))
+        let ternaryAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
+        XCTAssertEqual(ternaryAssignment, NaryVariableValueType(value: [4, 3, 5]))
+
+        XCTAssertTrue(aGreaterThanB.isSatisfied(state: variableSet))
+        XCTAssertTrue(cGreaterThanA.isSatisfied(state: variableSet))
+
+        XCTAssertFalse(constraintSet.anyViolated(state: variableSet))
     }
 
     func testApplyUnaryConstraints() {

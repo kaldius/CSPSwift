@@ -21,6 +21,10 @@ public struct ConstraintSet {
         allConstraints.allSatisfy({ $0.isSatisfied(state: state) })
     }
 
+    public func anyViolated(state: VariableSet) -> Bool {
+        allConstraints.contains(where: { $0.isViolated(state: state) })
+    }
+
     public func applyUnaryConstraints(to state: VariableSet) -> VariableSet {
         return unaryConstraints.reduce(state, { $1.restrictDomain(state: $0) })
     }

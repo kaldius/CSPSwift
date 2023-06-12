@@ -96,6 +96,10 @@ final class VariableSetTests: XCTestCase {
         XCTAssertTrue(variableSet.isAssigned(intVariableA.name))
     }
 
+    func testCanAssign_nonExistentVariable_throwsError() {
+
+    }
+
     func testGetAssignment_nonExistentVariable_throwsError() {
 
     }

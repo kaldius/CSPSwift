@@ -32,13 +32,13 @@ final class LeastConstrainingValueTests: XCTestCase {
 
         inferenceEngine = ArcConsistency3()
 
-        leastConstrainingValue = LeastConstrainingValue(inferenceEngine: inferenceEngine,
-                                                        variableSet: variableSet,
-                                                        constraintSet: constraintSet)
+        leastConstrainingValue = LeastConstrainingValue(inferenceEngine: inferenceEngine)
     }
 
     func testOrderDomainValues() {
-        let actualValues = leastConstrainingValue.orderDomainValues(for: intVariableA)
+        let actualValues = leastConstrainingValue.orderDomainValues(for: intVariableA,
+                                                                    state: variableSet,
+                                                                    constraintSet: constraintSet)
         let expectedValues = [5, 4]
 
         XCTAssertEqual(actualValues, expectedValues)

@@ -48,7 +48,24 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
                                             constraints: allConstraints)
     }
 
-    // TODO: test nextUnassignedVariable and orderDomainValues after pulling out as protocol
+    func testCanAssign_nonExistentVariable_throwsError() {
+
+    }
+
+    func testCanAssign_violatesConstraint_returnsFalse() {
+        csp.variableSet.assign(intVariableA.name, to: 5)
+
+        // violates bGreaterThanA
+        XCTAssertFalse(csp.canAssign(intVariableB.name, to: 1))
+    }
+
+    func testCanAssign_doesNotViolateConstraint_returnsTrue() {
+        csp.variableSet.assign(intVariableA.name, to: 5)
+        XCTAssertTrue(csp.canAssign(intVariableB.name, to: 6))
+
+        csp.variableSet.assign(intVariableB.name, to: 6)
+        XCTAssertTrue(csp.canAssign(intVariableC.name, to: 7))
+    }
 
     func testUpdateAndRevertToPreviousState_correctlyUpdatesAndReverts() {
         var expectedVariableSet = variableSet!

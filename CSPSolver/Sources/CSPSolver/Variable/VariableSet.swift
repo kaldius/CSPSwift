@@ -10,6 +10,10 @@ public struct VariableSet {
         Array(nameToVariable.values)
     }
 
+    public var unassignedVariables: [any Variable] {
+        variables.filter({ !$0.isAssigned })
+    }
+
     public var isCompletelyAssigned: Bool {
         variables.allSatisfy({ $0.isAssigned })
     }
@@ -51,6 +55,14 @@ public struct VariableSet {
             assert(false)
         }
         return variable.isAssigned
+    }
+
+    public func canAssign(_ name: String, to assignment: some Value) -> Bool {
+        guard let variable = nameToVariable[name] else {
+            // TODO: throw error
+            assert(false)
+        }
+        return variable.canAssign(to: assignment)
     }
 
     public func getAssignment<V: Variable>(_ name: String, type: V.Type) -> V.ValueType? {
