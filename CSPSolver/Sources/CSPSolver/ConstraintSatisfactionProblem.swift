@@ -7,26 +7,20 @@ public struct ConstraintSatisfactionProblem {
     var variableSet: VariableSet
     var constraintSet: ConstraintSet
 
-    /// Required for `orderDomainValues`.
-    private let inferenceEngine: InferenceEngine
-
     /// Stores `VariableSet`s used for the undo operation.
     private var stateUndoStack: Stack<VariableSet>
 
     init(variableSet: VariableSet,
          constraintSet: ConstraintSet,
-         inferenceEngine: InferenceEngine,
          stateUndoStack: Stack<VariableSet>) {
         self.variableSet = variableSet
         self.constraintSet = constraintSet
-        self.inferenceEngine = inferenceEngine
         self.stateUndoStack = stateUndoStack
     }
 
     /// Automatically applies all `UnaryConstraint`s on `Variable`s, then removes all `UnaryConstraint`s.
     init(variables: [any Variable],
-         constraints: [any Constraint],
-         inferenceEngine: InferenceEngine) {
+         constraints: [any Constraint]) {
         let variableSet = VariableSet(from: variables)
         var constraintSet = ConstraintSet(allConstraints: constraints)
         let finalVariableSet = constraintSet.applyUnaryConstraints(to: variableSet)
@@ -34,7 +28,6 @@ public struct ConstraintSatisfactionProblem {
 
         self.init(variableSet: finalVariableSet,
                   constraintSet: constraintSet,
-                  inferenceEngine: inferenceEngine,
                   stateUndoStack: Stack())
         saveCurrentState()
     }
@@ -58,24 +51,6 @@ public struct ConstraintSatisfactionProblem {
         return state
     }
 
-    /// Orders domain values for a given Variable using the Least Constraining Value heuristic
-    /// i.e. Returns an array of Values, sorted by `r` from greatest to smallest, where
-    /// `r` is the total number of remaining consistent domain values for all Variables.
-    // TODO: pull out as a separate protocol to allow flexible heuristics
-    // TODO: optimizations?
-    // TODO: restrict return type
-    public func orderDomainValues(for variable: some Variable) -> [some Value] {
-        var sortables = variable.domain.map({ domainValue in
-            let priority = numConsistentDomainValues(ifSetting: variable.name, to: domainValue)
-            return SortableValue(value: domainValue,
-                                 priority: priority)
-        })
-        sortables.removeAll(where: { $0.priority == 0 })
-        sortables.sort(by: { $0.priority > $1.priority })
-        let orderedValues = sortables.map({ $0.value })
-        return orderedValues
-    }
-
     /// Given a `VariableSet`, save the current state and set the domains
     /// to the ones given in the new state.
     public mutating func update(using state: VariableSet) {
@@ -94,25 +69,6 @@ public struct ConstraintSatisfactionProblem {
             stateUndoStack.pop()
         }
         setDomains(using: prevState)
-    }
-
-    /// Tries setting `variable` to `value`, then counts total number of
-    /// consistent domain values for all other variables.
-    ///
-    /// Returns 0 if setting this value will lead to failure.
-    private func numConsistentDomainValues(ifSetting variableName: String,
-                                           to value: some Value) -> Int {
-        var copiedVariableSet = variableSet
-        guard let variable = variableSet.getVariable(variableName),
-              variable.canAssign(to: value) else {
-            return 0
-        }
-        copiedVariableSet.assign(variableName, to: value)
-        guard let newInference = inferenceEngine.makeNewInference(from: copiedVariableSet,
-                                                                  constraintSet: constraintSet) else {
-            return 0
-        }
-        return newInference.totalDomainValueCount
     }
 
     private mutating func saveCurrentState() {

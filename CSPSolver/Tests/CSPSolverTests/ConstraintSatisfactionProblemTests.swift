@@ -5,12 +5,10 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
     var intVariableA: IntVariable!
     var intVariableB: IntVariable!
     var intVariableC: IntVariable!
-
     var ternaryVariable: TernaryVariable!
 
     var variableSet: VariableSet!
 
-    // answer: [1, 4, 8]
     var bGreaterThanA: GreaterThanConstraint!
     var cGreaterThanB: GreaterThanConstraint!
     var linearCombinationConstraint: LinearCombinationConstraint!
@@ -41,13 +39,13 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
                                                                   scaleB: 8,
                                                                   scaleC: 9,
                                                                   add: -111)
+        
         let allConstraints: [any Constraint] = [bGreaterThanA, cGreaterThanB, linearCombinationConstraint]
 
         constraintSet = ConstraintSet(allConstraints: allConstraints)
 
         csp = ConstraintSatisfactionProblem(variables: allVariables,
-                                            constraints: allConstraints,
-                                            inferenceEngine: ArcConsistency3())
+                                            constraints: allConstraints)
     }
 
     // TODO: test nextUnassignedVariable and orderDomainValues after pulling out as protocol
