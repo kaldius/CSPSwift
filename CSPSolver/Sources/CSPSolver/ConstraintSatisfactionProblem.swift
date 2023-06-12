@@ -36,12 +36,6 @@ public struct ConstraintSatisfactionProblem {
         variableSet.isCompletelyAssigned
     }
 
-    /// Selects the next Variable to assign using the Minimum Remaining Values heuristic.
-    // TODO: pull out as a separate protocol to allow flexible heuristics
-    public var nextUnassignedVariable: (any Variable)? {
-        variableSet.nextUnassignedVariable
-    }
-
     // TODO: delete?
     public var latestState: VariableSet {
         guard let state = stateUndoStack.peek() else {

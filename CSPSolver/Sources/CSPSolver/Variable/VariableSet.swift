@@ -14,12 +14,6 @@ public struct VariableSet {
         variables.allSatisfy({ $0.isAssigned })
     }
 
-    /// Selects the next Variable to assign using the Minimum Remaining Values heuristic.
-    public var nextUnassignedVariable: (any Variable)? {
-        // FIXME: is comparator correct?
-        variables.min(by: { $0.domainSize > $1.domainSize })
-    }
-
     public var containsEmptyDomain: Bool {
         variables.contains(where: { $0.domainSize == 0 })
     }
