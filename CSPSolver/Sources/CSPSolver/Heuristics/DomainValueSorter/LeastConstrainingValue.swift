@@ -1,3 +1,9 @@
+/**
+ Sorts domain values using the **Least Constraining Value** heuristic.
+ i.e. sorts by total number of remaining consistent domain values for all `Variable`s.
+
+ In order to infer remaining consistent domain values, an `InferenceEngine` must be provided.
+ */
 struct LeastConstrainingValue: DomainValueSorter {
     private let inferenceEngine: InferenceEngine
 
@@ -5,9 +11,7 @@ struct LeastConstrainingValue: DomainValueSorter {
         self.inferenceEngine = inferenceEngine
     }
 
-    /// Orders domain values for a given Variable using the Least Constraining Value heuristic
-    /// i.e. Returns an array of Values, sorted by `r` from greatest to smallest, where
-    /// `r` is the total number of remaining consistent domain values for all Variables.
+    /// Sorts domain values by total number of remaining consistent domain values for all `Variable`s.
     func orderDomainValues<V: Variable>(for variable: V,
                                         state: VariableSet,
                                         constraintSet: ConstraintSet) -> [V.ValueType] {

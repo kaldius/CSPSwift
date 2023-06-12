@@ -1,3 +1,6 @@
+/**
+ Extensions to allow comparision between all `any Comparable`s.
+ */
 extension Comparable {
     func isGreaterThan(_ other: any Comparable) -> Bool {
         guard let other = other as? Self else {

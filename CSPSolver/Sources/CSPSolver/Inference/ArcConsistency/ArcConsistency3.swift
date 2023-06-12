@@ -1,3 +1,6 @@
+/**
+ An `InferenceEngine` that uses the **AC-3** algorithm.
+ */
 public struct ArcConsistency3: InferenceEngine {
     public func makeNewInference(from state: VariableSet, constraintSet: ConstraintSet) -> VariableSet? {
         var copiedState = state
@@ -15,16 +18,18 @@ public struct ArcConsistency3: InferenceEngine {
                 copiedState.setDomain(for: arc.variableIName, to: newVariableIDomain)
                 let newArcs = arcsFromNeighbours(of: arc.variableIName,
                                                  except: arc.variableJName,
-                                                 constraintSet: constraintSet)
+                                                 using: constraintSet)
                 arcs.enqueueAll(in: newArcs)
             }
         }
         return copiedState
     }
 
+    /// Loops through all `BinaryConstraints` in `constraintSet` and creates an `Arc`
+    /// from every other `Variable` to `variableName`, except `excludedVarName`.
     private func arcsFromNeighbours(of variableName: String,
                                     except excludedVarName: String,
-                                    constraintSet: ConstraintSet) -> [Arc] {
+                                    using constraintSet: ConstraintSet) -> [Arc] {
         var arcs = [Arc]()
         for constraint in constraintSet.allConstraints {
             guard let binConstraint = constraint as? any BinaryConstraint,

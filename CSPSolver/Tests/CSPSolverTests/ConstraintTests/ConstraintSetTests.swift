@@ -36,7 +36,7 @@ final class ConstraintSetTests: XCTestCase {
                                                                   scaleC: 6,
                                                                   add: -45)
 
-        constraintSet = ConstraintSet(allConstraints: [aGreaterThanB, cGreaterThanA, linearCombinationConstraint])
+        constraintSet = ConstraintSet([aGreaterThanB, cGreaterThanA, linearCombinationConstraint])
     }
 
     func testAllConstraints_returnsAllConstraints() {
@@ -58,6 +58,16 @@ final class ConstraintSetTests: XCTestCase {
         XCTAssertEqual(actualUnaryConstraintArray.count, expectedUnaryConstraintArray.count)
         for expectedConstraint in expectedUnaryConstraintArray {
             XCTAssertTrue(actualUnaryConstraintArray.contains(where: { $0.isEqual(expectedConstraint) }))
+        }
+    }
+
+    func testBinaryConstraints_returnsAllBinaryConstraints() {
+        let expectedBinaryConstraintArray = [aGreaterThanB, cGreaterThanA]
+        let actualBinaryConstraintArray = constraintSet.binaryConstraints
+
+        XCTAssertEqual(actualBinaryConstraintArray.count, expectedBinaryConstraintArray.count)
+        for expectedConstraint in expectedBinaryConstraintArray {
+            XCTAssertTrue(actualBinaryConstraintArray.contains(where: { $0.isEqual(expectedConstraint) }))
         }
     }
 

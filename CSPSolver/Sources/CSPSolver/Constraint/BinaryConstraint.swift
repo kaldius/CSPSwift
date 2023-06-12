@@ -1,3 +1,6 @@
+/**
+ A protocol for all binary constraints.
+ */
 public protocol BinaryConstraint: Constraint {}
 
 extension BinaryConstraint {

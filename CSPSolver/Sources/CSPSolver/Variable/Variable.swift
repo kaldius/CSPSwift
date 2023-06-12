@@ -1,7 +1,5 @@
 /**
  Represents a Variable in a CSP.
- 
- Reference semantics used here to ensure that any changes to `Variable` are seen by all.
  */
 public protocol Variable: Hashable, CustomDebugStringConvertible {
     associatedtype ValueType: Value

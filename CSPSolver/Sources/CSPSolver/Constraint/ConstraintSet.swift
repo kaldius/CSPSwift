@@ -1,16 +1,19 @@
 /**
- `ConstraintSet` holds all the constraints for a given CSP.
+ `ConstraintSet` holds all the `Constraint`s for a given CSP.
  */
 public struct ConstraintSet {
     private(set) var allConstraints: [any Constraint]
+
+    public init(_ allConstraints: [any Constraint] = []) {
+        self.allConstraints = allConstraints
+    }
 
     var unaryConstraints: [any UnaryConstraint] {
         allConstraints.compactMap({ $0 as? any UnaryConstraint })
     }
 
-    // TODO: remove argument label
-    public init(allConstraints: [any Constraint] = []) {
-        self.allConstraints = allConstraints
+    var binaryConstraints: [any BinaryConstraint] {
+        allConstraints.compactMap({ $0 as? any BinaryConstraint })
     }
 
     public mutating func add(constraint: any Constraint) {
@@ -25,6 +28,8 @@ public struct ConstraintSet {
         allConstraints.contains(where: { $0.isViolated(state: state) })
     }
 
+    /// Applies all `UnaryConstraint`s to the given `state` and returns a new
+    /// `VariableSet` where all `Variable`s domains have been constrained.
     public func applyUnaryConstraints(to state: VariableSet) -> VariableSet {
         return unaryConstraints.reduce(state, { $1.restrictDomain(state: $0) })
     }

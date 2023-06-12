@@ -42,7 +42,7 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
         
         let allConstraints: [any Constraint] = [bGreaterThanA, cGreaterThanB, linearCombinationConstraint]
 
-        constraintSet = ConstraintSet(allConstraints: allConstraints)
+        constraintSet = ConstraintSet(allConstraints)
 
         csp = ConstraintSatisfactionProblem(variables: allVariables,
                                             constraints: allConstraints)

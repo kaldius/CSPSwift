@@ -1,3 +1,6 @@
+/**
+ `VariableSet` holds all the `Variable`s for a given CSP.
+ */
 public struct VariableSet {
     private var nameToVariable: [String: any Variable]
 

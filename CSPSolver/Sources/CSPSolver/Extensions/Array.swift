@@ -23,36 +23,6 @@ extension Array {
         return output
     }
 
-    // TODO: An attempt at a faster version, stress tests showed that it is slower. Come back to this!
-    /*
-    static func possibleAssignmentsB<T>(domains: [[T]]) -> [[T]] {
-        guard !domains.isEmpty else {
-            return [[T]]()
-        }
-        let numPossibleAssignments = domains.reduce(1, { $0 * $1.count })
-        var output = Array<Array<T>>(repeating: [], count: numPossibleAssignments)
-        var accumulatedDivisions = 1
-        for idx in 0 ..< domains.count {
-            let domain = domains[idx]
-            let domainSize = domain.count
-            let numRepeats = accumulatedDivisions
-            accumulatedDivisions *= domainSize
-            let numCopyEachValue = numPossibleAssignments / accumulatedDivisions
-
-            var position = 0
-            for _ in 0 ..< numRepeats {
-                for value in domain {
-                    for _ in 0 ..< numCopyEachValue {
-                        output[position].append(value)
-                        position += 1
-                    }
-                }
-            }
-        }
-        return output
-    }
-     */
-
     func permutations() -> [[Element]] {
         if self.count <= 1 {
             return [self]

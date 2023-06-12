@@ -207,7 +207,7 @@ final class CSPSolverTests: XCTestCase {
                           constraintT_C2_Y,
                           constraintO_F_Y]
 
-        constraintSet = ConstraintSet(allConstraints: allConstraints)
+        constraintSet = ConstraintSet(allConstraints)
         variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 

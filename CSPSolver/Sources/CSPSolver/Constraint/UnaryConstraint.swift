@@ -1,9 +1,11 @@
+/**
+ A protocol for all Unary constraints.
+ */
 public protocol UnaryConstraint: Constraint {
     var variableName: String { get }
 }
 
 extension UnaryConstraint {
-    // TODO: test
     func restrictDomain(state: VariableSet) -> VariableSet {
         guard let variable = state.getVariable(variableName, type: TernaryVariable.self) else {
             return state

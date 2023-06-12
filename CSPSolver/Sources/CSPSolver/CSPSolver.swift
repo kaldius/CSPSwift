@@ -1,3 +1,87 @@
+/**
+ A backtracking algorithm that uses an `InferenceEngine` to infer new restrictions on
+ `Variable` domains.
+
+ Requires a `NextVariableSelector` to apply a heuristic when selecting the next `Variable` to assign.
+
+ Requires a `DomainValueSorter` to apply a heuristic when selecting the next `Value` to assign
+ to a given `Variable`.
+ */
+public struct CSPSolver {
+    private let inferenceEngine: InferenceEngine
+    private let nextVariableSelector: any NextVariableSelector
+    private let domainValueSorter: any DomainValueSorter
+
+    init(inferenceEngine: InferenceEngine,
+         // TODO: turn these into enums, should not have user inputting the constraintset into the domainValueSorter
+         nextVariableSelector: any NextVariableSelector,
+         domainValueSorter: any DomainValueSorter) {
+        self.inferenceEngine = inferenceEngine
+        self.nextVariableSelector = nextVariableSelector
+        self.domainValueSorter = domainValueSorter
+    }
+
+    /// Returns the `VariableSet` in a solved state if it can be solved,
+    /// returns `nil` otherwise.
+    public func backtrack(csp: ConstraintSatisfactionProblem) -> VariableSet? {
+        if csp.variablesCompletelyAssigned && csp.allConstraintsSatisfied {
+            return csp.variableSet
+        }
+        guard let unassignedVariable = nextVariableSelector.nextUnassignedVariable(state: csp.variableSet) else {
+            // if there is no nextUnassignedVariable and the constraints are not
+            // all satisfied, search has failed
+            return nil
+        }
+        return testAllValues(for: unassignedVariable, given: csp)
+    }
+
+    /// For a given `Variable`, tests every domain `Value` in an order specified
+    /// by `domainValueSorter`.
+    ///
+    /// - Returns: a `VariableSet` of successful assignments if successful, `nil` otherwise.
+    private func testAllValues(for variable: some Variable,
+                               given csp: ConstraintSatisfactionProblem) -> VariableSet? {
+        var copiedCsp = csp
+        let orderedDomainValues =  domainValueSorter.orderDomainValues(for: variable,
+                                                               state: copiedCsp.variableSet,
+                                                               constraintSet: copiedCsp.constraintSet)
+        for domainValue in orderedDomainValues where copiedCsp.canAssign(variable.name, to: domainValue) {
+            guard let successfulState = testSettingValue(for: variable, to: domainValue, given: copiedCsp) else {
+                continue
+            }
+            return successfulState
+        }
+        return nil
+    }
+
+    /// For a given `Variable` and a given `Value`, tests the assignment and makes an inference.
+    ///
+    /// - Returns: a `VariableSet` of succesful assignments if successful, `nil` otherwise.
+    private func testSettingValue(for variable: some Variable,
+                                  to value: some Value,
+                                  given csp: ConstraintSatisfactionProblem) -> VariableSet? {
+        var copiedCsp = csp
+        copiedCsp.variableSet.assign(variable.name, to: value)
+        // make new inferences (without setting yet)
+        guard let inference = inferenceEngine.makeNewInference(from: copiedCsp.variableSet,
+                                                               constraintSet: copiedCsp.constraintSet),
+              !inference.containsEmptyDomain else {
+            // if new inference cannot be made, or inference shows some
+            // Variable eventually cannot be assigned, search has failed
+            return nil
+        }
+        // set new inferences
+        copiedCsp.update(using: copiedCsp.variableSet)
+        let result = backtrack(csp: copiedCsp)
+        guard result != nil else {
+            // remove inferences from csp
+            return nil
+        }
+        return result
+    }
+}
+// MARK: old code with revertToPreviousState() (new code does not use this undo, so consider removing)
+/*
 public struct CSPSolver {
     private let inferenceEngine: InferenceEngine
     private let nextVariableSelector: any NextVariableSelector
@@ -57,3 +141,4 @@ public struct CSPSolver {
         return nil
     }
 }
+*/

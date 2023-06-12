@@ -60,6 +60,7 @@ public struct Queue<T> {
 }
 
 extension Queue<Arc> {
+    /// Initializes a `Queue<Arc>` with a forward and backward `Arc` for every `Constraint`.
     init(given constraintSet: ConstraintSet) {
         let arcs = constraintSet.allConstraints.flatMap({ [Arc(from: $0), Arc(from: $0, reverse: true)] })
             .compactMap({ $0 })

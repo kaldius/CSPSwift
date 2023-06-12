@@ -1,3 +1,6 @@
+/**
+ Represents an Arc for all **Arc Consistency** algorithms.
+ */
 public struct Arc {
     let variableIName: String
     let variableJName: String

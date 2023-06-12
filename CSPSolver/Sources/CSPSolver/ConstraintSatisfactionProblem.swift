@@ -1,6 +1,5 @@
 /**
- Holds a reference to all the `Variable`s in the CSP.
- Exposes queries required by the solver.
+ Holds all the information about the Constraint Satisfaction Problem.
  */
 public struct ConstraintSatisfactionProblem {
     var variableSet: VariableSet
@@ -21,7 +20,7 @@ public struct ConstraintSatisfactionProblem {
     init(variables: [any Variable],
          constraints: [any Constraint]) {
         let variableSet = VariableSet(from: variables)
-        var constraintSet = ConstraintSet(allConstraints: constraints)
+        var constraintSet = ConstraintSet(constraints)
         let finalVariableSet = constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 

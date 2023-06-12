@@ -28,7 +28,7 @@ final class LeastConstrainingValueTests: XCTestCase {
 
         let allConstraints: [any Constraint] = [aGreaterThanB]
 
-        constraintSet = ConstraintSet(allConstraints: allConstraints)
+        constraintSet = ConstraintSet(allConstraints)
 
         inferenceEngine = ArcConsistency3()
 

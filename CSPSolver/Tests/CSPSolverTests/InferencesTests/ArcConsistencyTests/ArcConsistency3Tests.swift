@@ -203,7 +203,7 @@ final class ArcConsistency3Tests: XCTestCase {
                           constraintO_F_Y
         ]
 
-        constraintSet = ConstraintSet(allConstraints: allConstraints)
+        constraintSet = ConstraintSet(allConstraints)
         variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 
