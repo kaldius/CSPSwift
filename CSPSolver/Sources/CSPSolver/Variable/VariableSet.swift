@@ -87,6 +87,7 @@ public struct VariableSet {
         nameToVariable[name]?.setDomain(to: newDomain)
     }
 
+    // TODO: delete?
     public mutating func setAllDomains(using state: VariableDomainState) {
         for (name, domain) in state.variableNameToDomain {
             setDomain(for: name, to: domain)
@@ -112,12 +113,13 @@ public struct VariableSet {
         }
         return castedDomain
     }
+
 }
 
 extension VariableSet: Equatable {
     public static func == (lhs: VariableSet, rhs: VariableSet) -> Bool {
-        lhs.nameToVariable.keys == rhs.nameToVariable.keys
-        && Array(lhs.nameToVariable.values).isEqual(Array(rhs.nameToVariable.values))
+        Set(lhs.nameToVariable.keys) ==  Set(rhs.nameToVariable.keys)
+        && Array(lhs.nameToVariable.values).containsSameValues(as: Array(rhs.nameToVariable.values))
     }
 }
 

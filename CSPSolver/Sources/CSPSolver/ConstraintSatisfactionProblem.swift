@@ -10,19 +10,20 @@ public struct ConstraintSatisfactionProblem {
     /// Required for `orderDomainValues`.
     private let inferenceEngine: InferenceEngine
 
-    /// Stores `VariableDomainState`s used for the undo operation.
-    private var domainUndoStack: Stack<VariableDomainState>
+    /// Stores `VariableSet`s used for the undo operation.
+    private var stateUndoStack: Stack<VariableSet>
 
     init(variableSet: VariableSet,
          constraintSet: ConstraintSet,
          inferenceEngine: InferenceEngine,
-         domainUndoStack: Stack<VariableDomainState>) {
+         stateUndoStack: Stack<VariableSet>) {
         self.variableSet = variableSet
         self.constraintSet = constraintSet
         self.inferenceEngine = inferenceEngine
-        self.domainUndoStack = domainUndoStack
+        self.stateUndoStack = stateUndoStack
     }
 
+    /// Automatically applies all `UnaryConstraint`s on `Variable`s, then removes all `UnaryConstraint`s.
     init(variables: [any Variable],
          constraints: [any Constraint],
          inferenceEngine: InferenceEngine) {
@@ -34,8 +35,8 @@ public struct ConstraintSatisfactionProblem {
         self.init(variableSet: finalVariableSet,
                   constraintSet: constraintSet,
                   inferenceEngine: inferenceEngine,
-                  domainUndoStack: Stack())
-        saveCurrentDomainState()
+                  stateUndoStack: Stack())
+        saveCurrentState()
     }
 
     public var isCompletelyAssigned: Bool {
@@ -48,8 +49,9 @@ public struct ConstraintSatisfactionProblem {
         variableSet.nextUnassignedVariable
     }
 
-    public var latestDomainState: VariableDomainState {
-        guard let state = domainUndoStack.peek() else {
+    // TODO: delete?
+    public var latestState: VariableSet {
+        guard let state = stateUndoStack.peek() else {
             // TODO: throw error
             assert(false)
         }
@@ -74,22 +76,22 @@ public struct ConstraintSatisfactionProblem {
         return orderedValues
     }
 
-    /// Given a `VariableDomainState`, save the current state and set the domains
+    /// Given a `VariableSet`, save the current state and set the domains
     /// to the ones given in the new state.
-    public mutating func updateDomains(using state: VariableDomainState) {
-        saveCurrentDomainState()
+    public mutating func update(using state: VariableSet) {
+        saveCurrentState()
         setDomains(using: state)
     }
 
     /// Undo all `Variable`s domains to the previous saved state.
     // TODO: test that undoing infinite times will only stop at inital domain state
-    public mutating func revertToPreviousDomainState() {
-        guard let prevState = domainUndoStack.peek() else {
+    public mutating func revertToPreviousState() {
+        guard let prevState = stateUndoStack.peek() else {
             // TODO: throw error
             assert(false)
         }
-        if domainUndoStack.count > 1 {
-            domainUndoStack.pop()
+        if stateUndoStack.count > 1 {
+            stateUndoStack.pop()
         }
         setDomains(using: prevState)
     }
@@ -113,12 +115,11 @@ public struct ConstraintSatisfactionProblem {
         return newInference.totalDomainValueCount
     }
 
-    private mutating func saveCurrentDomainState() {
-        let variables = variableSet.variables
-        domainUndoStack.push(VariableDomainState(from: variables))
+    private mutating func saveCurrentState() {
+        stateUndoStack.push(variableSet)
     }
 
-    private mutating func setDomains(using state: VariableDomainState) {
-        variableSet.setAllDomains(using: state)
+    private mutating func setDomains(using state: VariableSet) {
+        variableSet = state
     }
 }

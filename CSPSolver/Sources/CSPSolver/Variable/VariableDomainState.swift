@@ -1,8 +1,7 @@
 /**
  Represents a state of all `Variable`s domains.
  */
-// TODO: TEST
-// TODO: compare use of VDS vs just copying variableSets
+// TODO: DELETE?
 public struct VariableDomainState {
     public var variableNameToDomain: [String: [any Value]]
     private var variableNameToVariable: [String: any Variable]

@@ -141,7 +141,7 @@ final class VariableSetTests: XCTestCase {
 
         variableSet.setDomain(for: intVariableA.name, to: [2, 1])
         let newDomain = variableSet.getDomain(intVariableA.name)
-        XCTAssertTrue(newDomain.isEqual([2, 1]))
+        XCTAssertTrue(newDomain.containsSameValues(as: [2, 1]))
     }
 
     func testGetDomain_nonExistentVariable_throwsError() {
