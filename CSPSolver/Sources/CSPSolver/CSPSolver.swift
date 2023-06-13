@@ -12,13 +12,12 @@ public struct CSPSolver {
     private let nextVariableSelector: any NextVariableSelector
     private let domainValueSorter: any DomainValueSorter
 
-    init(inferenceEngine: InferenceEngine,
-         // TODO: turn these into enums, should not have user inputting the constraintset into the domainValueSorter
-         nextVariableSelector: any NextVariableSelector,
-         domainValueSorter: any DomainValueSorter) {
-        self.inferenceEngine = inferenceEngine
-        self.nextVariableSelector = nextVariableSelector
-        self.domainValueSorter = domainValueSorter
+    init(inferenceEngineType: InferenceEngineType,
+         nextVariableSelectorType: NextVariableSelectorType,
+         domainValueSorterType: DomainValueSorterType) {
+        self.inferenceEngine = InferenceEngineFactory.create(inferenceEngineType)
+        self.nextVariableSelector = NextVariableSelectorFactory.create(nextVariableSelectorType)
+        self.domainValueSorter = DomainValueSorterFactory.create(domainValueSorterType)
     }
 
     /// Returns the `VariableSet` in a solved state if it can be solved,
@@ -88,7 +87,6 @@ public struct CSPSolver {
     private let domainValueSorter: any DomainValueSorter
 
     init(inferenceEngine: InferenceEngine,
-         // TODO: turn these into enums, should not have user inputting the constraintset into the domainValueSorter
          nextVariableSelector: any NextVariableSelector,
          domainValueSorter: any DomainValueSorter) {
         self.inferenceEngine = inferenceEngine

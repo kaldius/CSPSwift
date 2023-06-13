@@ -1,0 +1,3 @@
+enum NextVariableSelectorType {
+    case minimumRemainingValues
+}

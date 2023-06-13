@@ -9,7 +9,6 @@ public struct SortableValue<T: Value> {
 }
 
 extension SortableValue: Comparable {
-    // TODO: check if the comparison direction is correct
     public static func < (lhs: SortableValue<T>, rhs: SortableValue<T>) -> Bool {
         lhs.priority < rhs.priority
     }

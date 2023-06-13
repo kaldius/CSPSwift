@@ -215,9 +215,9 @@ final class CSPSolverTests: XCTestCase {
 
         csp = ConstraintSatisfactionProblem(variables: allVariables, constraints: allConstraints)
 
-        solver = CSPSolver(inferenceEngine: inferenceEngine,
-                           nextVariableSelector: MinimumRemainingValues(),
-                           domainValueSorter: LeastConstrainingValue(inferenceEngine: inferenceEngine))
+        solver = CSPSolver(inferenceEngineType: .ac3,
+                           nextVariableSelectorType: .minimumRemainingValues,
+                           domainValueSorterType: .leastConstrainingValue_ac3)
     }
 
     func testBacktrack_simple() {
@@ -230,9 +230,9 @@ final class CSPSolverTests: XCTestCase {
 
         let newAllConstraints: [any Constraint] = [aEqualBConstraint]
 
-        let newSolver = CSPSolver(inferenceEngine: inferenceEngine,
-                                  nextVariableSelector: MinimumRemainingValues(),
-                                  domainValueSorter: LeastConstrainingValue(inferenceEngine: inferenceEngine))
+        let newSolver = CSPSolver(inferenceEngineType: .ac3,
+                                  nextVariableSelectorType: .minimumRemainingValues,
+                                  domainValueSorterType: .leastConstrainingValue_ac3)
 
         let newCSP = ConstraintSatisfactionProblem(variables: newAllVariables, constraints: newAllConstraints)
 
