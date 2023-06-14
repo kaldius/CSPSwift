@@ -30,8 +30,8 @@ public struct ConstraintSet {
 
     /// Applies all `UnaryConstraint`s to the given `state` and returns a new
     /// `VariableSet` where all `Variable`s domains have been constrained.
-    public func applyUnaryConstraints(to state: VariableSet) -> VariableSet {
-        return unaryConstraints.reduce(state, { $1.restrictDomain(state: $0) })
+    public func applyUnaryConstraints(to state: VariableSet) throws -> VariableSet {
+        return try unaryConstraints.reduce(state, { try $1.restrictDomain(state: $0) })
     }
 
     public mutating func removeUnaryConstraints() {

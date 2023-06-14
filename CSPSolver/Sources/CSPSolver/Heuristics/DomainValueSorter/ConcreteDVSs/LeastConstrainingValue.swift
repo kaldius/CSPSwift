@@ -18,12 +18,12 @@ struct LeastConstrainingValue: DomainValueSorter {
     /// Sorts domain values by total number of remaining consistent domain values for all `Variable`s.
     public func orderDomainValues<V: Variable>(for variable: V,
                                                state: VariableSet,
-                                               constraintSet: ConstraintSet) -> [V.ValueType] {
-        var sortables = variable.domain.map({ domainValue in
-            let priority = numConsistentDomainValues(ifSetting: variable.name,
-                                                     to: domainValue,
-                                                     state: state,
-                                                     constraintSet: constraintSet)
+                                               constraintSet: ConstraintSet) throws -> [V.ValueType] {
+        var sortables = try variable.domain.map({ domainValue in
+            let priority = try numConsistentDomainValues(ifSetting: variable.name,
+                                                         to: domainValue,
+                                                         state: state,
+                                                         constraintSet: constraintSet)
             return SortableValue(value: domainValue,
                                  priority: priority)
         })
@@ -40,14 +40,14 @@ struct LeastConstrainingValue: DomainValueSorter {
     private func numConsistentDomainValues(ifSetting variableName: String,
                                            to value: some Value,
                                            state: VariableSet,
-                                           constraintSet: ConstraintSet) -> Int {
+                                           constraintSet: ConstraintSet) throws -> Int {
         var copiedState = state
         guard let variable = state.getVariable(variableName),
               variable.canAssign(to: value) else {
             return 0
         }
-        copiedState.assign(variableName, to: value)
-        guard let newInference = inferenceEngine.makeNewInference(from: copiedState,
+        try copiedState.assign(variableName, to: value)
+        guard let newInference = try inferenceEngine.makeNewInference(from: copiedState,
                                                                   constraintSet: constraintSet) else {
             return 0
         }

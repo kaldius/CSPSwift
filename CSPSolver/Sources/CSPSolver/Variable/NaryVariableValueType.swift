@@ -2,7 +2,6 @@
  Takes the place of `Variable.ValueType` in an `NaryVariable`.
  This wrapper exists because `[any Value]` cannot conform to `Value`.
  */
-// TODO: test
 public struct NaryVariableValueType {
     var value: [any Value]
 

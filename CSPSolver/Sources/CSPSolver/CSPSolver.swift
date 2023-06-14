@@ -22,7 +22,7 @@ public struct CSPSolver {
 
     /// Returns the `VariableSet` in a solved state if it can be solved,
     /// returns `nil` otherwise.
-    public func backtrack(csp: ConstraintSatisfactionProblem) -> VariableSet? {
+    public func backtrack(csp: ConstraintSatisfactionProblem) throws -> VariableSet? {
         if csp.variablesCompletelyAssigned && csp.allConstraintsSatisfied {
             return csp.variableSet
         }
@@ -31,7 +31,7 @@ public struct CSPSolver {
             // all satisfied, search has failed
             return nil
         }
-        return testAllValues(for: unassignedVariable, given: csp)
+        return try testAllValues(for: unassignedVariable, given: csp)
     }
 
     /// For a given `Variable`, tests every domain `Value` in an order specified
@@ -39,13 +39,13 @@ public struct CSPSolver {
     ///
     /// - Returns: a `VariableSet` of successful assignments if successful, `nil` otherwise.
     private func testAllValues(for variable: some Variable,
-                               given csp: ConstraintSatisfactionProblem) -> VariableSet? {
+                               given csp: ConstraintSatisfactionProblem) throws -> VariableSet? {
         var copiedCsp = csp
-        let orderedDomainValues = domainValueSorter.orderDomainValues(for: variable,
-                                                                      state: copiedCsp.variableSet,
-                                                                      constraintSet: copiedCsp.constraintSet)
-        for domainValue in orderedDomainValues where copiedCsp.canAssign(variable.name, to: domainValue) {
-            guard let successfulState = testSettingValue(for: variable, to: domainValue, given: copiedCsp) else {
+        let orderedDomainValues = try domainValueSorter.orderDomainValues(for: variable,
+                                                                          state: copiedCsp.variableSet,
+                                                                          constraintSet: copiedCsp.constraintSet)
+        for domainValue in orderedDomainValues where try copiedCsp.canAssign(variable.name, to: domainValue) {
+            guard let successfulState = try testSettingValue(for: variable, to: domainValue, given: copiedCsp) else {
                 continue
             }
             return successfulState
@@ -58,12 +58,12 @@ public struct CSPSolver {
     /// - Returns: a `VariableSet` of succesful assignments if successful, `nil` otherwise.
     private func testSettingValue(for variable: some Variable,
                                   to value: some Value,
-                                  given csp: ConstraintSatisfactionProblem) -> VariableSet? {
+                                  given csp: ConstraintSatisfactionProblem) throws -> VariableSet? {
         var copiedCsp = csp
-        copiedCsp.variableSet.assign(variable.name, to: value)
+        try copiedCsp.variableSet.assign(variable.name, to: value)
         // make new inferences (without setting yet)
-        guard let inference = inferenceEngine.makeNewInference(from: copiedCsp.variableSet,
-                                                               constraintSet: copiedCsp.constraintSet),
+        guard let inference = try inferenceEngine.makeNewInference(from: copiedCsp.variableSet,
+                                                                   constraintSet: copiedCsp.constraintSet),
               !inference.containsEmptyDomain else {
             // if new inference cannot be made, or inference shows some
             // Variable eventually cannot be assigned, search has failed
@@ -71,7 +71,7 @@ public struct CSPSolver {
         }
         // set new inferences
         copiedCsp.update(using: copiedCsp.variableSet)
-        let result = backtrack(csp: copiedCsp)
+        let result = try backtrack(csp: copiedCsp)
         guard result != nil else {
             // remove inferences from csp
             return nil

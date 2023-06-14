@@ -60,7 +60,7 @@ final class ArcConsistency3Tests: XCTestCase {
 
     var inferenceEngine: InferenceEngine!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableT = IntVariable(name: "T", domain: Set(1 ... 9))
         intVariableW = IntVariable(name: "W", domain: Set(0 ... 9))
@@ -204,25 +204,25 @@ final class ArcConsistency3Tests: XCTestCase {
         ]
 
         constraintSet = ConstraintSet(allConstraints)
-        variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
+        variableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 
         inferenceEngine = ArcConsistency3()
     }
 
-    func testMakeNewInference_settingFTo1AndOTo6() {
+    func testMakeNewInference_settingFTo1AndOTo6() throws {
         // assign F to 1
-        variableSet.assign(intVariableF.name, to: 1)
+        try variableSet.assign(intVariableF.name, to: 1)
         let assignmentF = variableSet.getAssignment(intVariableF.name, type: IntVariable.self)
         XCTAssertEqual(assignmentF, 1)
 
         // assign O to 6
-        variableSet.assign(intVariableO.name, to: 6)
+        try variableSet.assign(intVariableO.name, to: 6)
         let assignmentO = variableSet.getAssignment(intVariableO.name, type: IntVariable.self)
         XCTAssertEqual(assignmentO, 6)
 
         // make a new inference
-        let inference = inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
+        let inference = try inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
 
         // get all domains from inference
         let inferredIntVarDomains = allIntVariables.map({ variable in
@@ -279,9 +279,9 @@ final class ArcConsistency3Tests: XCTestCase {
                            expectedDualVarDomains[idx],
                            "\(allDualVariables[idx].name)")
         }
-        
+
         measure {
-            _ = inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
+            _ = try? inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)
         }
 
     }

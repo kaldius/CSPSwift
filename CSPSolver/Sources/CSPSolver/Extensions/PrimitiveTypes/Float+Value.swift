@@ -1,12 +1,10 @@
 extension Float: Value {
-    // TODO: get rid of force cast by throwing error
     init?(_ value: any Value) {
-        switch value {
-        case is Int:
-            self.init(value as! Int)
-        case is Float:
-            self.init(value as! Float)
-        default:
+        if let intValue = value as? Int {
+            self.init(intValue)
+        } else if let floatValue = value as? Float {
+            self.init(floatValue)
+        } else {
             return nil
         }
     }

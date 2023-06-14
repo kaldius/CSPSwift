@@ -6,14 +6,14 @@ public protocol UnaryConstraint: Constraint {
 }
 
 extension UnaryConstraint {
-    func restrictDomain(state: VariableSet) -> VariableSet {
+    func restrictDomain(state: VariableSet) throws -> VariableSet {
         guard let variable = state.getVariable(variableName, type: TernaryVariable.self) else {
             return state
         }
         var copiedState = state
         var newDomain = variable.domain
         for domainValue in variable.domain {
-            copiedState.assign(variableName, to: domainValue)
+            try copiedState.assign(variableName, to: domainValue)
             if isViolated(state: copiedState) {
                 newDomain.remove(domainValue)
             }

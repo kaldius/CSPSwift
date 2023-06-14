@@ -24,15 +24,15 @@ final class EqualToConstraintTests: XCTestCase {
         XCTAssertFalse(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
     }
 
-    func testContainsAssignedVariable_someAssigned_returnsFalse() {
+    func testContainsAssignedVariable_someAssigned_returnsFalse() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
         XCTAssertTrue(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
 
         // assign B
-        variableSet.assign(intVariableB.name, to: 2)
+        try variableSet.assign(intVariableB.name, to: 2)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 2)
         XCTAssertTrue(aEqualToBConstraint.containsAssignedVariable(state: variableSet))
@@ -77,9 +77,9 @@ final class EqualToConstraintTests: XCTestCase {
         XCTAssertFalse(aEqualToBConstraint.isSatisfied(state: variableSet))
     }
 
-    func testIsSatisfied_oneUnassigned_returnsFalse() {
+    func testIsSatisfied_oneUnassigned_returnsFalse() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
 
@@ -89,42 +89,42 @@ final class EqualToConstraintTests: XCTestCase {
         XCTAssertFalse(aEqualToBConstraint.isSatisfied(state: variableSet))
     }
 
-    func testIsSatisfied_aLessThanB_returnsFalse() {
+    func testIsSatisfied_aLessThanB_returnsFalse() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
 
         // assign B
-        variableSet.assign(intVariableB.name, to: 2)
+        try variableSet.assign(intVariableB.name, to: 2)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 2)
 
         XCTAssertFalse(aEqualToBConstraint.isSatisfied(state: variableSet))
     }
 
-    func testIsSatisfied_aGreaterThanB_returnsFalse() {
+    func testIsSatisfied_aGreaterThanB_returnsFalse() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 4)
+        try variableSet.assign(intVariableA.name, to: 4)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 4)
 
         // assign B
-        variableSet.assign(intVariableB.name, to: 1)
+        try variableSet.assign(intVariableB.name, to: 1)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 1)
 
         XCTAssertFalse(aEqualToBConstraint.isSatisfied(state: variableSet))
     }
 
-    func testIsSatisfied_aEqualToB_returnsTrue() {
+    func testIsSatisfied_aEqualToB_returnsTrue() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
 
         // assign B
-        variableSet.assign(intVariableB.name, to: 1)
+        try variableSet.assign(intVariableB.name, to: 1)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 1)
 
@@ -132,13 +132,13 @@ final class EqualToConstraintTests: XCTestCase {
     }
 
     // MARK: tests for isViolated
-    func testIsViolated_bothUnassigned_returnsFalse() {
+    func testIsViolated_bothUnassigned_returnsFalse() throws {
         XCTAssertFalse(aEqualToBConstraint.isViolated(state: variableSet))
     }
 
-    func testIsViolated_oneUnassigned_returnsFalse() {
+    func testIsViolated_oneUnassigned_returnsFalse() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
 
@@ -148,42 +148,42 @@ final class EqualToConstraintTests: XCTestCase {
         XCTAssertFalse(aEqualToBConstraint.isViolated(state: variableSet))
     }
 
-    func testIsViolated_aGreaterThanB_returnsTrue() {
+    func testIsViolated_aGreaterThanB_returnsTrue() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 4)
+        try variableSet.assign(intVariableA.name, to: 4)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 4)
 
         // assign B
-        variableSet.assign(intVariableB.name, to: 1)
+        try variableSet.assign(intVariableB.name, to: 1)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 1)
 
         XCTAssertTrue(aEqualToBConstraint.isViolated(state: variableSet))
     }
 
-    func testIsViolated_aLessThanB_returnsTrue() {
+    func testIsViolated_aLessThanB_returnsTrue() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
 
         // assign B
-        variableSet.assign(intVariableB.name, to: 2)
+        try variableSet.assign(intVariableB.name, to: 2)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 2)
 
         XCTAssertTrue(aEqualToBConstraint.isViolated(state: variableSet))
     }
 
-    func testIsViolated_aEqualToB_returnsFalse() {
+    func testIsViolated_aEqualToB_returnsFalse() throws {
         // assign A
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 1)
 
         // assign B
-        variableSet.assign(intVariableB.name, to: 1)
+        try variableSet.assign(intVariableB.name, to: 1)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 1)
 

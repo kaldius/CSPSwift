@@ -2,7 +2,7 @@
  An `InferenceEngine` that uses the **AC-3** algorithm.
  */
 public struct ArcConsistency3: InferenceEngine {
-    public func makeNewInference(from state: VariableSet, constraintSet: ConstraintSet) -> VariableSet? {
+    public func makeNewInference(from state: VariableSet, constraintSet: ConstraintSet) throws -> VariableSet? {
         var copiedState = state
         var arcs = Queue<Arc>(given: constraintSet)
 
@@ -10,7 +10,7 @@ public struct ArcConsistency3: InferenceEngine {
             guard let arc = arcs.dequeue() else {
                 assert(false)
             }
-            if let newVariableIDomain = arc.revise(state: copiedState) {
+            if let newVariableIDomain = try arc.revise(state: copiedState) {
                 if newVariableIDomain.isEmpty {
                     // impossible to carry on 
                     return nil

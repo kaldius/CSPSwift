@@ -17,7 +17,7 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
 
     var csp: ConstraintSatisfactionProblem!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3, 4, 5]))
         intVariableB = IntVariable(name: "intB", domain: Set([3, 4, 5, 6, 7]))
@@ -44,33 +44,33 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
 
         constraintSet = ConstraintSet(allConstraints)
 
-        csp = ConstraintSatisfactionProblem(variables: allVariables,
-                                            constraints: allConstraints)
+        csp = try ConstraintSatisfactionProblem(variables: allVariables,
+                                                constraints: allConstraints)
     }
 
     func testCanAssign_nonExistentVariable_throwsError() {
 
     }
 
-    func testCanAssign_violatesConstraint_returnsFalse() {
-        csp.variableSet.assign(intVariableA.name, to: 5)
+    func testCanAssign_violatesConstraint_returnsFalse() throws {
+        try csp.variableSet.assign(intVariableA.name, to: 5)
 
         // violates bGreaterThanA
-        XCTAssertFalse(csp.canAssign(intVariableB.name, to: 1))
+        XCTAssertFalse(try csp.canAssign(intVariableB.name, to: 1))
     }
 
-    func testCanAssign_doesNotViolateConstraint_returnsTrue() {
-        csp.variableSet.assign(intVariableA.name, to: 5)
-        XCTAssertTrue(csp.canAssign(intVariableB.name, to: 6))
+    func testCanAssign_doesNotViolateConstraint_returnsTrue() throws {
+        try csp.variableSet.assign(intVariableA.name, to: 5)
+        XCTAssertTrue(try csp.canAssign(intVariableB.name, to: 6))
 
-        csp.variableSet.assign(intVariableB.name, to: 6)
-        XCTAssertTrue(csp.canAssign(intVariableC.name, to: 7))
+        try csp.variableSet.assign(intVariableB.name, to: 6)
+        XCTAssertTrue(try csp.canAssign(intVariableC.name, to: 7))
     }
 
-    func testUpdateAndRevertToPreviousState_correctlyUpdatesAndReverts() {
+    func testUpdateAndRevertToPreviousState_correctlyUpdatesAndReverts() throws {
         var expectedVariableSet = variableSet!
         expectedVariableSet.setDomain(for: intVariableA.name, to: [1])
-        expectedVariableSet.assign(intVariableC.name, to: 8)
+        try expectedVariableSet.assign(intVariableC.name, to: 8)
 
         csp.update(using: expectedVariableSet)
 
@@ -78,13 +78,13 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
 
         csp.revertToPreviousState()
 
-        let revertedVariableSet = constraintSet.applyUnaryConstraints(to: variableSet)
+        let revertedVariableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
 
         XCTAssertEqual(csp.variableSet, revertedVariableSet)
     }
 
-    func testRevertToPreviousState_alreadyAtInitialState_noChange() {
-        let initialState = constraintSet.applyUnaryConstraints(to: variableSet)
+    func testRevertToPreviousState_alreadyAtInitialState_noChange() throws {
+        let initialState = try constraintSet.applyUnaryConstraints(to: variableSet)
 
         for _ in 0 ..< 10 {
             csp.revertToPreviousState()

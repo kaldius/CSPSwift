@@ -62,7 +62,7 @@ final class CSPSolverTests: XCTestCase {
 
     var csp: ConstraintSatisfactionProblem!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableT = IntVariable(name: "T", domain: Set(1 ... 9))
         intVariableW = IntVariable(name: "W", domain: Set(0 ... 9))
@@ -206,15 +206,15 @@ final class CSPSolverTests: XCTestCase {
                           constraintO_F_Y]
 
         constraintSet = ConstraintSet(allConstraints)
-        variableSet = constraintSet.applyUnaryConstraints(to: variableSet)
+        variableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 
         inferenceEngine = ArcConsistency3()
 
-        csp = ConstraintSatisfactionProblem(variables: allVariables, constraints: allConstraints)
+        csp = try ConstraintSatisfactionProblem(variables: allVariables, constraints: allConstraints)
     }
 
-    func testBacktrack_sixVariablesAssigned() {
+    func testBacktrack_sixVariablesAssigned() throws {
         let givenAssignments = [intVariableF.name: 1,
                                 intVariableO.name: 6,
                                 intVariableC1.name: 1,
@@ -223,7 +223,7 @@ final class CSPSolverTests: XCTestCase {
                                 intVariableC2.name: 0]
 
         for (variableName, value) in givenAssignments {
-            csp.variableSet.assign(variableName, to: value)
+            try csp.variableSet.assign(variableName, to: value)
             let assignment = csp.variableSet.getAssignment(variableName, type: IntVariable.self)
             XCTAssertEqual(assignment, value)
         }
@@ -231,21 +231,22 @@ final class CSPSolverTests: XCTestCase {
         let solver = CSPSolver(inferenceEngineType: .ac3,
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .random)
-        let output = solver.backtrack(csp: csp)!
+        let output = try XCTUnwrap(solver.backtrack(csp: csp))
         XCTAssertTrue(constraintSet.allSatisfied(state: output))
         measure {
-            _ = solver.backtrack(csp: csp)!
+            let measuredOutput = try? solver.backtrack(csp: csp)
+            XCTAssertNotNil(measuredOutput)
         }
     }
 
-    func testBacktrack_fourVariablesAssigned() {
+    func testBacktrack_fourVariablesAssigned() throws {
         let givenAssignments = [intVariableF.name: 1,
                                 intVariableC1.name: 1,
                                 intVariableU.name: 5,
                                 intVariableW.name: 2]
 
         for (variableName, value) in givenAssignments {
-            csp.variableSet.assign(variableName, to: value)
+            try csp.variableSet.assign(variableName, to: value)
             let assignment = csp.variableSet.getAssignment(variableName, type: IntVariable.self)
             XCTAssertEqual(assignment, value)
         }
@@ -253,19 +254,20 @@ final class CSPSolverTests: XCTestCase {
         let solver = CSPSolver(inferenceEngineType: .ac3,
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .random)
-        let output = solver.backtrack(csp: csp)!
+        let output = try XCTUnwrap(solver.backtrack(csp: csp))
         XCTAssertTrue(constraintSet.allSatisfied(state: output))
         measure {
-            _ = solver.backtrack(csp: csp)!
+            let measuredOutput = try? solver.backtrack(csp: csp)
+            XCTAssertNotNil(measuredOutput)
         }
     }
 
-    func testBacktrack_twoVariablesAssigned() {
+    func testBacktrack_twoVariablesAssigned() throws {
         let givenAssignments = [intVariableF.name: 1,
                                 intVariableC1.name: 1]
 
         for (variableName, value) in givenAssignments {
-            csp.variableSet.assign(variableName, to: value)
+            try csp.variableSet.assign(variableName, to: value)
             let assignment = csp.variableSet.getAssignment(variableName, type: IntVariable.self)
             XCTAssertEqual(assignment, value)
         }
@@ -273,49 +275,54 @@ final class CSPSolverTests: XCTestCase {
         let solver = CSPSolver(inferenceEngineType: .ac3,
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .random)
-        let output = solver.backtrack(csp: csp)!
+        let output = try XCTUnwrap(solver.backtrack(csp: csp))
         XCTAssertTrue(constraintSet.allSatisfied(state: output))
         measure {
-            _ = solver.backtrack(csp: csp)!
+            let measuredOutput = try? solver.backtrack(csp: csp)
+            XCTAssertNotNil(measuredOutput)
         }
     }
 
     // Worst performance
     // Likely because using AC3's runtime is so slow it negates the benefits of the heuristic.
-    func testBacktrack_ac3_mrv_lcvAc3() {
+    func testBacktrack_ac3_mrv_lcvAc3() throws {
         let solver = CSPSolver(inferenceEngineType: .ac3,
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .leastConstrainingValue_ac3)
 
-        let output = solver.backtrack(csp: csp)!
+        let output = try XCTUnwrap(solver.backtrack(csp: csp))
         XCTAssertTrue(constraintSet.allSatisfied(state: output))
         measure {
-            _ = solver.backtrack(csp: csp)!
+            let measuredOutput = try? solver.backtrack(csp: csp)
+            XCTAssertNotNil(measuredOutput)
         }
     }
 
     // Second best performance
-    func testBacktrack_ac3_mrv_lcvForwardChecking() {
+    func testBacktrack_ac3_mrv_lcvForwardChecking() throws {
         let solver = CSPSolver(inferenceEngineType: .ac3,
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .leastConstrainingValue_forwardChecking)
 
-        let output = solver.backtrack(csp: csp)!
+        let output = try XCTUnwrap(solver.backtrack(csp: csp))
         XCTAssertTrue(constraintSet.allSatisfied(state: output))
         measure {
-            _ = solver.backtrack(csp: csp)!
+            let measuredOutput = try? solver.backtrack(csp: csp)
+            XCTAssertNotNil(measuredOutput)
         }
     }
 
     // Best performance so far
-    func testBacktrack_ac3_mrv_randomDVS() {
+    func testBacktrack_ac3_mrv_randomDVS() throws {
         let solver = CSPSolver(inferenceEngineType: .ac3,
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .random)
-        let output = solver.backtrack(csp: csp)!
+
+        let output = try XCTUnwrap(solver.backtrack(csp: csp))
         XCTAssertTrue(constraintSet.allSatisfied(state: output))
         measure {
-            _ = solver.backtrack(csp: csp)!
+            let measuredOutput = try? solver.backtrack(csp: csp)
+            XCTAssertNotNil(measuredOutput)
         }
     }
 }

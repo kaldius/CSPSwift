@@ -18,10 +18,10 @@ public struct ConstraintSatisfactionProblem {
 
     /// Automatically applies all `UnaryConstraint`s on `Variable`s, then removes all `UnaryConstraint`s.
     init(variables: [any Variable],
-         constraints: [any Constraint]) {
+         constraints: [any Constraint]) throws {
         let variableSet = VariableSet(from: variables)
         var constraintSet = ConstraintSet(constraints)
-        let finalVariableSet = constraintSet.applyUnaryConstraints(to: variableSet)
+        let finalVariableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()
 
         self.init(variableSet: finalVariableSet,
@@ -47,11 +47,11 @@ public struct ConstraintSatisfactionProblem {
         return state
     }
 
-    public mutating func canAssign(_ variableName: String, to value: some Value) -> Bool {
+    public mutating func canAssign(_ variableName: String, to value: some Value) throws -> Bool {
         guard variableSet.canAssign(variableName, to: value) else {
             return false
         }
-        variableSet.assign(variableName, to: value)
+        try variableSet.assign(variableName, to: value)
         let anyViolated = constraintSet.anyViolated(state: variableSet)
         variableSet.unassign(variableName)
         return !anyViolated

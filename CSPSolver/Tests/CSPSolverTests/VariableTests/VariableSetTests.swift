@@ -29,19 +29,19 @@ final class VariableSetTests: XCTestCase {
         XCTAssertFalse(variableSet.isCompletelyAssigned)
     }
 
-    func testIsCompletelyAssigned_someAssignedSomeUnassigned_returnsFalse() {
-        variableSet.assign(intVariableA.name, to: 2)
-        variableSet.assign(floatVariableC.name, to: Float(7.987))
-        variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [1, Float(4.123), Float(7.987)]))
+    func testIsCompletelyAssigned_someAssignedSomeUnassigned_returnsFalse() throws {
+        try variableSet.assign(intVariableA.name, to: 2)
+        try variableSet.assign(floatVariableC.name, to: Float(7.987))
+        try variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [1, Float(4.123), Float(7.987)]))
 
         XCTAssertFalse(variableSet.isCompletelyAssigned)
     }
 
-    func testIsCompletelyAssigned_allAssigned_returnsTrue() {
-        variableSet.assign(intVariableA.name, to: 2)
-        variableSet.assign(floatVariableB.name, to: Float(4.123))
-        variableSet.assign(floatVariableC.name, to: Float(9.321))
-        variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [1, Float(4.123), Float(7.987)]))
+    func testIsCompletelyAssigned_allAssigned_returnsTrue() throws {
+        try variableSet.assign(intVariableA.name, to: 2)
+        try variableSet.assign(floatVariableB.name, to: Float(4.123))
+        try variableSet.assign(floatVariableC.name, to: Float(9.321))
+        try variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [1, Float(4.123), Float(7.987)]))
 
         XCTAssertTrue(variableSet.isCompletelyAssigned)
     }
@@ -90,9 +90,9 @@ final class VariableSetTests: XCTestCase {
 
     }
 
-    func testIsAssigned_returnsCorrectValue() {
+    func testIsAssigned_returnsCorrectValue() throws {
         XCTAssertFalse(variableSet.isAssigned(intVariableA.name))
-        variableSet.assign(intVariableA.name, to: 1)
+        try variableSet.assign(intVariableA.name, to: 1)
         XCTAssertTrue(variableSet.isAssigned(intVariableA.name))
     }
 
@@ -108,9 +108,9 @@ final class VariableSetTests: XCTestCase {
         XCTAssertNil(variableSet.getAssignment(intVariableA.name, type: IntVariable.self))
     }
 
-    func testAssignAndGetAssignment_variableAssigned_returnsCorrectAssignment() {
+    func testAssignAndGetAssignment_variableAssigned_returnsCorrectAssignment() throws {
         let assignment = Float(7.987)
-        variableSet.assign(floatVariableC.name, to: assignment)
+        try variableSet.assign(floatVariableC.name, to: assignment)
         let extractedAssignment = variableSet.getAssignment(floatVariableC.name, type: FloatVariable.self)
         XCTAssertEqual(extractedAssignment, assignment)
     }
@@ -127,8 +127,8 @@ final class VariableSetTests: XCTestCase {
 
     }
 
-    func testUnassign_variableCorrectlyUnassigned() {
-        variableSet.assign(intVariableA.name, to: 1)
+    func testUnassign_variableCorrectlyUnassigned() throws {
+        try variableSet.assign(intVariableA.name, to: 1)
         XCTAssertTrue(variableSet.isAssigned(intVariableA.name))
 
         variableSet.unassign(intVariableA.name)

@@ -42,13 +42,13 @@ public struct Arc {
     /// supporting `variableJ` value.
     ///
     /// - Returns: an array representing the revised domain for `variableI`, or nil if no revision occured.
-    public func revise(state: VariableSet) -> [any Value]? {
+    public func revise(state: VariableSet) throws -> [any Value]? {
         guard !state.isAssigned(variableIName) else {
             return nil
         }
         let variableIDomain = state.getDomain(variableIName)
         var variableIDomainCopy = variableIDomain
-        for iDomainValue in variableIDomain where canBeRemoved(iDomainValue, state: state) {
+        for iDomainValue in variableIDomain where try canBeRemoved(iDomainValue, state: state) {
             // TODO: optimize?
             variableIDomainCopy.removeAll(where: { $0.isEqual(iDomainValue) })
         }
@@ -60,23 +60,23 @@ public struct Arc {
     }
 
     /// Checks if the given `iDomainValue` can be removed from the domain of `variableI`.
-    private func canBeRemoved(_ iDomainValue: any Value, state: VariableSet) -> Bool {
+    private func canBeRemoved(_ iDomainValue: any Value, state: VariableSet) throws -> Bool {
         var copiedState = state
-        copiedState.assign(variableIName, to: iDomainValue)
+        try copiedState.assign(variableIName, to: iDomainValue)
         if copiedState.isAssigned(variableJName) {
             return !constraintIJ.isSatisfied(state: copiedState)
         }
         let variableJDomain = state.getDomain(variableJName)
-        return !containsSatisfactoryJValue(domain: variableJDomain, state: copiedState)
+        return try !containsSatisfactoryJValue(domain: variableJDomain, state: copiedState)
     }
 
     /// Checks if the provided `domain` contains an assignment for `variableJ` such that
     /// `constraintIJ` is satisfied.
-    private func containsSatisfactoryJValue(domain: [any Value], state: VariableSet) -> Bool {
+    private func containsSatisfactoryJValue(domain: [any Value], state: VariableSet) throws -> Bool {
         var copiedState = state
         // look for a domainValue that satisfies the constraint
-        return domain.contains(where: { jDomainValue in
-            copiedState.assign(variableJName, to: jDomainValue)
+        return try domain.contains(where: { jDomainValue in
+            try copiedState.assign(variableJName, to: jDomainValue)
             let satisfied = constraintIJ.isSatisfied(state: copiedState)
             copiedState.unassign(variableJName)
             return satisfied

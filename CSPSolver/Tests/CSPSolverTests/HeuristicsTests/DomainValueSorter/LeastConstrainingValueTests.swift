@@ -35,10 +35,10 @@ final class LeastConstrainingValueTests: XCTestCase {
         leastConstrainingValue = LeastConstrainingValue(inferenceEngine: inferenceEngine)
     }
 
-    func testOrderDomainValues() {
-        let actualValues = leastConstrainingValue.orderDomainValues(for: intVariableA,
-                                                                    state: variableSet,
-                                                                    constraintSet: constraintSet)
+    func testOrderDomainValues() throws {
+        let actualValues = try leastConstrainingValue.orderDomainValues(for: intVariableA,
+                                                                        state: variableSet,
+                                                                        constraintSet: constraintSet)
         let expectedValues = [5, 4]
 
         XCTAssertEqual(actualValues, expectedValues)

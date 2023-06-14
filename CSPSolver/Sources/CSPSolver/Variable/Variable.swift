@@ -16,22 +16,16 @@ public protocol Variable: Hashable, CustomDebugStringConvertible {
 extension Variable {
     public var domain: Set<ValueType> {
         get {
-            if isAssigned {
-                guard let unwrappedAssignment = assignment else {
-                    // TODO: throw error
-                    assert(false)
-                }
+            if let unwrappedAssignment = assignment {
                 return [unwrappedAssignment]
             } else {
                 return internalDomain
             }
         }
         set(newDomain) {
-            guard canSetDomain(to: newDomain) else {
-                // TODO: throw error
-                assert(false)
+            if canSetDomain(to: newDomain) {
+                internalDomain = newDomain
             }
-            internalDomain = newDomain
         }
     }
 
@@ -40,11 +34,9 @@ extension Variable {
             internalAssignment
         }
         set(newAssignment) {
-            guard canAssign(to: newAssignment) else {
-                // TODO: throw error
-                assert(false)
+            if canAssign(to: newAssignment) {
+                internalAssignment = newAssignment
             }
-            internalAssignment = newAssignment
         }
     }
 
@@ -64,10 +56,9 @@ extension Variable {
 
     /// Another setter, but takes in value of type `any Value` and does the necessary
     /// casting before assignment. If assignment fails, throws error.
-    public mutating func assign(to newAssignment: any Value) {
+    public mutating func assign(to newAssignment: any Value) throws {
         guard let castedNewAssignment = newAssignment as? ValueType else {
-            // TODO: throw error
-            assert(false)
+            throw VariableError.valueTypeError
         }
         assignment = castedNewAssignment
     }
@@ -94,6 +85,7 @@ extension Variable {
         let set = Set(array.compactMap({ $0 as? ValueType }))
         guard array.count == set.count else {
             // TODO: throw error
+            // throw valueTypeError(expected: ValueType.description, received: type(of: newAssignment).description)
             assert(false)
         }
         return set

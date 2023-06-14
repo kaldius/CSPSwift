@@ -87,16 +87,16 @@ final class ConstraintSetTests: XCTestCase {
         }
     }
 
-    func testAllSatisfied_allNotSatisfied_returnsFalse() {
-        variableSet.assign(intVariableA.name, to: 3)
+    func testAllSatisfied_allNotSatisfied_returnsFalse() throws {
+        try variableSet.assign(intVariableA.name, to: 3)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 3)
 
-        variableSet.assign(intVariableB.name, to: 3)
+        try variableSet.assign(intVariableB.name, to: 3)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 3)
 
-        variableSet.assign(intVariableC.name, to: 2)
+        try variableSet.assign(intVariableC.name, to: 2)
         let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
         XCTAssertEqual(assignmentC, 2)
 
@@ -106,12 +106,12 @@ final class ConstraintSetTests: XCTestCase {
         XCTAssertFalse(constraintSet.allSatisfied(state: variableSet))
     }
 
-    func testAllSatisfied_oneNotSatisfied_returnsFalse() {
-        variableSet.assign(intVariableA.name, to: 5)
+    func testAllSatisfied_oneNotSatisfied_returnsFalse() throws {
+        try variableSet.assign(intVariableA.name, to: 5)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 5)
 
-        variableSet.assign(intVariableB.name, to: 2)
+        try variableSet.assign(intVariableB.name, to: 2)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 2)
 
@@ -121,20 +121,20 @@ final class ConstraintSetTests: XCTestCase {
         XCTAssertFalse(constraintSet.allSatisfied(state: variableSet))
     }
 
-    func testAllSatisfied_allSatisfied_returnsTrue() {
-        variableSet.assign(intVariableA.name, to: 4)
+    func testAllSatisfied_allSatisfied_returnsTrue() throws {
+        try variableSet.assign(intVariableA.name, to: 4)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 4)
 
-        variableSet.assign(intVariableB.name, to: 3)
+        try variableSet.assign(intVariableB.name, to: 3)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 3)
 
-        variableSet.assign(intVariableC.name, to: 5)
+        try variableSet.assign(intVariableC.name, to: 5)
         let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
         XCTAssertEqual(assignmentC, 5)
 
-        variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [4, 3, 5]))
+        try variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [4, 3, 5]))
         let ternaryAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryAssignment, NaryVariableValueType(value: [4, 3, 5]))
 
@@ -148,16 +148,16 @@ final class ConstraintSetTests: XCTestCase {
         XCTAssertFalse(constraintSet.anyViolated(state: variableSet))
     }
 
-    func testAnyViolated_oneViolated_returnsTrue() {
-        variableSet.assign(intVariableA.name, to: 4)
+    func testAnyViolated_oneViolated_returnsTrue() throws {
+        try variableSet.assign(intVariableA.name, to: 4)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 4)
 
-        variableSet.assign(intVariableB.name, to: 3)
+        try variableSet.assign(intVariableB.name, to: 3)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 3)
 
-        variableSet.assign(intVariableC.name, to: 2)
+        try variableSet.assign(intVariableC.name, to: 2)
         let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
         XCTAssertEqual(assignmentC, 2)
 
@@ -167,20 +167,20 @@ final class ConstraintSetTests: XCTestCase {
         XCTAssertTrue(constraintSet.anyViolated(state: variableSet))
     }
 
-    func testAnyViolated_allSatisfied_returnsFalse() {
-        variableSet.assign(intVariableA.name, to: 4)
+    func testAnyViolated_allSatisfied_returnsFalse() throws {
+        try variableSet.assign(intVariableA.name, to: 4)
         let assignmentA = variableSet.getAssignment(intVariableA.name, type: IntVariable.self)
         XCTAssertEqual(assignmentA, 4)
 
-        variableSet.assign(intVariableB.name, to: 3)
+        try variableSet.assign(intVariableB.name, to: 3)
         let assignmentB = variableSet.getAssignment(intVariableB.name, type: IntVariable.self)
         XCTAssertEqual(assignmentB, 3)
 
-        variableSet.assign(intVariableC.name, to: 5)
+        try variableSet.assign(intVariableC.name, to: 5)
         let assignmentC = variableSet.getAssignment(intVariableC.name, type: IntVariable.self)
         XCTAssertEqual(assignmentC, 5)
 
-        variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [4, 3, 5]))
+        try variableSet.assign(ternaryVariable.name, to: NaryVariableValueType(value: [4, 3, 5]))
         let ternaryAssignment = variableSet.getAssignment(ternaryVariable.name, type: TernaryVariable.self)
         XCTAssertEqual(ternaryAssignment, NaryVariableValueType(value: [4, 3, 5]))
 
@@ -190,14 +190,14 @@ final class ConstraintSetTests: XCTestCase {
         XCTAssertFalse(constraintSet.anyViolated(state: variableSet))
     }
 
-    func testApplyUnaryConstraints() {
+    func testApplyUnaryConstraints() throws {
         // only testing unary constraint, so only ternaryVariable domain should be restricted
         let expectedIntVariableADomain: [any Value] = [1, 3, 4, 5]
         let expectedIntVariableBDomain: [any Value] = [1, 2, 3]
         let expectedIntVariableCDomain: [any Value] = [2, 3, 4, 5]
         let expectedTernaryVariableDomain: [any Value] = [NaryVariableValueType(value: [4, 3, 5])]
 
-        let newVariableSet = constraintSet.applyUnaryConstraints(to: variableSet)
+        let newVariableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
 
         let actualIntVariableADomain = newVariableSet.getDomain(intVariableA.name)
         let actualIntVariableBDomain = newVariableSet.getDomain(intVariableB.name)

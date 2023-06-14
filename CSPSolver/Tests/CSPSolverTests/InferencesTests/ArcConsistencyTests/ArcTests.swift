@@ -97,9 +97,9 @@ final class ArcTests: XCTestCase {
         XCTAssertFalse(arcAEqualToB.contains("nonExistentVariableName"))
     }
 
-    func testRevise_variableIAssigned_noRevisionReturned() {
-        variableSet.assign(intVariableA.name, to: 4)
-        let expectedNilValue = arcAEqualToB.revise(state: variableSet)
+    func testRevise_variableIAssigned_noRevisionReturned() throws {
+        try variableSet.assign(intVariableA.name, to: 4)
+        let expectedNilValue = try arcAEqualToB.revise(state: variableSet)
         XCTAssertNil(expectedNilValue)
     }
 

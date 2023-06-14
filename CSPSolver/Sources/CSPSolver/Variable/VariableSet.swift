@@ -76,12 +76,12 @@ public struct VariableSet {
         return nameToVariable[name]?.assignment as? V.ValueType
     }
 
-    public mutating func assign(_ name: String, to assignment: some Value) {
+    public mutating func assign(_ name: String, to assignment: some Value) throws {
         guard exists(name) else {
             // TODO: throw error
             assert(false)
         }
-        nameToVariable[name]?.assign(to: assignment)
+        try nameToVariable[name]?.assign(to: assignment)
     }
 
     public mutating func unassign(_ name: String) {
