@@ -7,6 +7,8 @@ struct DomainValueSorterFactory {
         case .leastConstrainingValue_ac3:
             let ac3 = InferenceEngineFactory.create(.ac3)
             return LeastConstrainingValue(inferenceEngine: ac3)
+        case .random:
+            return RandomDVS()
         }
     }
 }

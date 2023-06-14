@@ -251,11 +251,22 @@ final class CSPSolverTests: XCTestCase {
         }
     }
 
-    func testBacktrack_mainTestProblem() {
+    func testBacktrack_mainTestProblem_leastConstrainingValue() {
         let output = solver.backtrack(csp: csp)!
         XCTAssertTrue(constraintSet.allSatisfied(state: output))
         measure {
             _ = solver.backtrack(csp: csp)!
+        }
+    }
+
+    func testBacktrack_mainTestProblem_randomDVS() {
+        let newSolver = CSPSolver(inferenceEngineType: .ac3,
+                                  nextVariableSelectorType: .minimumRemainingValues,
+                                  domainValueSorterType: .random)
+        let output = newSolver.backtrack(csp: csp)!
+        XCTAssertTrue(constraintSet.allSatisfied(state: output))
+        measure {
+            _ = newSolver.backtrack(csp: csp)!
         }
     }
 }
