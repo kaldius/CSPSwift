@@ -13,7 +13,7 @@ struct ForwardChecking: InferenceEngine {
                                   state: state,
                                   constraintSet: constraintSet)
             })
-            copiedState.setDomain(for: variableName, to: newDomain)
+            try copiedState.setDomain(for: variableName, to: newDomain)
         }
         return copiedState
     }

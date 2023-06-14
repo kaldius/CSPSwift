@@ -52,8 +52,8 @@ final class VariableSetTests: XCTestCase {
         XCTAssertFalse(variableSet.containsEmptyDomain)
     }
 
-    func testContainsEmptyDomain_oneDomainsEmpty_returnsFalse() {
-        variableSet.setDomain(for: intVariableA.name, to: [])
+    func testContainsEmptyDomain_oneDomainsEmpty_returnsFalse() throws {
+        try variableSet.setDomain(for: intVariableA.name, to: [])
         XCTAssertTrue(variableSet.containsEmptyDomain)
     }
 
@@ -139,11 +139,11 @@ final class VariableSetTests: XCTestCase {
 
     }
 
-    func testGetAndSetDomain_domainCorrectlySet() {
+    func testGetAndSetDomain_domainCorrectlySet() throws {
         let originalDomain = variableSet.getDomain(intVariableA.name)
         XCTAssertTrue(originalDomain.isEqual(intVariableA.domainAsArray))
 
-        variableSet.setDomain(for: intVariableA.name, to: [2, 1])
+        try variableSet.setDomain(for: intVariableA.name, to: [2, 1])
         let newDomain = variableSet.getDomain(intVariableA.name)
         XCTAssertTrue(newDomain.containsSameValues(as: [2, 1]))
     }

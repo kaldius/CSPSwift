@@ -100,17 +100,17 @@ final class IntVariableTests: XCTestCase {
         XCTAssertFalse(intVariable.canSetDomain(to: newDomain))
     }
 
-    func testSetDomain_validNewDomain_setsDomainCorrectly() {
+    func testSetDomain_validNewDomain_setsDomainCorrectly() throws {
         let newDomain: [any Value] = [1, 2]
-        intVariable.setDomain(to: newDomain)
+        try intVariable.setDomain(to: newDomain)
         let expectedDomain = Set([1, 2])
 
         XCTAssertEqual(intVariable.domain, expectedDomain)
     }
 
-    func testSetDomain_emptyDomain_setsDomainCorrectly() {
+    func testSetDomain_emptyDomain_setsDomainCorrectly() throws {
         let newDomain: [any Value] = []
-        intVariable.setDomain(to: newDomain)
+        try intVariable.setDomain(to: newDomain)
 
         XCTAssertEqual(intVariable.domain.count, 0)
     }

@@ -69,7 +69,7 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
 
     func testUpdateAndRevertToPreviousState_correctlyUpdatesAndReverts() throws {
         var expectedVariableSet = variableSet!
-        expectedVariableSet.setDomain(for: intVariableA.name, to: [1])
+        try expectedVariableSet.setDomain(for: intVariableA.name, to: [1])
         try expectedVariableSet.assign(intVariableC.name, to: 8)
 
         csp.update(using: expectedVariableSet)

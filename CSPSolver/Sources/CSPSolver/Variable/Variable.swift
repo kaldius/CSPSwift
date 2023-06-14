@@ -75,20 +75,8 @@ extension Variable {
         Set(newDomain).isSubset(of: domain)
     }
 
-    public mutating func setDomain(to newDomain: [any Value]) {
-        domain = createValueTypeSet(from: newDomain)
-    }
-
-    /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.
-    /// If casting fails for any element, throws error.
-    public func createValueTypeSet(from array: [any Value]) -> Set<ValueType> {
-        let set = Set(array.compactMap({ $0 as? ValueType }))
-        guard array.count == set.count else {
-            // TODO: throw error
-            // throw valueTypeError(expected: ValueType.description, received: type(of: newAssignment).description)
-            assert(false)
-        }
-        return set
+    public mutating func setDomain(to newDomain: [any Value]) throws {
+        domain = try createValueTypeSet(from: newDomain)
     }
 
     public mutating func unassign() {
@@ -97,6 +85,16 @@ extension Variable {
 
     public func getSelf() -> Self {
         self
+    }
+
+    /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.
+    /// If casting fails for any element, throws error.
+    private func createValueTypeSet(from array: [any Value]) throws -> Set<ValueType> {
+        let set = Set(array.compactMap({ $0 as? ValueType }))
+        guard array.count == set.count else {
+            throw VariableError.valueTypeError
+        }
+        return set
     }
 
     // MARK: convenience attributes

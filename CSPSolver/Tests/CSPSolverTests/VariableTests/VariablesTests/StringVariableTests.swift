@@ -100,17 +100,17 @@ final class StringVariableTests: XCTestCase {
         XCTAssertFalse(stringVariable.canSetDomain(to: newDomain))
     }
 
-    func testSetDomain_validNewDomain_setsDomainCorrectly() {
+    func testSetDomain_validNewDomain_setsDomainCorrectly() throws {
         let newDomain: [any Value] = ["a", "b"]
-        stringVariable.setDomain(to: newDomain)
+        try stringVariable.setDomain(to: newDomain)
         let expectedDomain = Set(["a", "b"])
 
         XCTAssertEqual(stringVariable.domain, expectedDomain)
     }
 
-    func testSetDomain_emptyDomain_setsDomainCorrectly() {
+    func testSetDomain_emptyDomain_setsDomainCorrectly() throws {
         let newDomain: [any Value] = []
-        stringVariable.setDomain(to: newDomain)
+        try stringVariable.setDomain(to: newDomain)
 
         XCTAssertEqual(stringVariable.domain.count, 0)
     }

@@ -88,18 +88,18 @@ public struct VariableSet {
         nameToVariable[name]?.unassign()
     }
 
-    public mutating func setDomain(for name: String, to newDomain: [any Value]) {
+    public mutating func setDomain(for name: String, to newDomain: [any Value]) throws {
         guard exists(name) else {
             // TODO: throw error
             assert(false)
         }
-        nameToVariable[name]?.setDomain(to: newDomain)
+        try nameToVariable[name]?.setDomain(to: newDomain)
     }
 
     // TODO: delete?
-    public mutating func setAllDomains(using state: VariableDomainState) {
+    public mutating func setAllDomains(using state: VariableDomainState) throws {
         for (name, domain) in state.variableNameToDomain {
-            setDomain(for: name, to: domain)
+            try setDomain(for: name, to: domain)
         }
     }
 

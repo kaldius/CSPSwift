@@ -15,7 +15,7 @@ public struct ArcConsistency3: InferenceEngine {
                     // impossible to carry on 
                     return nil
                 }
-                copiedState.setDomain(for: arc.variableIName, to: newVariableIDomain)
+                try copiedState.setDomain(for: arc.variableIName, to: newVariableIDomain)
                 let newArcs = arcsFromNeighbours(of: arc.variableIName,
                                                  except: arc.variableJName,
                                                  using: constraintSet)

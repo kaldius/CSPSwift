@@ -35,7 +35,7 @@ final class MinimumRemainingValuesTests: XCTestCase {
     }
 
     func testNextUnassignedVariable_afterChangingDomain() throws {
-        variableSet.setDomain(for: ternaryVariable.name, to: [NaryVariableValueType(value: [1, 3, 5])])
+        try variableSet.setDomain(for: ternaryVariable.name, to: [NaryVariableValueType(value: [1, 3, 5])])
 
         let selectedVariable = try XCTUnwrap(minimumRemainingValues.nextUnassignedVariable(state: variableSet))
         XCTAssertEqual(selectedVariable.name, ternaryVariable.name)

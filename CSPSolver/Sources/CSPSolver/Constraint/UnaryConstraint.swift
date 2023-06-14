@@ -19,7 +19,7 @@ extension UnaryConstraint {
             }
             copiedState.unassign(variableName)
         }
-        copiedState.setDomain(for: variableName, to: Array(newDomain))
+        try copiedState.setDomain(for: variableName, to: Array(newDomain))
         return copiedState
     }
 }
