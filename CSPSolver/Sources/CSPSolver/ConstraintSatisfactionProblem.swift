@@ -19,7 +19,7 @@ public struct ConstraintSatisfactionProblem {
     /// Automatically applies all `UnaryConstraint`s on `Variable`s, then removes all `UnaryConstraint`s.
     init(variables: [any Variable],
          constraints: [any Constraint]) throws {
-        let variableSet = VariableSet(from: variables)
+        let variableSet = try VariableSet(from: variables)
         var constraintSet = ConstraintSet(constraints)
         let finalVariableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
         constraintSet.removeUnaryConstraints()

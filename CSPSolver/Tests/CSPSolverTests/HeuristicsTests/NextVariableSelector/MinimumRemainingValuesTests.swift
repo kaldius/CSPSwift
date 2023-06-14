@@ -11,7 +11,7 @@ final class MinimumRemainingValuesTests: XCTestCase {
 
     var minimumRemainingValues: MinimumRemainingValues!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3, 4]))
         intVariableB = IntVariable(name: "intB", domain: Set([3, 4, 5]))
@@ -24,7 +24,7 @@ final class MinimumRemainingValuesTests: XCTestCase {
 
         let allVariables: [any Variable] = [intVariableA, intVariableB, intVariableC, ternaryVariable]
 
-        variableSet = VariableSet(from: allVariables)
+        variableSet = try VariableSet(from: allVariables)
 
         minimumRemainingValues = MinimumRemainingValues()
     }

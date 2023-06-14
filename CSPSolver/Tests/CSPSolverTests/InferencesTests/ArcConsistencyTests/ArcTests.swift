@@ -18,13 +18,13 @@ final class ArcTests: XCTestCase {
     var arcAGreaterThanB: Arc!
     var arcBLessThanA: Arc!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         intVariableADomain = Set([1, 2, 3, 4, 5])
         intVariableA = IntVariable(name: "intA", domain: intVariableADomain)
         intVariableBDomain = Set([3, 4, 5, 6, 7])
         intVariableB = IntVariable(name: "intB", domain: intVariableBDomain)
 
-        variableSet = VariableSet(from: [intVariableA, intVariableB])
+        variableSet = try VariableSet(from: [intVariableA, intVariableB])
 
         aEqualToB = EqualToConstraint(intVariableA, isEqualTo: intVariableB)
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)

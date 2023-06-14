@@ -130,7 +130,7 @@ final class CSPSolverTests: XCTestCase {
                         dualVariableO_F_Y
         ]
 
-        variableSet = VariableSet(from: allVariables)
+        variableSet = try VariableSet(from: allVariables)
 
         auxillaryConstraintT = AuxillaryConstraint(mainVariable: intVariableT,
                                                    dualVariable: dualVariableT_C2_Y)

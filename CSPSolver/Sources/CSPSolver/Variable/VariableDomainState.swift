@@ -1,6 +1,7 @@
 /**
  Represents a state of all `Variable`s domains.
  */
+/*
 // TODO: DELETE?
 public struct VariableDomainState {
     public var variableNameToDomain: [String: [any Value]]
@@ -74,3 +75,4 @@ extension VariableDomainState: Equatable {
         && Array(lhs.variableNameToVariable.values).containsSameValues(as: Array(rhs.variableNameToVariable.values))
     }
 }
+*/

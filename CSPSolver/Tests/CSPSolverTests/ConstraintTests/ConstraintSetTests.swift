@@ -15,7 +15,7 @@ final class ConstraintSetTests: XCTestCase {
 
     var constraintSet: ConstraintSet!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableA = IntVariable(name: "intA", domain: [1, 3, 4, 5])
         intVariableB = IntVariable(name: "intB", domain: [1, 2, 3])
@@ -25,7 +25,7 @@ final class ConstraintSetTests: XCTestCase {
                                           variableB: intVariableB,
                                           variableC: intVariableC)
 
-        variableSet = VariableSet(from: [intVariableA, intVariableB, intVariableC, ternaryVariable])
+        variableSet = try VariableSet(from: [intVariableA, intVariableB, intVariableC, ternaryVariable])
 
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
         cGreaterThanA = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableA)

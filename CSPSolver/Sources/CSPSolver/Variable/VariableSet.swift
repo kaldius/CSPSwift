@@ -4,9 +4,9 @@
 public struct VariableSet {
     private var nameToVariable: [String: any Variable]
 
-    init(from variables: [any Variable]) {
+    init(from variables: [any Variable]) throws {
         self.nameToVariable = [:]
-        variables.forEach({ insert($0) })
+        try variables.forEach({ try insert($0) })
     }
 
     public var variables: [any Variable] {
@@ -32,10 +32,9 @@ public struct VariableSet {
         })
     }
 
-    public mutating func insert<Var: Variable>(_ variable: Var) {
-        guard nameToVariable[variable.name] == nil else {
-            // TODO: throw error
-            assert(false)
+    public mutating func insert<Var: Variable>(_ variable: Var) throws {
+        guard !exists(variable.name) else {
+            throw VariableError.overwritingExistingVariableError(name: variable.name)
         }
         nameToVariable[variable.name] = variable
     }
@@ -96,12 +95,14 @@ public struct VariableSet {
         try nameToVariable[name]?.setDomain(to: newDomain)
     }
 
+    /*
     // TODO: delete?
     public mutating func setAllDomains(using state: VariableDomainState) throws {
         for (name, domain) in state.variableNameToDomain {
             try setDomain(for: name, to: domain)
         }
     }
+     */
 
     public func getDomain(_ name: String) -> [any Value] {
         guard let variable = nameToVariable[name] else {

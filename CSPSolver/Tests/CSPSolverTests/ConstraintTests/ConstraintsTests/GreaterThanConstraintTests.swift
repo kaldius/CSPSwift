@@ -9,12 +9,12 @@ final class GreaterThanConstraintTests: XCTestCase {
 
     var aGreaterThanBConstraint: GreaterThanConstraint!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableA = IntVariable(name: "intA", domain: [1, 4, 5])
         intVariableB = IntVariable(name: "intB", domain: [1, 2, 3])
 
-        variableSet = VariableSet(from: [intVariableA, intVariableB])
+        variableSet = try VariableSet(from: [intVariableA, intVariableB])
 
         aGreaterThanBConstraint = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
     }

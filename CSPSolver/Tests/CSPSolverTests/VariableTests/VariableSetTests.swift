@@ -11,7 +11,7 @@ final class VariableSetTests: XCTestCase {
 
     var variableSet: VariableSet!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3]))
         floatVariableB = FloatVariable(name: "floatB", domain: Set([4.123, 5.456, 6.789]))
@@ -22,7 +22,7 @@ final class VariableSetTests: XCTestCase {
                                           variableB: floatVariableB,
                                           variableC: floatVariableC)
 
-        variableSet = VariableSet(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
+        variableSet = try VariableSet(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
     }
 
     func testIsCompletelyAssigned_allUnassigned_returnsFalse() {
@@ -70,7 +70,7 @@ final class VariableSetTests: XCTestCase {
 
     func testInsertAndGetVariable_variableNotAlreadyInserted_correctlyInserts() throws {
         let newVariable = IntVariable(name: "intD", domain: Set([7, 8, 9]))
-        variableSet.insert(newVariable)
+        try variableSet.insert(newVariable)
         let extractedVariable = try XCTUnwrap(variableSet.getVariable(newVariable.name))
         XCTAssertTrue(extractedVariable.isEqual(newVariable))
     }

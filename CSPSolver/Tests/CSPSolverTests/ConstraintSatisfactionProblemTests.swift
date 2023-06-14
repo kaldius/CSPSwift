@@ -30,7 +30,7 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
 
         let allVariables: [any Variable] = [intVariableA, intVariableB, intVariableC, ternaryVariable]
 
-        variableSet = VariableSet(from: allVariables)
+        variableSet = try VariableSet(from: allVariables)
 
         bGreaterThanA = GreaterThanConstraint(intVariableB, isGreaterThan: intVariableA)
         cGreaterThanB = GreaterThanConstraint(intVariableC, isGreaterThan: intVariableB)

@@ -1,6 +1,7 @@
 import XCTest
 @testable import CSPSolver
 
+/*
 final class VariableDomainStateTests: XCTestCase {
     var intVariableDomain: Set<Int>!
     var intVariable: IntVariable!
@@ -110,3 +111,4 @@ final class VariableDomainStateTests: XCTestCase {
         XCTAssertNil(inferredDomain)
     }
 }
+*/

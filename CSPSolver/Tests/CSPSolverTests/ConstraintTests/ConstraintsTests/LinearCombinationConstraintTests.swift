@@ -12,7 +12,7 @@ final class LinearCombinationConstraintTests: XCTestCase {
 
     var linearCombinationConstraint: LinearCombinationConstraint!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3]))
         floatVariableB = FloatVariable(name: "floatB", domain: Set([4.123, 5.456, 6.789]))
@@ -23,7 +23,7 @@ final class LinearCombinationConstraintTests: XCTestCase {
                                           variableB: floatVariableB,
                                           variableC: floatVariableC)
 
-        variableSet = VariableSet(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
+        variableSet = try VariableSet(from: [intVariableA, floatVariableB, floatVariableC, ternaryVariable])
 
         linearCombinationConstraint = LinearCombinationConstraint(ternaryVariable,
                                                                   scaleA: 1,

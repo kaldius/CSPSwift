@@ -15,14 +15,14 @@ final class LeastConstrainingValueTests: XCTestCase {
 
     var leastConstrainingValue: LeastConstrainingValue!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         super.setUp()
         intVariableA = IntVariable(name: "intA", domain: Set([1, 2, 3, 4, 5]))
         intVariableB = IntVariable(name: "intB", domain: Set([3, 4, 5, 6, 7]))
 
         let allVariables: [any Variable] = [intVariableA, intVariableB]
 
-        variableSet = VariableSet(from: allVariables)
+        variableSet = try VariableSet(from: allVariables)
 
         aGreaterThanB = GreaterThanConstraint(intVariableA, isGreaterThan: intVariableB)
 
