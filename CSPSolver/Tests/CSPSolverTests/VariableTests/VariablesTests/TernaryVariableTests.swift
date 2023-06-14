@@ -322,12 +322,32 @@ final class TernaryVariableTests: XCTestCase {
         XCTAssertTrue(ternaryVariable.canSetDomain(to: newDomain))
     }
 
-    func testCanSetDomain_setter_notSubsetOfCurrentDomain_returnsFalse() {
+    func testCanSetDomain_notSubsetOfCurrentDomain_returnsFalse() {
         var newDomain: Set<NaryVariableValueType> = expectedTernaryVariableDomain
         let extraDomainValue = NaryVariableValueType(value: [10, 6, "a"])
         newDomain.insert(extraDomainValue)
 
         XCTAssertFalse(ternaryVariable.canSetDomain(to: Array(newDomain)))
+    }
+
+    func testSetDomain_validNewDomain_setsDomainCorrectly() {
+        let newDomainAsArray: [[any Value]] = [[1, 4, 9], [2, 5, 8]]
+        let newDomain = newDomainAsArray.map({ NaryVariableValueType(value: $0) })
+        ternaryVariable.setDomain(to: newDomain)
+        let expectedDomain = Set(newDomain)
+
+        XCTAssertEqual(ternaryVariable.domain, expectedDomain)
+    }
+
+    func testSetDomain_emptyDomain_setsDomainCorrectly() {
+        let newDomain: [any Value] = []
+        ternaryVariable.setDomain(to: newDomain)
+
+        XCTAssertEqual(ternaryVariable.domain.count, 0)
+    }
+
+    func testSetDomain_wrongValueType_throwsError() {
+
     }
 
     func testUnassign_assignmentSetToNil() throws {

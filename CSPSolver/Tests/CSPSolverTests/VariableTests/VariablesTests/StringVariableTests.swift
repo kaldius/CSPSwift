@@ -95,46 +95,29 @@ final class StringVariableTests: XCTestCase {
         XCTAssertTrue(stringVariable.canSetDomain(to: newDomain))
     }
 
-    func testCanSetDomain_setter_notSubsetOfCurrentDomain_returnsFalse() {
+    func testCanSetDomain_notSubsetOfCurrentDomain_returnsFalse() {
         let newDomain = ["a", "b", "c", "d"]
         XCTAssertFalse(stringVariable.canSetDomain(to: newDomain))
     }
 
-    /*
-    func testUndoSetDomain_oneLevel() {
-        // set domain to ["b", "a"]
-        let newDomain = Set(["b", "a"])
-        stringVariable.domain = newDomain
-        XCTAssertEqual(stringVariable.domain, newDomain)
-        
-        let expectedPreviousDomain = stringVariableDomain
-        stringVariable.undoSetDomain()
-        
-        XCTAssertEqual(stringVariable.domain, expectedPreviousDomain)
+    func testSetDomain_validNewDomain_setsDomainCorrectly() {
+        let newDomain: [any Value] = ["a", "b"]
+        stringVariable.setDomain(to: newDomain)
+        let expectedDomain = Set(["a", "b"])
+
+        XCTAssertEqual(stringVariable.domain, expectedDomain)
     }
-    
-    func testUndoSetDomain_twoLevels() {
-        // set domain to ["b", "a"]
-        var newDomain = Set(["b", "a"])
-        stringVariable.domain = newDomain
-        XCTAssertEqual(stringVariable.domain, newDomain)
-        
-        // set domain to ["b"]
-        newDomain = Set(["b"])
-        stringVariable.domain = newDomain
-        XCTAssertEqual(stringVariable.domain, newDomain)
-        
-        // undo to ["b", "a"]
-        var expectedPreviousDomain = Set(["b", "a"])
-        stringVariable.undoSetDomain()
-        XCTAssertEqual(stringVariable.domain, expectedPreviousDomain)
-        
-        // undo to ["a", "b", "c"]
-        expectedPreviousDomain = stringVariableDomain
-        stringVariable.undoSetDomain()
-        XCTAssertEqual(stringVariable.domain, expectedPreviousDomain)
+
+    func testSetDomain_emptyDomain_setsDomainCorrectly() {
+        let newDomain: [any Value] = []
+        stringVariable.setDomain(to: newDomain)
+
+        XCTAssertEqual(stringVariable.domain.count, 0)
     }
-    */
+
+    func testSetDomain_wrongValueType_throwsError() {
+
+    }
 
     func testUnassign_assignmentSetToNil() throws {
         stringVariable.assign(to: "b")

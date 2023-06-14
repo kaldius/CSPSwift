@@ -84,7 +84,6 @@ extension Variable {
         Set(newDomain).isSubset(of: domain)
     }
 
-    // TODO: test
     public mutating func setDomain(to newDomain: [any Value]) {
         domain = createValueTypeSet(from: newDomain)
     }
@@ -120,20 +119,9 @@ extension Variable {
     public var isAssigned: Bool {
         assignment != nil
     }
-
-    public var assignmentAsAnyValue: (any Value)? {
-        assignment
-    }
-
-    public var emptyValueSet: Set<ValueType> {
-        Set<ValueType>()
-    }
-
-    public var emptyValueArray: [ValueType] {
-        [ValueType]()
-    }
 }
 
+// Equatable
 extension Variable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.name == rhs.name
@@ -142,6 +130,7 @@ extension Variable {
     }
 }
 
+// Hashable
 extension Variable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
@@ -184,6 +173,6 @@ extension [any Variable] {
 
 extension Variable {
     public var debugDescription: String {
-        domain.debugDescription
+        "[" + name + ": " + domain.debugDescription + "]"
     }
 }
