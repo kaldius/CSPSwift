@@ -1,3 +1,3 @@
 enum InferenceEngineType {
-    case ac3
+    case ac3, forwardChecking
 }

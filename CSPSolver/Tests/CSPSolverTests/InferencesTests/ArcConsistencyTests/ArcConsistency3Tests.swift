@@ -221,10 +221,6 @@ final class ArcConsistency3Tests: XCTestCase {
         let assignmentO = variableSet.getAssignment(intVariableO.name, type: IntVariable.self)
         XCTAssertEqual(assignmentO, 6)
 
-        measure {
-            _ = inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
-        }
-
         // make a new inference
         let inference = inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
 
@@ -283,5 +279,10 @@ final class ArcConsistency3Tests: XCTestCase {
                            expectedDualVarDomains[idx],
                            "\(allDualVariables[idx].name)")
         }
+        
+        measure {
+            _ = inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
+        }
+
     }
 }

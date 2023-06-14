@@ -41,9 +41,9 @@ public struct CSPSolver {
     private func testAllValues(for variable: some Variable,
                                given csp: ConstraintSatisfactionProblem) -> VariableSet? {
         var copiedCsp = csp
-        let orderedDomainValues =  domainValueSorter.orderDomainValues(for: variable,
-                                                               state: copiedCsp.variableSet,
-                                                               constraintSet: copiedCsp.constraintSet)
+        let orderedDomainValues = domainValueSorter.orderDomainValues(for: variable,
+                                                                      state: copiedCsp.variableSet,
+                                                                      constraintSet: copiedCsp.constraintSet)
         for domainValue in orderedDomainValues where copiedCsp.canAssign(variable.name, to: domainValue) {
             guard let successfulState = testSettingValue(for: variable, to: domainValue, given: copiedCsp) else {
                 continue

@@ -3,6 +3,10 @@
  i.e. sorts by total number of remaining consistent domain values for all `Variable`s.
 
  In order to infer remaining consistent domain values, an `InferenceEngine` must be provided.
+
+ Note: The `ForwardChecking` seems to be faster than `ArcConsistency3` for the
+ `InferenceEngine` used here. Although AC-3 shrinks domains more, its slow runtime
+ likely negates its benefits.
  */
 struct LeastConstrainingValue: DomainValueSorter {
     private let inferenceEngine: InferenceEngine
@@ -12,9 +16,9 @@ struct LeastConstrainingValue: DomainValueSorter {
     }
 
     /// Sorts domain values by total number of remaining consistent domain values for all `Variable`s.
-    func orderDomainValues<V: Variable>(for variable: V,
-                                        state: VariableSet,
-                                        constraintSet: ConstraintSet) -> [V.ValueType] {
+    public func orderDomainValues<V: Variable>(for variable: V,
+                                               state: VariableSet,
+                                               constraintSet: ConstraintSet) -> [V.ValueType] {
         var sortables = variable.domain.map({ domainValue in
             let priority = numConsistentDomainValues(ifSetting: variable.name,
                                                      to: domainValue,
