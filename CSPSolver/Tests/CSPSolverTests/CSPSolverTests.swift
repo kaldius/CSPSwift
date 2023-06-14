@@ -224,7 +224,7 @@ final class CSPSolverTests: XCTestCase {
 
         for (variableName, value) in givenAssignments {
             try csp.variableSet.assign(variableName, to: value)
-            let assignment = csp.variableSet.getAssignment(variableName, type: IntVariable.self)
+            let assignment = try csp.variableSet.getAssignment(variableName, type: IntVariable.self)
             XCTAssertEqual(assignment, value)
         }
 
@@ -232,7 +232,7 @@ final class CSPSolverTests: XCTestCase {
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .random)
         let output = try XCTUnwrap(solver.backtrack(csp: csp))
-        XCTAssertTrue(constraintSet.allSatisfied(state: output))
+        XCTAssertTrue(try constraintSet.allSatisfied(state: output))
         measure {
             let measuredOutput = try? solver.backtrack(csp: csp)
             XCTAssertNotNil(measuredOutput)
@@ -247,7 +247,7 @@ final class CSPSolverTests: XCTestCase {
 
         for (variableName, value) in givenAssignments {
             try csp.variableSet.assign(variableName, to: value)
-            let assignment = csp.variableSet.getAssignment(variableName, type: IntVariable.self)
+            let assignment = try csp.variableSet.getAssignment(variableName, type: IntVariable.self)
             XCTAssertEqual(assignment, value)
         }
 
@@ -255,7 +255,7 @@ final class CSPSolverTests: XCTestCase {
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .random)
         let output = try XCTUnwrap(solver.backtrack(csp: csp))
-        XCTAssertTrue(constraintSet.allSatisfied(state: output))
+        XCTAssertTrue(try constraintSet.allSatisfied(state: output))
         measure {
             let measuredOutput = try? solver.backtrack(csp: csp)
             XCTAssertNotNil(measuredOutput)
@@ -268,7 +268,7 @@ final class CSPSolverTests: XCTestCase {
 
         for (variableName, value) in givenAssignments {
             try csp.variableSet.assign(variableName, to: value)
-            let assignment = csp.variableSet.getAssignment(variableName, type: IntVariable.self)
+            let assignment = try csp.variableSet.getAssignment(variableName, type: IntVariable.self)
             XCTAssertEqual(assignment, value)
         }
 
@@ -276,7 +276,7 @@ final class CSPSolverTests: XCTestCase {
                                nextVariableSelectorType: .minimumRemainingValues,
                                domainValueSorterType: .random)
         let output = try XCTUnwrap(solver.backtrack(csp: csp))
-        XCTAssertTrue(constraintSet.allSatisfied(state: output))
+        XCTAssertTrue(try constraintSet.allSatisfied(state: output))
         measure {
             let measuredOutput = try? solver.backtrack(csp: csp)
             XCTAssertNotNil(measuredOutput)
@@ -291,7 +291,7 @@ final class CSPSolverTests: XCTestCase {
                                domainValueSorterType: .leastConstrainingValue_ac3)
 
         let output = try XCTUnwrap(solver.backtrack(csp: csp))
-        XCTAssertTrue(constraintSet.allSatisfied(state: output))
+        XCTAssertTrue(try constraintSet.allSatisfied(state: output))
         measure {
             let measuredOutput = try? solver.backtrack(csp: csp)
             XCTAssertNotNil(measuredOutput)
@@ -305,7 +305,7 @@ final class CSPSolverTests: XCTestCase {
                                domainValueSorterType: .leastConstrainingValue_forwardChecking)
 
         let output = try XCTUnwrap(solver.backtrack(csp: csp))
-        XCTAssertTrue(constraintSet.allSatisfied(state: output))
+        XCTAssertTrue(try constraintSet.allSatisfied(state: output))
         measure {
             let measuredOutput = try? solver.backtrack(csp: csp)
             XCTAssertNotNil(measuredOutput)
@@ -319,7 +319,7 @@ final class CSPSolverTests: XCTestCase {
                                domainValueSorterType: .random)
 
         let output = try XCTUnwrap(solver.backtrack(csp: csp))
-        XCTAssertTrue(constraintSet.allSatisfied(state: output))
+        XCTAssertTrue(try constraintSet.allSatisfied(state: output))
         measure {
             let measuredOutput = try? solver.backtrack(csp: csp)
             XCTAssertNotNil(measuredOutput)

@@ -23,7 +23,7 @@ public struct CSPSolver {
     /// Returns the `VariableSet` in a solved state if it can be solved,
     /// returns `nil` otherwise.
     public func backtrack(csp: ConstraintSatisfactionProblem) throws -> VariableSet? {
-        if csp.variablesCompletelyAssigned && csp.allConstraintsSatisfied {
+        if try csp.variablesCompletelyAssigned && csp.allConstraintsSatisfied {
             return csp.variableSet
         }
         guard let unassignedVariable = nextVariableSelector.nextUnassignedVariable(state: csp.variableSet) else {

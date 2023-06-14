@@ -16,17 +16,17 @@ struct EqualToConstraint: BinaryConstraint {
         self.variableBName = variableB.name
     }
 
-    func isSatisfied(state: VariableSet) -> Bool {
-        guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
-              let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
+    func isSatisfied(state: VariableSet) throws -> Bool {
+        guard let valueA = try state.getAssignment(variableAName, type: IntVariable.self),
+              let valueB = try state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
         }
         return valueA == valueB
     }
 
-    func isViolated(state: VariableSet) -> Bool {
-        guard let valueA = state.getAssignment(variableAName, type: IntVariable.self),
-              let valueB = state.getAssignment(variableBName, type: IntVariable.self) else {
+    func isViolated(state: VariableSet) throws -> Bool {
+        guard let valueA = try state.getAssignment(variableAName, type: IntVariable.self),
+              let valueB = try state.getAssignment(variableBName, type: IntVariable.self) else {
             return false
         }
         return valueA != valueB

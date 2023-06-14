@@ -213,12 +213,12 @@ final class ArcConsistency3Tests: XCTestCase {
     func testMakeNewInference_settingFTo1AndOTo6() throws {
         // assign F to 1
         try variableSet.assign(intVariableF.name, to: 1)
-        let assignmentF = variableSet.getAssignment(intVariableF.name, type: IntVariable.self)
+        let assignmentF = try variableSet.getAssignment(intVariableF.name, type: IntVariable.self)
         XCTAssertEqual(assignmentF, 1)
 
         // assign O to 6
         try variableSet.assign(intVariableO.name, to: 6)
-        let assignmentO = variableSet.getAssignment(intVariableO.name, type: IntVariable.self)
+        let assignmentO = try variableSet.getAssignment(intVariableO.name, type: IntVariable.self)
         XCTAssertEqual(assignmentO, 6)
 
         // make a new inference

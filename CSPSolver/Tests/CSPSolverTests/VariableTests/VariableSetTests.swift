@@ -91,9 +91,9 @@ final class VariableSetTests: XCTestCase {
     }
 
     func testIsAssigned_returnsCorrectValue() throws {
-        XCTAssertFalse(variableSet.isAssigned(intVariableA.name))
+        XCTAssertFalse(try variableSet.isAssigned(intVariableA.name))
         try variableSet.assign(intVariableA.name, to: 1)
-        XCTAssertTrue(variableSet.isAssigned(intVariableA.name))
+        XCTAssertTrue(try variableSet.isAssigned(intVariableA.name))
     }
 
     func testCanAssign_nonExistentVariable_throwsError() {
@@ -105,13 +105,13 @@ final class VariableSetTests: XCTestCase {
     }
 
     func testGetAssignment_variableUnassigned_returnsNil() {
-        XCTAssertNil(variableSet.getAssignment(intVariableA.name, type: IntVariable.self))
+        XCTAssertNil(try variableSet.getAssignment(intVariableA.name, type: IntVariable.self))
     }
 
     func testAssignAndGetAssignment_variableAssigned_returnsCorrectAssignment() throws {
         let assignment = Float(7.987)
         try variableSet.assign(floatVariableC.name, to: assignment)
-        let extractedAssignment = variableSet.getAssignment(floatVariableC.name, type: FloatVariable.self)
+        let extractedAssignment = try variableSet.getAssignment(floatVariableC.name, type: FloatVariable.self)
         XCTAssertEqual(extractedAssignment, assignment)
     }
 
@@ -129,10 +129,10 @@ final class VariableSetTests: XCTestCase {
 
     func testUnassign_variableCorrectlyUnassigned() throws {
         try variableSet.assign(intVariableA.name, to: 1)
-        XCTAssertTrue(variableSet.isAssigned(intVariableA.name))
+        XCTAssertTrue(try variableSet.isAssigned(intVariableA.name))
 
         variableSet.unassign(intVariableA.name)
-        XCTAssertFalse(variableSet.isAssigned(intVariableA.name))
+        XCTAssertFalse(try variableSet.isAssigned(intVariableA.name))
     }
 
     func testSetDomain_nonExistentVariable_throwsError() {

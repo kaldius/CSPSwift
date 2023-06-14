@@ -20,12 +20,12 @@ public struct ConstraintSet {
         allConstraints.append(constraint)
     }
 
-    public func allSatisfied(state: VariableSet) -> Bool {
-        allConstraints.allSatisfy({ $0.isSatisfied(state: state) })
+    public func allSatisfied(state: VariableSet) throws -> Bool {
+        try allConstraints.allSatisfy({ try $0.isSatisfied(state: state) })
     }
 
-    public func anyViolated(state: VariableSet) -> Bool {
-        allConstraints.contains(where: { $0.isViolated(state: state) })
+    public func anyViolated(state: VariableSet) throws -> Bool {
+        try allConstraints.contains(where: { try $0.isViolated(state: state) })
     }
 
     /// Applies all `UnaryConstraint`s to the given `state` and returns a new

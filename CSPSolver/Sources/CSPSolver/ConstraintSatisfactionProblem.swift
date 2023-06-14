@@ -35,7 +35,9 @@ public struct ConstraintSatisfactionProblem {
     }
 
     public var allConstraintsSatisfied: Bool {
-        constraintSet.allSatisfied(state: variableSet)
+        get throws {
+            try constraintSet.allSatisfied(state: variableSet)
+        }
     }
 
     // TODO: delete?
@@ -48,11 +50,11 @@ public struct ConstraintSatisfactionProblem {
     }
 
     public mutating func canAssign(_ variableName: String, to value: some Value) throws -> Bool {
-        guard variableSet.canAssign(variableName, to: value) else {
+        guard try variableSet.canAssign(variableName, to: value) else {
             return false
         }
         try variableSet.assign(variableName, to: value)
-        let anyViolated = constraintSet.anyViolated(state: variableSet)
+        let anyViolated = try constraintSet.anyViolated(state: variableSet)
         variableSet.unassign(variableName)
         return !anyViolated
     }

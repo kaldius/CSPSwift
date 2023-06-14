@@ -43,7 +43,7 @@ public struct Arc {
     ///
     /// - Returns: an array representing the revised domain for `variableI`, or nil if no revision occured.
     public func revise(state: VariableSet) throws -> [any Value]? {
-        guard !state.isAssigned(variableIName) else {
+        guard try !state.isAssigned(variableIName) else {
             return nil
         }
         let variableIDomain = state.getDomain(variableIName)
@@ -63,8 +63,8 @@ public struct Arc {
     private func canBeRemoved(_ iDomainValue: any Value, state: VariableSet) throws -> Bool {
         var copiedState = state
         try copiedState.assign(variableIName, to: iDomainValue)
-        if copiedState.isAssigned(variableJName) {
-            return !constraintIJ.isSatisfied(state: copiedState)
+        if try copiedState.isAssigned(variableJName) {
+            return try !constraintIJ.isSatisfied(state: copiedState)
         }
         let variableJDomain = state.getDomain(variableJName)
         return try !containsSatisfactoryJValue(domain: variableJDomain, state: copiedState)
@@ -77,7 +77,7 @@ public struct Arc {
         // look for a domainValue that satisfies the constraint
         return try domain.contains(where: { jDomainValue in
             try copiedState.assign(variableJName, to: jDomainValue)
-            let satisfied = constraintIJ.isSatisfied(state: copiedState)
+            let satisfied = try constraintIJ.isSatisfied(state: copiedState)
             copiedState.unassign(variableJName)
             return satisfied
         })

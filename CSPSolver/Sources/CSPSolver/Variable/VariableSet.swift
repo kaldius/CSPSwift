@@ -51,28 +51,27 @@ public struct VariableSet {
         nameToVariable[name] != nil
     }
 
-    public func isAssigned(_ name: String) -> Bool {
-        guard let variable = nameToVariable[name] else {
-            // TODO: throw error
-            assert(false)
-        }
+    public func isAssigned(_ name: String) throws -> Bool {
+        let variable = try extractVariable(named: name)
         return variable.isAssigned
     }
 
-    public func canAssign(_ name: String, to assignment: some Value) -> Bool {
+    public func canAssign(_ name: String, to assignment: some Value) throws -> Bool {
         guard let variable = nameToVariable[name] else {
-            // TODO: throw error
-            assert(false)
+            throw VariableError.nonExistentVariableError(name: name)
         }
         return variable.canAssign(to: assignment)
     }
 
-    public func getAssignment<V: Variable>(_ name: String, type: V.Type) -> V.ValueType? {
-        guard exists(name) else {
-            // TODO: throw error
-            assert(false)
+    public func getAssignment<V: Variable>(_ name: String, type: V.Type) throws -> V.ValueType? {
+        let variable = try extractVariable(named: name)
+        if variable.assignment == nil {
+            return nil
         }
-        return nameToVariable[name]?.assignment as? V.ValueType
+        guard let assignment = variable.assignment as? V.ValueType else {
+            throw VariableError.valueTypeError
+        }
+        return assignment
     }
 
     public mutating func assign(_ name: String, to assignment: some Value) throws {
@@ -122,6 +121,13 @@ public struct VariableSet {
             assert(false)
         }
         return castedDomain
+    }
+
+    private func extractVariable(named name: String) throws -> any Variable {
+        guard let variable = nameToVariable[name] else {
+            throw VariableError.nonExistentVariableError(name: name)
+        }
+        return variable
     }
 
 }

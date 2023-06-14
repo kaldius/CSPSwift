@@ -23,11 +23,11 @@ struct ForwardChecking: InferenceEngine {
                                state: VariableSet,
                                constraintSet: ConstraintSet) throws -> Bool {
         var copiedState = state
-        guard copiedState.canAssign(variableName, to: value) else {
+        guard try copiedState.canAssign(variableName, to: value) else {
             return false
         }
         try copiedState.assign(variableName, to: value)
-        let anyViolated = constraintSet.anyViolated(state: copiedState)
+        let anyViolated = try constraintSet.anyViolated(state: copiedState)
         copiedState.unassign(variableName)
         return !anyViolated
     }
