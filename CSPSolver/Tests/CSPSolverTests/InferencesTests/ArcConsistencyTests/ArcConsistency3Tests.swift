@@ -225,11 +225,11 @@ final class ArcConsistency3Tests: XCTestCase {
         let inference = try inferenceEngine.makeNewInference(from: variableSet, constraintSet: constraintSet)!
 
         // get all domains from inference
-        let inferredIntVarDomains = allIntVariables.map({ variable in
-            Set(inference.getDomain(variable.name, type: IntVariable.self))
+        let inferredIntVarDomains = try allIntVariables.map({ variable in
+            try Set(inference.getDomain(variable.name, type: IntVariable.self))
         })
-        let inferredDualVarDomains = allDualVariables.map({ variable in
-            Set(inference.getDomain(variable.name, type: TernaryVariable.self))
+        let inferredDualVarDomains = try allDualVariables.map({ variable in
+            try Set(inference.getDomain(variable.name, type: TernaryVariable.self))
         })
 
         // define expected domains

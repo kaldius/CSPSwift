@@ -199,10 +199,10 @@ final class ConstraintSetTests: XCTestCase {
 
         let newVariableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
 
-        let actualIntVariableADomain = newVariableSet.getDomain(intVariableA.name)
-        let actualIntVariableBDomain = newVariableSet.getDomain(intVariableB.name)
-        let actualIntVariableCDomain = newVariableSet.getDomain(intVariableC.name)
-        let actualTernaryVariableDomain = newVariableSet.getDomain(ternaryVariable.name)
+        let actualIntVariableADomain = try newVariableSet.getDomain(intVariableA.name)
+        let actualIntVariableBDomain = try newVariableSet.getDomain(intVariableB.name)
+        let actualIntVariableCDomain = try newVariableSet.getDomain(intVariableC.name)
+        let actualTernaryVariableDomain = try newVariableSet.getDomain(ternaryVariable.name)
 
         XCTAssertTrue(actualIntVariableADomain.containsSameValues(as: expectedIntVariableADomain))
         XCTAssertTrue(actualIntVariableBDomain.containsSameValues(as: expectedIntVariableBDomain))

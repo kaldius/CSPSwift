@@ -55,13 +55,13 @@ final class LinearCombinationConstraintTests: XCTestCase {
         var copiedVariableSet = variableSet!
         let newAssignment = NaryVariableValueType(value: [2, floatB, floatC])
         try copiedVariableSet.assign(ternaryVariable.name, to: newAssignment)
-        let expectedTernaryVariableDomain = copiedVariableSet.getDomain(ternaryVariable.name,
-                                                                        type: TernaryVariable.self)
+        let expectedTernaryVariableDomain = try copiedVariableSet.getDomain(ternaryVariable.name,
+                                                                            type: TernaryVariable.self)
 
         // getting result
         let restrictedVariableSet = try linearCombinationConstraint.restrictDomain(state: variableSet)
-        let actualTernaryVariableDomain = restrictedVariableSet.getDomain(ternaryVariable.name,
-                                                                          type: TernaryVariable.self)
+        let actualTernaryVariableDomain = try restrictedVariableSet.getDomain(ternaryVariable.name,
+                                                                              type: TernaryVariable.self)
 
         measure {
             _ = try? linearCombinationConstraint.restrictDomain(state: variableSet)

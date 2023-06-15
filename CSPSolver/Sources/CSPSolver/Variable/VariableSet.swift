@@ -32,8 +32,9 @@ public struct VariableSet {
         })
     }
 
+    // MARK: insert/extract
     public mutating func insert<Var: Variable>(_ variable: Var) throws {
-        guard !exists(variable.name) else {
+        guard !contains(variable.name) else {
             throw VariableError.overwritingExistingVariableError(name: variable.name)
         }
         nameToVariable[variable.name] = variable
@@ -47,10 +48,7 @@ public struct VariableSet {
         nameToVariable[name] as? V
     }
 
-    public func exists(_ name: String) -> Bool {
-        nameToVariable[name] != nil
-    }
-
+    // MARK: Variable assignments
     public func isAssigned(_ name: String) throws -> Bool {
         let variable = try extractVariable(named: name)
         return variable.isAssigned
@@ -75,9 +73,8 @@ public struct VariableSet {
     }
 
     public mutating func assign(_ name: String, to assignment: some Value) throws {
-        guard exists(name) else {
-            // TODO: throw error
-            assert(false)
+        guard contains(name) else {
+            throw VariableError.nonExistentVariableError(name: name)
         }
         try nameToVariable[name]?.assign(to: assignment)
     }
@@ -86,41 +83,30 @@ public struct VariableSet {
         nameToVariable[name]?.unassign()
     }
 
+    // MARK: Variable domains
     public mutating func setDomain(for name: String, to newDomain: [any Value]) throws {
-        guard exists(name) else {
-            // TODO: throw error
-            assert(false)
+        guard contains(name) else {
+            throw VariableError.nonExistentVariableError(name: name)
         }
         try nameToVariable[name]?.setDomain(to: newDomain)
     }
 
-    /*
-    // TODO: delete?
-    public mutating func setAllDomains(using state: VariableDomainState) throws {
-        for (name, domain) in state.variableNameToDomain {
-            try setDomain(for: name, to: domain)
-        }
-    }
-     */
-
-    public func getDomain(_ name: String) -> [any Value] {
-        guard let variable = nameToVariable[name] else {
-            // TODO: throw error
-            assert(false)
-        }
+    public func getDomain(_ name: String) throws -> [any Value] {
+        let variable = try extractVariable(named: name)
         return variable.domainAsArray
     }
 
-    public func getDomain<V: Variable>(_ name: String, type: V.Type) -> [V.ValueType] {
-        guard let variable = nameToVariable[name] else {
-            // TODO: throw error
-            assert(false)
-        }
-        guard let castedDomain =  variable.domainAsArray as? [V.ValueType] else {
-            // TODO: throw different error
-            assert(false)
+    public func getDomain<V: Variable>(_ name: String, type: V.Type) throws -> [V.ValueType] {
+        let domain = try getDomain(name)
+        guard let castedDomain = domain as? [V.ValueType] else {
+            throw VariableError.valueTypeError
         }
         return castedDomain
+    }
+
+    // MARK: private methods
+    private func contains(_ name: String) -> Bool {
+        nameToVariable[name] != nil
     }
 
     private func extractVariable(named name: String) throws -> any Variable {
@@ -144,8 +130,13 @@ extension VariableSet: CustomDebugStringConvertible {
         var outputString = ""
         for name in nameToVariable.keys {
             outputString += "[" + name + ": "
-            let domain = getDomain(name)
-            outputString += domain.description + "]\n"
+            do {
+                let domain = try getDomain(name)
+                outputString += domain.description
+            } catch {
+                outputString += "NOT FOUND"
+            }
+            outputString += "]\n"
         }
         return outputString
     }

@@ -46,7 +46,7 @@ public struct Arc {
         guard try !state.isAssigned(variableIName) else {
             return nil
         }
-        let variableIDomain = state.getDomain(variableIName)
+        let variableIDomain = try state.getDomain(variableIName)
         var variableIDomainCopy = variableIDomain
         for iDomainValue in variableIDomain where try canBeRemoved(iDomainValue, state: state) {
             // TODO: optimize?
@@ -66,7 +66,7 @@ public struct Arc {
         if try copiedState.isAssigned(variableJName) {
             return try !constraintIJ.isSatisfied(state: copiedState)
         }
-        let variableJDomain = state.getDomain(variableJName)
+        let variableJDomain = try state.getDomain(variableJName)
         return try !containsSatisfactoryJValue(domain: variableJDomain, state: copiedState)
     }
 

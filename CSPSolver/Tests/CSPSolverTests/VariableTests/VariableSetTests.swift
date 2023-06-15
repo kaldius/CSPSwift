@@ -140,11 +140,11 @@ final class VariableSetTests: XCTestCase {
     }
 
     func testGetAndSetDomain_domainCorrectlySet() throws {
-        let originalDomain = variableSet.getDomain(intVariableA.name)
+        let originalDomain = try variableSet.getDomain(intVariableA.name)
         XCTAssertTrue(originalDomain.isEqual(intVariableA.domainAsArray))
 
         try variableSet.setDomain(for: intVariableA.name, to: [2, 1])
-        let newDomain = variableSet.getDomain(intVariableA.name)
+        let newDomain = try variableSet.getDomain(intVariableA.name)
         XCTAssertTrue(newDomain.containsSameValues(as: [2, 1]))
     }
 
