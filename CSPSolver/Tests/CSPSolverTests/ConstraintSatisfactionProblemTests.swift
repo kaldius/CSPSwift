@@ -76,7 +76,7 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
 
         XCTAssertEqual(csp.variableSet, expectedVariableSet)
 
-        csp.revertToPreviousState()
+        try csp.revertToPreviousState()
 
         let revertedVariableSet = try constraintSet.applyUnaryConstraints(to: variableSet)
 
@@ -87,7 +87,7 @@ final class ConstraintSatisfactionProblemTests: XCTestCase {
         let initialState = try constraintSet.applyUnaryConstraints(to: variableSet)
 
         for _ in 0 ..< 10 {
-            csp.revertToPreviousState()
+            try csp.revertToPreviousState()
             XCTAssertEqual(csp.variableSet, initialState)
         }
     }

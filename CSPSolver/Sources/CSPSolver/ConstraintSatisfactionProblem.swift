@@ -40,15 +40,6 @@ public struct ConstraintSatisfactionProblem {
         }
     }
 
-    // TODO: delete?
-    public var latestState: VariableSet {
-        guard let state = stateUndoStack.peek() else {
-            // TODO: throw error
-            assert(false)
-        }
-        return state
-    }
-
     public mutating func canAssign(_ variableName: String, to value: some Value) throws -> Bool {
         guard try variableSet.canAssign(variableName, to: value) else {
             return false
@@ -67,11 +58,9 @@ public struct ConstraintSatisfactionProblem {
     }
 
     /// Undo all `Variable`s domains to the previous saved state.
-    // TODO: test that undoing infinite times will only stop at inital domain state
-    public mutating func revertToPreviousState() {
+    public mutating func revertToPreviousState() throws {
         guard let prevState = stateUndoStack.peek() else {
-            // TODO: throw error
-            assert(false)
+            throw CSPError.emptyUndoStackError
         }
         if stateUndoStack.count > 1 {
             stateUndoStack.pop()

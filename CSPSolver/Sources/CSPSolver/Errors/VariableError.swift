@@ -2,8 +2,10 @@ enum VariableError: Error {
     case valueTypeError
     case overwritingExistingVariableError(name: String)
     case nonExistentVariableError(name: String)
+}
 
-    var errorMsg: String {
+extension VariableError: CustomStringConvertible {
+    var description: String {
         switch self {
         case .valueTypeError:
             return "Unable to cast value to Variable.ValueType"

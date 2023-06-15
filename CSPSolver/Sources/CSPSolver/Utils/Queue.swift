@@ -26,6 +26,7 @@ public struct Queue<T> {
         if self.isEmpty {
             return nil
         } else {
+            // TODO: this part is O(n). TOO SLOW! optimize with 2 stacks method?
             return queueArray.removeFirst()
         }
     }
