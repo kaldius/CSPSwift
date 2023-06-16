@@ -1,19 +1,35 @@
 public struct StringVariable: Variable {
     public var name: String
-    public var _domain: Set<String>
-    public var _assignment: String?
+    private var _domain: Set<String>
+    private var _assignment: String?
 
     init(name: String, domain: Set<String>) {
-        self.init(name: name,
-                  internalDomain: domain,
-                  internalAssignment: nil)
+        self.name = name
+        self._domain = domain
+        self._assignment = nil
     }
 
-    init(name: String,
-         internalDomain: Set<String>,
-         internalAssignment: String?) {
-        self.name = name
-        self._domain = internalDomain
-        self._assignment = internalAssignment
+    public var domain: Set<String> {
+        if let unwrappedAssignment = assignment {
+            return [unwrappedAssignment]
+        } else {
+            return _domain
+        }
+    }
+
+    public var assignment: String? {
+        _assignment
+    }
+
+    public mutating func assign(to newAssignment: String) {
+        _assignment = newAssignment
+    }
+
+    public mutating func setDomain(to newDomain: Set<String>) {
+        _domain = newDomain
+    }
+
+    public mutating func unassign() {
+        _assignment = nil
     }
 }

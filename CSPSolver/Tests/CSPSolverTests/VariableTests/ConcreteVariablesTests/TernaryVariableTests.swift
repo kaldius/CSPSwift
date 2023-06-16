@@ -56,7 +56,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignmentSatisfied_ternaryVariableAssigned_mainVariableUnassigned_returnsFalse() {
         for domainValue in ternaryVariable.domain {
             // assign ternaryVariable
-            ternaryVariable.assignment = domainValue
+            ternaryVariable.assign(to: domainValue)
             for associatedVariable in allAssociatedVariables {
                 // associatedVariable remains unassigned
                 XCTAssertFalse(ternaryVariable.assignmentSatisfied(for: associatedVariable))
@@ -82,7 +82,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignmentSatisfied_bothAssignedDifferently_returnsFalse() throws {
         for ternaryVarDomainValue in ternaryVariable.domain {
             // assign ternaryVariable
-            ternaryVariable.assignment = ternaryVarDomainValue
+            ternaryVariable.assign(to: ternaryVarDomainValue)
             for idx in 0 ..< allAssociatedVariables.count {
                 var associatedVar = allAssociatedVariables[idx]
                 for associatedVarDomainValue in associatedVar.domainAsArray
@@ -101,7 +101,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignmentSatisfied_bothAssignedSame_returnsTrue() throws {
         for ternaryVarDomainValue in ternaryVariable.domain {
             // assign ternaryVariable
-            ternaryVariable.assignment = ternaryVarDomainValue
+            ternaryVariable.assign(to: ternaryVarDomainValue)
             for idx in 0 ..< allAssociatedVariables.count {
                 var associatedVar = allAssociatedVariables[idx]
                 let correctAssociatedVarAssignment = ternaryVarDomainValue[idx]
@@ -129,7 +129,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignmentViolated_ternaryVariableAssigned_mainVariableUnassigned_returnsFalse() {
         for domainValue in ternaryVariable.domain {
             // assign ternaryVariable
-            ternaryVariable.assignment = domainValue
+            ternaryVariable.assign(to: domainValue)
             for associatedVariable in allAssociatedVariables {
                 // associatedVariable remains unassigned
                 XCTAssertFalse(ternaryVariable.assignmentViolated(for: associatedVariable))
@@ -155,7 +155,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignmentViolated_bothAssignedSame_returnsFalse() throws {
         for ternaryVarDomainValue in ternaryVariable.domain {
             // assign ternaryVariable
-            ternaryVariable.assignment = ternaryVarDomainValue
+            ternaryVariable.assign(to: ternaryVarDomainValue)
             for idx in 0 ..< allAssociatedVariables.count {
                 var associatedVar = allAssociatedVariables[idx]
                 let correctAssociatedVarAssignment = ternaryVarDomainValue[idx]
@@ -172,7 +172,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignmentViolated_bothAssignedDifferently_returnsTrue() throws {
         for ternaryVarDomainValue in ternaryVariable.domain {
             // assign ternaryVariable
-            ternaryVariable.assignment = ternaryVarDomainValue
+            ternaryVariable.assign(to: ternaryVarDomainValue)
             for idx in 0 ..< allAssociatedVariables.count {
                 var associatedVar = allAssociatedVariables[idx]
                 for associatedVarDomainValue in associatedVar.domainAsArray
@@ -236,14 +236,14 @@ final class TernaryVariableTests: XCTestCase {
 
     func testDomain_getter_variableAssigned_returnsOnlyOneValue() {
         let assignment = NaryVariableValueType(value: [1, 4, 8])
-        ternaryVariable.assignment = assignment
+        ternaryVariable.assign(to: assignment)
         XCTAssertEqual(ternaryVariable.domain, [assignment])
     }
 
     func testDomain_setter_validNewDomain_setsDomainCorrectly() {
         let newDomainAsArray: [[any Value]] = [[1, 4, 9], [2, 5, 8]]
         let newDomain = Set(newDomainAsArray.map({ NaryVariableValueType(value: $0) }))
-        ternaryVariable.domain = newDomain
+        ternaryVariable.setDomain(to: newDomain)
 
         XCTAssertEqual(ternaryVariable.domain, newDomain)
     }
@@ -259,7 +259,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignment_setter_validNewAssignment() {
         for domainValue in expectedTernaryVariableDomain {
             ternaryVariable.unassign()
-            ternaryVariable.assignment = domainValue
+            ternaryVariable.assign(to: domainValue)
             XCTAssertEqual(ternaryVariable.assignment, domainValue)
         }
     }
@@ -291,7 +291,7 @@ final class TernaryVariableTests: XCTestCase {
     func testAssignTo_possibleValue_getsAssigned() throws {
         for domainValue in expectedTernaryVariableDomain {
             ternaryVariable.unassign()
-            try ternaryVariable.assign(to: domainValue)
+            ternaryVariable.assign(to: domainValue)
             let assignment = try XCTUnwrap(ternaryVariable.assignment)
             XCTAssertEqual(assignment, domainValue)
         }
@@ -352,7 +352,7 @@ final class TernaryVariableTests: XCTestCase {
 
     func testUnassign_assignmentSetToNil() throws {
         let newAssignment = NaryVariableValueType(value: [1, 4, 7])
-        ternaryVariable.assignment = newAssignment
+        ternaryVariable.assign(to: newAssignment)
         let actualAssignment = try XCTUnwrap(ternaryVariable.assignment)
         XCTAssertEqual(actualAssignment, newAssignment)
         ternaryVariable.unassign()

@@ -5,9 +5,9 @@
  are equal to the respective values in the assignment tuple of the dual `Variable`.
  */
 struct TernaryVariable: NaryVariable {
-    var name: String
-    var _domain: Set<NaryVariableValueType>
-    var _assignment: NaryVariableValueType?
+    public var name: String
+    private var _domain: Set<NaryVariableValueType>
+    private var _assignment: NaryVariableValueType?
 
     var associatedVariableNames: [String]
 
@@ -15,23 +15,35 @@ struct TernaryVariable: NaryVariable {
          variableA: any Variable,
          variableB: any Variable,
          variableC: any Variable) {
+        self.name = name
         let associatedVariables = [variableA, variableB, variableC]
-        let associatedVariableNames = associatedVariables.map { $0.name }
+        self.associatedVariableNames = associatedVariables.map { $0.name }
         let associatedDomains = Self.getAssociatedDomains(from: associatedVariables)
-        let domain = Self.createInternalDomain(from: associatedDomains)
-        self.init(name: name,
-                  associatedVariableNames: associatedVariableNames,
-                  internalDomain: domain,
-                  internalAssignment: nil)
+        self._domain = Self.createInternalDomain(from: associatedDomains)
+        self._assignment = nil
     }
 
-    init(name: String,
-         associatedVariableNames: [String],
-         internalDomain: Set<NaryVariableValueType>,
-         internalAssignment: NaryVariableValueType?) {
-        self.name = name
-        self.associatedVariableNames = associatedVariableNames
-        self._domain = internalDomain
-        self._assignment = nil
+    var domain: Set<NaryVariableValueType> {
+        if let unwrappedAssignment = assignment {
+            return [unwrappedAssignment]
+        } else {
+            return _domain
+        }
+    }
+
+    var assignment: NaryVariableValueType? {
+        _assignment
+    }
+
+    mutating func assign(to newAssignment: NaryVariableValueType) {
+        _assignment = newAssignment
+    }
+
+    mutating func setDomain(to newDomain: Set<NaryVariableValueType>) {
+        _domain = newDomain
+    }
+
+    mutating func unassign() {
+        _assignment = nil
     }
 }

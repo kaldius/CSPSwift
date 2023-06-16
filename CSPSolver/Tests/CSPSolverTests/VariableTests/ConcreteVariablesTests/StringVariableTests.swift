@@ -18,13 +18,13 @@ final class StringVariableTests: XCTestCase {
     }
 
     func testDomain_getter_variableAssigned_returnsOnlyOneValue() {
-        stringVariable.assignment = "b"
+        stringVariable.assign(to: "b")
         XCTAssertEqual(stringVariable.domain, ["b"])
     }
 
     func testDomain_setter_validNewDomain_setsDomainCorrectly() {
         let newDomain = Set(["b", "c"])
-        stringVariable.domain = newDomain
+        stringVariable.setDomain(to: newDomain)
 
         XCTAssertEqual(stringVariable.domain, newDomain)
     }
@@ -40,7 +40,7 @@ final class StringVariableTests: XCTestCase {
     func testAssignment_setter_validNewAssignment() {
         for domainValue in stringVariableDomain {
             stringVariable.unassign()
-            stringVariable.assignment = domainValue
+            stringVariable.assign(to: domainValue)
             XCTAssertEqual(stringVariable.assignment, domainValue)
         }
     }
@@ -68,7 +68,7 @@ final class StringVariableTests: XCTestCase {
     func testAssignTo_possibleValue_getsAssigned() throws {
         for domainValue in stringVariableDomain {
             stringVariable.unassign()
-            try stringVariable.assign(to: domainValue)
+            stringVariable.assign(to: domainValue)
             let assignment = try XCTUnwrap(stringVariable.assignment)
             XCTAssertEqual(assignment, domainValue)
         }
@@ -120,7 +120,7 @@ final class StringVariableTests: XCTestCase {
     }
 
     func testUnassign_assignmentSetToNil() throws {
-        try stringVariable.assign(to: "b")
+        stringVariable.assign(to: "b")
         let stringValue = try XCTUnwrap(stringVariable.assignment)
         XCTAssertEqual(stringValue, "b")
         stringVariable.unassign()

@@ -5,10 +5,8 @@ public protocol NaryVariable: Variable {
     associatedtype ValueType = NaryVariableValueType
 
     var associatedVariableNames: [String] { get }
-    var assignment: NaryVariableValueType? { get set }
-    var _assignment: NaryVariableValueType? { get set }
-    var domain: Set<NaryVariableValueType> { get set }
-    var _domain: Set<NaryVariableValueType> { get set }
+    var assignment: NaryVariableValueType? { get }
+    var domain: Set<NaryVariableValueType> { get }
 }
 
 extension NaryVariable {

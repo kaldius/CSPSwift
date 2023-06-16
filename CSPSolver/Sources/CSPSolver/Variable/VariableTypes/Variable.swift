@@ -5,92 +5,67 @@ public protocol Variable: Hashable, CustomDebugStringConvertible {
     associatedtype ValueType: Value
 
     var name: String { get }
+    var domain: Set<ValueType> { get }
+    var assignment: ValueType? { get }
 
-    /// To be used by the computed variable `domain`.
-    var _domain: Set<ValueType> { get set }
-
-    /// To be used by the computed variable `assignment`.
-    var _assignment: ValueType? { get set }
+    mutating func assign(to newAssignment: ValueType) throws
+    mutating func setDomain(to newDomain: Set<ValueType>) throws
+    mutating func unassign()
 }
 
 extension Variable {
-    public var domain: Set<ValueType> {
-        get {
-            if let unwrappedAssignment = assignment {
-                return [unwrappedAssignment]
-            } else {
-                return _domain
-            }
-        }
-        set(newDomain) {
-            if canSetDomain(to: newDomain) {
-                _domain = newDomain
-            }
-        }
-    }
-
-    public var assignment: ValueType? {
-        get {
-            _assignment
-        }
-        set(newAssignment) {
-            if canAssign(to: newAssignment) {
-                _assignment = newAssignment
-            }
-        }
-    }
-
-    /// Returns true if this variable can be set to `newAssignment`,
-    /// false otherwise.
+    /// Returns true if assignment can be set to `newAssignment`, false otherwise.
+    /// Note: this method takes in any type that conforms to `Value`.
     public func canAssign(to newAssignment: some Value) -> Bool {
-        let castedNewAssignment = newAssignment as? ValueType
-        return canAssign(to: castedNewAssignment)
-    }
-
-    private func canAssign(to newAssignment: ValueType?) -> Bool {
-        guard let unwrappedNewAssignment = newAssignment else {
+        guard let castedNewAssignment = newAssignment as? ValueType else {
             return false
         }
-        return assignment == nil && domain.contains(unwrappedNewAssignment)
+        return !isAssigned && domain.contains(castedNewAssignment)
     }
 
-    /// Another setter, but takes in value of type `any Value` and does the necessary
-    /// casting before assignment. If assignment fails, throws error.
+    /// Sets the `Variable` assignment to `newAssignment`.
+    /// Note: this method takes in any type that conforms to `Value`.
+    ///
+    /// - Throws: VariableError.valueTypeError if casting fails
     public mutating func assign(to newAssignment: any Value) throws {
         guard let castedNewAssignment = newAssignment as? ValueType else {
             throw VariableError.valueTypeError
         }
-        assignment = castedNewAssignment
+        try assign(to: castedNewAssignment)
     }
 
+    /// Returns true if domain can be set to `newDomain`, false otherwise.
+    /// Note: this method takes in an **array** of any type that conforms to `Value`.
     public func canSetDomain(to newDomain: [any Value]) -> Bool {
         let newDomainAsValueType = newDomain.compactMap({ $0 as? ValueType })
         guard newDomain.count == newDomainAsValueType.count else {
+            // casting failed at some point in compactMap
             return false
         }
-        return canSetDomain(to: Set(newDomainAsValueType))
+        return isSubsetOfDomain(Set(newDomainAsValueType))
     }
 
-    public func canSetDomain(to newDomain: Set<ValueType>) -> Bool {
-        Set(newDomain).isSubset(of: domain)
-    }
-
+    /// Sets the `Variable` domain to `newDomain`.
+    /// Note: this method takes in an **array** of any type that conforms to `Value`.
     public mutating func setDomain(to newDomain: [any Value]) throws {
-        domain = try createValueTypeSet(from: newDomain)
-    }
-
-    public mutating func unassign() {
-        _assignment = nil
+        try setDomain(to: try createValueTypeSet(from: newDomain))
     }
 
     /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.
     /// If casting fails for any element, throws error.
+    ///
+    /// - Throws: VariableError.valueTypeError if casting fails
     private func createValueTypeSet(from array: [any Value]) throws -> Set<ValueType> {
         let set = Set(array.compactMap({ $0 as? ValueType }))
         guard array.count == set.count else {
+            // casting failed at some point in compactMap
             throw VariableError.valueTypeError
         }
         return set
+    }
+
+    internal func isSubsetOfDomain(_ newDomain: Set<ValueType>) -> Bool {
+        Set(newDomain).isSubset(of: domain)
     }
 
     // MARK: convenience attributes
