@@ -35,11 +35,20 @@ struct TernaryVariable: NaryVariable {
         _assignment
     }
 
-    mutating func assign(to newAssignment: NaryVariableValueType) {
+    mutating func assign(to newAssignment: NaryVariableValueType) throws {
+        guard !isAssigned else {
+            throw VariableError.overwritingExistingAssignmentError
+        }
+        guard _domain.contains(newAssignment) else {
+            throw VariableError.assignmentNotInDomainError
+        }
         _assignment = newAssignment
     }
 
-    mutating func setDomain(to newDomain: Set<NaryVariableValueType>) {
+    mutating func setDomain(to newDomain: Set<NaryVariableValueType>) throws {
+        guard isSubsetOfDomain(newDomain) else {
+            throw VariableError.incompatibleDomainError
+        }
         _domain = newDomain
     }
 

@@ -1,7 +1,6 @@
 import XCTest
 @testable import CSPSolver
 
-// TODO: test cases ending with "throwsError" should be implemented after errors are implemented!!!
 final class IntVariableTests: XCTestCase {
     var intVariableDomain: Set<Int>!
     var intVariable: IntVariable!
@@ -13,7 +12,6 @@ final class IntVariableTests: XCTestCase {
     }
 
     // MARK: Testing methods/attributes declared in IntVariable
-    // domain
     func testDomain_returnsCorrectDomain() {
         XCTAssertEqual(intVariable.domain, intVariableDomain)
     }
@@ -23,12 +21,10 @@ final class IntVariableTests: XCTestCase {
         XCTAssertEqual(intVariable.domain, [1])
     }
 
-    // assignment
     func testAssignment_initialAssignment_returnsNil() {
         XCTAssertNil(intVariable.assignment)
     }
 
-    // assign(to:)
     func testAssignTo_possibleValue_correctlyAssigned() throws {
         for domainValue in intVariableDomain {
             XCTAssertNoThrow(try intVariable.assign(to: domainValue))
@@ -56,7 +52,6 @@ final class IntVariableTests: XCTestCase {
         XCTAssertNoThrow(try intVariable.assign(to: 3))
     }
 
-    // setDomain(to:)
     func testSetDomainTo_validNewDomain_setsDomainCorrectly() throws {
         let newDomain = Set([1, 2])
         try intVariable.setDomain(to: newDomain)
@@ -78,7 +73,6 @@ final class IntVariableTests: XCTestCase {
                              { XCTAssertEqual($0 as? VariableError, VariableError.incompatibleDomainError) })
     }
 
-    // unassign()
     func testUnassign_assignmentSetToNil() throws {
         XCTAssertNoThrow(try intVariable.assign(to: 2))
         XCTAssertEqual(intVariable.assignment, 2)

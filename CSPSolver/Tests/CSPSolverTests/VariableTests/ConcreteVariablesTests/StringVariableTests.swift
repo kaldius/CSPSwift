@@ -1,7 +1,6 @@
 import XCTest
 @testable import CSPSolver
 
-// TODO: test cases ending with "throwsError" should be implemented after errors are implemented!!!
 final class StringVariableTests: XCTestCase {
     var stringVariableDomain: Set<String>!
     var stringVariable: StringVariable!
@@ -12,45 +11,83 @@ final class StringVariableTests: XCTestCase {
         stringVariable = StringVariable(name: "string", domain: stringVariableDomain)
     }
 
-    // MARK: Testing methods/attributes inherited from Variable
-    func testDomain_getter() {
+    // MARK: Testing methods/attributes declared in StringVariable
+    func testDomain_returnsCorrectDomain() {
         XCTAssertEqual(stringVariable.domain, stringVariableDomain)
     }
 
-    func testDomain_getter_variableAssigned_returnsOnlyOneValue() {
-        stringVariable.assign(to: "b")
-        XCTAssertEqual(stringVariable.domain, ["b"])
+    func testDomain_variableAssigned_returnsOnlyOneValue() {
+        XCTAssertNoThrow(try stringVariable.assign(to: "a"))
+        XCTAssertEqual(stringVariable.domain, ["a"])
     }
 
-    func testDomain_setter_validNewDomain_setsDomainCorrectly() {
-        let newDomain = Set(["b", "c"])
-        stringVariable.setDomain(to: newDomain)
+    func testAssignment_initialAssignment_returnsNil() {
+        XCTAssertNil(stringVariable.assignment)
+    }
+
+    func testAssignTo_possibleValue_correctlyAssigned() throws {
+        for domainValue in stringVariableDomain {
+            XCTAssertNoThrow(try stringVariable.assign(to: domainValue))
+            let assignment = try XCTUnwrap(stringVariable.assignment)
+            XCTAssertEqual(assignment, domainValue)
+            stringVariable.unassign()
+        }
+    }
+
+    func testAssignTo_variableCurrentlyAssigned_throwsError() {
+        XCTAssertNoThrow(try stringVariable.assign(to: "a"))
+        XCTAssertThrowsError(try stringVariable.assign(to: "b"),
+                             "Should throw overwritingExistingAssignmentError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.overwritingExistingAssignmentError) })
+        XCTAssertEqual(stringVariable.assignment, "a")
+    }
+
+    func testAssignTo_valueNotInDomain_throwsError() throws {
+        // assign to d fails
+        XCTAssertThrowsError(try stringVariable.assign(to: "d"),
+                             "Should throw assignmentNotInDomainError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.assignmentNotInDomainError) })
+        XCTAssertNil(stringVariable.assignment)
+        // assign to c passes
+        XCTAssertNoThrow(try stringVariable.assign(to: "c"))
+    }
+
+    func testSetDomainTo_validNewDomain_setsDomainCorrectly() throws {
+        let newDomain = Set(["a", "b"])
+        try stringVariable.setDomain(to: newDomain)
 
         XCTAssertEqual(stringVariable.domain, newDomain)
     }
 
-    func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
+    func testSetDomainTo_emptyDomain_setsDomainCorrectly() throws {
+        let newDomain: Set<String> = Set()
+        try stringVariable.setDomain(to: newDomain)
 
+        XCTAssertEqual(stringVariable.domain.count, 0)
     }
 
-    func testAssignment_getter_initialAssignmentNil() {
+    func testSetDomainTo_notSubsetOfCurrentDomain_throwsError() {
+        let newDomain = Set(["b", "c", "d"])
+        XCTAssertThrowsError(try stringVariable.setDomain(to: newDomain),
+                             "Should throw incompatibleDomainError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.incompatibleDomainError) })
+    }
+
+    func testUnassign_assignmentSetToNil() throws {
+        XCTAssertNoThrow(try stringVariable.assign(to: "b"))
+        XCTAssertEqual(stringVariable.assignment, "b")
+        stringVariable.unassign()
         XCTAssertNil(stringVariable.assignment)
     }
 
-    func testAssignment_setter_validNewAssignment() {
-        for domainValue in stringVariableDomain {
-            stringVariable.unassign()
-            stringVariable.assign(to: domainValue)
-            XCTAssertEqual(stringVariable.assignment, domainValue)
-        }
-    }
-
-    func testAssignment_setter_currentAssignmentNotNil_throwsError() {
-
-    }
-
-    func testAssignment_setter_newAssignmentNotInDomain_throwsError() {
-
+    // MARK: Testing methods/attributes inherited from Variable
+    func testAssignToAnyValue_wrongValueType_throwsError() throws {
+        XCTAssertThrowsError(try stringVariable.assign(to: 7),
+                             "Should throw valueTypeError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.valueTypeError) })
+        XCTAssertThrowsError(try stringVariable.assign(to: true),
+                             "Should throw valueTypeError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.valueTypeError) })
     }
 
     func testCanAssign_possibleValue_returnsTrue() {
@@ -60,33 +97,13 @@ final class StringVariableTests: XCTestCase {
     }
 
     func testCanAssign_impossibleValue_returnsFalse() {
-        XCTAssertFalse(stringVariable.canAssign(to: "e"))
-        XCTAssertFalse(stringVariable.canAssign(to: 4))
+        XCTAssertFalse(stringVariable.canAssign(to: "d"))
+        XCTAssertFalse(stringVariable.canAssign(to: 3))
         XCTAssertFalse(stringVariable.canAssign(to: true))
     }
 
-    func testAssignTo_possibleValue_getsAssigned() throws {
-        for domainValue in stringVariableDomain {
-            stringVariable.unassign()
-            stringVariable.assign(to: domainValue)
-            let assignment = try XCTUnwrap(stringVariable.assignment)
-            XCTAssertEqual(assignment, domainValue)
-        }
-    }
-
-    func testAssignTo_impossibleValue_throwsError() throws {
-        /*
-        XCTAssertFalse(stringVariable.assign(to: "e"))
-        XCTAssertNil(stringVariable.assignment)
-        stringVariable.assign(to: "c")
-        XCTAssertFalse(stringVariable.assign(to: "d"))
-        let stringValue = try XCTUnwrap(stringVariable.assignment)
-        XCTAssertEqual(stringValue, "c")
-         */
-    }
-
     func testCanSetDomain_validNewDomain_returnsTrue() {
-        let newDomain = ["b", "c"]
+        let newDomain = ["a", "b"]
         XCTAssertTrue(stringVariable.canSetDomain(to: newDomain))
     }
 
@@ -96,11 +113,11 @@ final class StringVariableTests: XCTestCase {
     }
 
     func testCanSetDomain_notSubsetOfCurrentDomain_returnsFalse() {
-        let newDomain = ["a", "b", "c", "d"]
+        let newDomain = ["b", "c", "d"]
         XCTAssertFalse(stringVariable.canSetDomain(to: newDomain))
     }
 
-    func testSetDomain_validNewDomain_setsDomainCorrectly() throws {
+    func testSetDomainToAnyValue_validNewDomain_setsDomainCorrectly() throws {
         let newDomain: [any Value] = ["a", "b"]
         try stringVariable.setDomain(to: newDomain)
         let expectedDomain = Set(["a", "b"])
@@ -108,22 +125,19 @@ final class StringVariableTests: XCTestCase {
         XCTAssertEqual(stringVariable.domain, expectedDomain)
     }
 
-    func testSetDomain_emptyDomain_setsDomainCorrectly() throws {
+    func testSetDomainToAnyValue_emptyDomain_setsDomainCorrectly() throws {
         let newDomain: [any Value] = []
         try stringVariable.setDomain(to: newDomain)
 
         XCTAssertEqual(stringVariable.domain.count, 0)
     }
 
-    func testSetDomain_wrongValueType_throwsError() {
+    func testSetDomainToAnyValue_wrongValueType_throwsError() {
+        let newDomain = [1, 2, 3]
+        XCTAssertThrowsError(try stringVariable.setDomain(to: newDomain),
+                             "Should throw valueTypeError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.valueTypeError) })
 
-    }
-
-    func testUnassign_assignmentSetToNil() throws {
-        stringVariable.assign(to: "b")
-        let stringValue = try XCTUnwrap(stringVariable.assignment)
-        XCTAssertEqual(stringValue, "b")
-        stringVariable.unassign()
-        XCTAssertNil(stringVariable.assignment)
+        XCTAssertEqual(stringVariable.domain, stringVariableDomain)
     }
 }

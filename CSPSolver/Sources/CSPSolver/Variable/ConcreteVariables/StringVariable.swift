@@ -21,11 +21,20 @@ public struct StringVariable: Variable {
         _assignment
     }
 
-    public mutating func assign(to newAssignment: String) {
+    public mutating func assign(to newAssignment: String) throws {
+        guard !isAssigned else {
+            throw VariableError.overwritingExistingAssignmentError
+        }
+        guard _domain.contains(newAssignment) else {
+            throw VariableError.assignmentNotInDomainError
+        }
         _assignment = newAssignment
     }
 
-    public mutating func setDomain(to newDomain: Set<String>) {
+    public mutating func setDomain(to newDomain: Set<String>) throws {
+        guard isSubsetOfDomain(newDomain) else {
+            throw VariableError.incompatibleDomainError
+        }
         _domain = newDomain
     }
 
