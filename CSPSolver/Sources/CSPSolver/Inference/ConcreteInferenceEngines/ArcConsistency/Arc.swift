@@ -78,7 +78,7 @@ public struct Arc {
         return try domain.contains(where: { jDomainValue in
             try copiedState.assign(variableJName, to: jDomainValue)
             let satisfied = try constraintIJ.isSatisfied(state: copiedState)
-            copiedState.unassign(variableJName)
+            try copiedState.unassign(variableJName)
             return satisfied
         })
     }

@@ -79,7 +79,10 @@ public struct VariableSet {
         try nameToVariable[name]?.assign(to: assignment)
     }
 
-    public mutating func unassign(_ name: String) {
+    public mutating func unassign(_ name: String) throws {
+        guard nameToVariable[name] != nil else {
+            throw VariableError.nonExistentVariableError(name: name)
+        }
         nameToVariable[name]?.unassign()
     }
 

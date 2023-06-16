@@ -28,7 +28,7 @@ struct ForwardChecking: InferenceEngine {
         }
         try copiedState.assign(variableName, to: value)
         let anyViolated = try constraintSet.anyViolated(state: copiedState)
-        copiedState.unassign(variableName)
+        try copiedState.unassign(variableName)
         return !anyViolated
     }
 }

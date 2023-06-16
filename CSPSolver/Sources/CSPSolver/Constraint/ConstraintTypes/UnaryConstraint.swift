@@ -17,7 +17,7 @@ extension UnaryConstraint {
             if try isViolated(state: copiedState) {
                 newDomain.remove(domainValue)
             }
-            copiedState.unassign(variableName)
+            try copiedState.unassign(variableName)
         }
         try copiedState.setDomain(for: variableName, to: Array(newDomain))
         return copiedState

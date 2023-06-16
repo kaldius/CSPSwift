@@ -46,7 +46,7 @@ public struct ConstraintSatisfactionProblem {
         }
         try variableSet.assign(variableName, to: value)
         let anyViolated = try constraintSet.anyViolated(state: variableSet)
-        variableSet.unassign(variableName)
+        try variableSet.unassign(variableName)
         return !anyViolated
     }
 

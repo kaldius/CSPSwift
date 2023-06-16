@@ -42,7 +42,7 @@ final class StringVariableTests: XCTestCase {
         XCTAssertEqual(stringVariable.assignment, "a")
     }
 
-    func testAssignTo_valueNotInDomain_throwsError() throws {
+    func testAssignTo_valueNotInDomain_throwsError() {
         // assign to d fails
         XCTAssertThrowsError(try stringVariable.assign(to: "d"),
                              "Should throw assignmentNotInDomainError",
@@ -52,16 +52,16 @@ final class StringVariableTests: XCTestCase {
         XCTAssertNoThrow(try stringVariable.assign(to: "c"))
     }
 
-    func testSetDomainTo_validNewDomain_setsDomainCorrectly() throws {
+    func testSetDomainTo_validNewDomain_setsDomainCorrectly() {
         let newDomain = Set(["a", "b"])
-        try stringVariable.setDomain(to: newDomain)
+        XCTAssertNoThrow(try stringVariable.setDomain(to: newDomain))
 
         XCTAssertEqual(stringVariable.domain, newDomain)
     }
 
-    func testSetDomainTo_emptyDomain_setsDomainCorrectly() throws {
+    func testSetDomainTo_emptyDomain_setsDomainCorrectly() {
         let newDomain: Set<String> = Set()
-        try stringVariable.setDomain(to: newDomain)
+        XCTAssertNoThrow(try stringVariable.setDomain(to: newDomain))
 
         XCTAssertEqual(stringVariable.domain.count, 0)
     }
@@ -73,7 +73,7 @@ final class StringVariableTests: XCTestCase {
                              { XCTAssertEqual($0 as? VariableError, VariableError.incompatibleDomainError) })
     }
 
-    func testUnassign_assignmentSetToNil() throws {
+    func testUnassign_assignmentSetToNil() {
         XCTAssertNoThrow(try stringVariable.assign(to: "b"))
         XCTAssertEqual(stringVariable.assignment, "b")
         stringVariable.unassign()
@@ -81,7 +81,7 @@ final class StringVariableTests: XCTestCase {
     }
 
     // MARK: Testing methods/attributes inherited from Variable
-    func testAssignToAnyValue_wrongValueType_throwsError() throws {
+    func testAssignToAnyValue_wrongValueType_throwsError() {
         XCTAssertThrowsError(try stringVariable.assign(to: 7),
                              "Should throw valueTypeError",
                              { XCTAssertEqual($0 as? VariableError, VariableError.valueTypeError) })
@@ -117,17 +117,17 @@ final class StringVariableTests: XCTestCase {
         XCTAssertFalse(stringVariable.canSetDomain(to: newDomain))
     }
 
-    func testSetDomainToAnyValue_validNewDomain_setsDomainCorrectly() throws {
+    func testSetDomainToAnyValue_validNewDomain_setsDomainCorrectly() {
         let newDomain: [any Value] = ["a", "b"]
-        try stringVariable.setDomain(to: newDomain)
+        XCTAssertNoThrow(try stringVariable.setDomain(to: newDomain))
         let expectedDomain = Set(["a", "b"])
 
         XCTAssertEqual(stringVariable.domain, expectedDomain)
     }
 
-    func testSetDomainToAnyValue_emptyDomain_setsDomainCorrectly() throws {
+    func testSetDomainToAnyValue_emptyDomain_setsDomainCorrectly() {
         let newDomain: [any Value] = []
-        try stringVariable.setDomain(to: newDomain)
+        XCTAssertNoThrow(try stringVariable.setDomain(to: newDomain))
 
         XCTAssertEqual(stringVariable.domain.count, 0)
     }
