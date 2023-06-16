@@ -1,7 +1,7 @@
 public struct IntVariable: Variable {
     public var name: String
-    public var internalDomain: Set<Int>
-    public var internalAssignment: Int?
+    public var _domain: Set<Int>
+    public var _assignment: Int?
 
     init(name: String, domain: Set<Int>) {
         self.init(name: name,
@@ -13,7 +13,7 @@ public struct IntVariable: Variable {
          internalDomain: Set<Int>,
          internalAssignment: Int?) {
         self.name = name
-        self.internalDomain = internalDomain
-        self.internalAssignment = internalAssignment
+        self._domain = internalDomain
+        self._assignment = internalAssignment
     }
 }

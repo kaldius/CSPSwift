@@ -7,10 +7,10 @@ public protocol Variable: Hashable, CustomDebugStringConvertible {
     var name: String { get }
 
     /// To be used by the computed variable `domain`.
-    var internalDomain: Set<ValueType> { get set }
+    var _domain: Set<ValueType> { get set }
 
     /// To be used by the computed variable `assignment`.
-    var internalAssignment: ValueType? { get set }
+    var _assignment: ValueType? { get set }
 }
 
 extension Variable {
@@ -19,23 +19,23 @@ extension Variable {
             if let unwrappedAssignment = assignment {
                 return [unwrappedAssignment]
             } else {
-                return internalDomain
+                return _domain
             }
         }
         set(newDomain) {
             if canSetDomain(to: newDomain) {
-                internalDomain = newDomain
+                _domain = newDomain
             }
         }
     }
 
     public var assignment: ValueType? {
         get {
-            internalAssignment
+            _assignment
         }
         set(newAssignment) {
             if canAssign(to: newAssignment) {
-                internalAssignment = newAssignment
+                _assignment = newAssignment
             }
         }
     }
@@ -47,7 +47,7 @@ extension Variable {
         return canAssign(to: castedNewAssignment)
     }
 
-    public func canAssign(to newAssignment: ValueType?) -> Bool {
+    private func canAssign(to newAssignment: ValueType?) -> Bool {
         guard let unwrappedNewAssignment = newAssignment else {
             return false
         }
@@ -80,11 +80,7 @@ extension Variable {
     }
 
     public mutating func unassign() {
-        internalAssignment = nil
-    }
-
-    public func getSelf() -> Self {
-        self
+        _assignment = nil
     }
 
     /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.

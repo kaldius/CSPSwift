@@ -13,7 +13,7 @@ final class IntVariableTests: XCTestCase {
     }
 
     // MARK: Testing methods/attributes inherited from Variable
-    func testDomain_getter() {
+    func testDomain_getter_getsDomainCorrectly() {
         XCTAssertEqual(intVariable.domain, intVariableDomain)
     }
 
@@ -29,15 +29,18 @@ final class IntVariableTests: XCTestCase {
         XCTAssertEqual(intVariable.domain, newDomain)
     }
 
-    func testDomain_setter_notSubsetOfCurrentDomain_throwsError() {
+    func testDomain_setter_notSubsetOfCurrentDomain_setFails() {
+        let oldDomain = intVariable.domain
+        intVariable.domain = Set([1, 2, 4])
 
+        XCTAssertEqual(intVariable.domain, oldDomain)
     }
 
-    func testAssignment_getter_initialAssignmentNil() {
+    func testAssignment_getter_initialAssignment_returnsNil() {
         XCTAssertNil(intVariable.assignment)
     }
 
-    func testAssignment_setter_validNewAssignment() {
+    func testAssignment_setter_validNewAssignment_setsAssignmentCorrectly() {
         for domainValue in intVariableDomain {
             intVariable.unassign()
             intVariable.assignment = domainValue
@@ -45,12 +48,19 @@ final class IntVariableTests: XCTestCase {
         }
     }
 
-    func testAssignment_setter_currentAssignmentNotNil_throwsError() {
+    func testAssignment_setter_variableAlreadyAssigned_setFails() {
+        intVariable.assignment = 2
+        let oldAssignment = intVariable.assignment
+        intVariable.assignment = 3
 
+        XCTAssertEqual(intVariable.assignment, oldAssignment)
     }
 
-    func testAssignment_setter_newAssignmentNotInDomain_throwsError() {
+    func testAssignment_setter_newAssignmentNotInDomain_setFails() {
+        let oldAssignment = intVariable.assignment
+        intVariable.assignment = 4
 
+        XCTAssertEqual(intVariable.assignment, oldAssignment)
     }
 
     func testCanAssign_possibleValue_returnsTrue() {
@@ -74,15 +84,23 @@ final class IntVariableTests: XCTestCase {
         }
     }
 
-    func testAssignTo_impossibleValue_throwsError() throws {
-        /*
-        XCTAssertFalse(intVariable.assign(to: 4))
+    func testAssignTo_wrongValueType_throwsError() throws {
+        XCTAssertThrowsError(try intVariable.assign(to: "success"),
+                             "Should throw valueTypeError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.valueTypeError) })
+        XCTAssertThrowsError(try intVariable.assign(to: true),
+                             "Should throw valueTypeError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.valueTypeError) })
+    }
+
+    // TODO: this should throw error instead of failing silently
+    func testAssignTo_valueNotInDomain_assignFails() throws {
+        XCTAssertNoThrow(try intVariable.assign(to: 4))
         XCTAssertNil(intVariable.assignment)
-        intVariable.assign(to: 3)
-        XCTAssertFalse(intVariable.assign(to: 5))
+        XCTAssertNoThrow(try intVariable.assign(to: 3))
+        XCTAssertNoThrow(try intVariable.assign(to: 5))
         let intValue = try XCTUnwrap(intVariable.assignment)
         XCTAssertEqual(intValue, 3)
-         */
     }
 
     func testCanSetDomain_validNewDomain_returnsTrue() {
@@ -116,7 +134,12 @@ final class IntVariableTests: XCTestCase {
     }
 
     func testSetDomain_wrongValueType_throwsError() {
+        let newDomain = ["a", "b", "c"]
+        XCTAssertThrowsError(try intVariable.setDomain(to: newDomain),
+                             "Should throw valueTypeError",
+                             { XCTAssertEqual($0 as? VariableError, VariableError.valueTypeError) })
 
+        XCTAssertEqual(intVariable.domain, intVariableDomain)
     }
 
     func testUnassign_assignmentSetToNil() throws {

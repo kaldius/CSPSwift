@@ -1,4 +1,4 @@
-enum VariableError: Error {
+enum VariableError: Error, Equatable {
     case valueTypeError
     case overwritingExistingVariableError(name: String)
     case nonExistentVariableError(name: String)

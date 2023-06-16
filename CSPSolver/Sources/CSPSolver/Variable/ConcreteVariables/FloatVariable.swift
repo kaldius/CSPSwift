@@ -1,7 +1,7 @@
 public struct FloatVariable: Variable {
     public var name: String
-    public var internalDomain: Set<Float>
-    public var internalAssignment: Float?
+    public var _domain: Set<Float>
+    public var _assignment: Float?
 
     init(name: String, domain: Set<Float>) {
         self.init(name: name, internalDomain: domain, internalAssignment: nil)
@@ -11,7 +11,7 @@ public struct FloatVariable: Variable {
          internalDomain: Set<Float>,
          internalAssignment: Float?) {
         self.name = name
-        self.internalDomain = internalDomain
-        self.internalAssignment = internalAssignment
+        self._domain = internalDomain
+        self._assignment = internalAssignment
     }
 }

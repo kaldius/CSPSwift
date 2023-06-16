@@ -6,8 +6,8 @@
  */
 struct TernaryVariable: NaryVariable {
     var name: String
-    var internalDomain: Set<NaryVariableValueType>
-    var internalAssignment: NaryVariableValueType?
+    var _domain: Set<NaryVariableValueType>
+    var _assignment: NaryVariableValueType?
 
     var associatedVariableNames: [String]
 
@@ -31,7 +31,7 @@ struct TernaryVariable: NaryVariable {
          internalAssignment: NaryVariableValueType?) {
         self.name = name
         self.associatedVariableNames = associatedVariableNames
-        self.internalDomain = internalDomain
-        self.internalAssignment = nil
+        self._domain = internalDomain
+        self._assignment = nil
     }
 }

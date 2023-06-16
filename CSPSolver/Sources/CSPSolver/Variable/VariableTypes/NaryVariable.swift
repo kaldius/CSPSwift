@@ -6,9 +6,9 @@ public protocol NaryVariable: Variable {
 
     var associatedVariableNames: [String] { get }
     var assignment: NaryVariableValueType? { get set }
-    var internalAssignment: NaryVariableValueType? { get set }
+    var _assignment: NaryVariableValueType? { get set }
     var domain: Set<NaryVariableValueType> { get set }
-    var internalDomain: Set<NaryVariableValueType> { get set }
+    var _domain: Set<NaryVariableValueType> { get set }
 }
 
 extension NaryVariable {

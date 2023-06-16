@@ -1,4 +1,4 @@
-enum CSPError: Error {
+enum CSPError: Error, Equatable {
     case emptyUndoStackError
 }
 
