@@ -40,11 +40,11 @@ public struct VariableSet {
         nameToVariable[variable.name] = variable
     }
 
-    func getVariable(_ name: String) -> (any Variable)? {
+    public func getVariable(_ name: String) -> (any Variable)? {
         nameToVariable[name]
     }
 
-    func getVariable<V: Variable>(_ name: String, type: V.Type) -> V? {
+    public func getVariable<V: Variable>(_ name: String, type: V.Type) -> V? {
         nameToVariable[name] as? V
     }
 

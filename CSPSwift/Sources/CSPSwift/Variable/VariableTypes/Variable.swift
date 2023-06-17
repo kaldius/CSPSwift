@@ -64,7 +64,7 @@ extension Variable {
         return set
     }
 
-    func isSubsetOfDomain(_ newDomain: Set<ValueType>) -> Bool {
+    public func isSubsetOfDomain(_ newDomain: Set<ValueType>) -> Bool {
         Set(newDomain).isSubset(of: domain)
     }
 
@@ -77,7 +77,7 @@ extension Variable {
         domain.count
     }
 
-    var isAssigned: Bool {
+    public var isAssigned: Bool {
         assignment != nil
     }
 }

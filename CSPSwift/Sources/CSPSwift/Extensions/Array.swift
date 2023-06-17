@@ -5,7 +5,7 @@ extension Array {
     /// `output = [[1, 3], [1, 4], [2, 3], [2, 4]]`
     ///
     /// Runtime: `nd^n` (where `n`: number of domains; `d`: max domain size)
-    static func possibleAssignments<T>(domains: [[T]]) -> [[T]] {
+    public static func possibleAssignments<T>(domains: [[T]]) -> [[T]] {
         guard !domains.isEmpty else {
             return [[T]]()
         }
