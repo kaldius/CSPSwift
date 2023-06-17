@@ -4,7 +4,7 @@
 public struct VariableSet {
     private var nameToVariable: [String: any Variable]
 
-    init(from variables: [any Variable]) throws {
+    public init(from variables: [any Variable]) throws {
         self.nameToVariable = [:]
         try variables.forEach({ try insert($0) })
     }
@@ -13,20 +13,20 @@ public struct VariableSet {
         Array(nameToVariable.values)
     }
 
-    public var unassignedVariables: [any Variable] {
+    var unassignedVariables: [any Variable] {
         variables.filter({ !$0.isAssigned })
     }
 
-    public var isCompletelyAssigned: Bool {
+    var isCompletelyAssigned: Bool {
         variables.allSatisfy({ $0.isAssigned })
     }
 
-    public var containsEmptyDomain: Bool {
+    var containsEmptyDomain: Bool {
         variables.contains(where: { $0.domainSize == 0 })
     }
 
     /// Returns the total number of consistent domain values for all variables.
-    public var totalDomainValueCount: Int {
+    var totalDomainValueCount: Int {
         variables.reduce(0, { countSoFar, variable in
             countSoFar + variable.domainSize
         })
@@ -40,28 +40,28 @@ public struct VariableSet {
         nameToVariable[variable.name] = variable
     }
 
-    public func getVariable(_ name: String) -> (any Variable)? {
+    func getVariable(_ name: String) -> (any Variable)? {
         nameToVariable[name]
     }
 
-    public func getVariable<V: Variable>(_ name: String, type: V.Type) -> V? {
+    func getVariable<V: Variable>(_ name: String, type: V.Type) -> V? {
         nameToVariable[name] as? V
     }
 
     // MARK: Variable assignments
-    public func isAssigned(_ name: String) throws -> Bool {
+    func isAssigned(_ name: String) throws -> Bool {
         let variable = try extractVariable(named: name)
         return variable.isAssigned
     }
 
-    public func canAssign(_ name: String, to assignment: some Value) throws -> Bool {
+    func canAssign(_ name: String, to assignment: some Value) throws -> Bool {
         guard let variable = nameToVariable[name] else {
             throw VariableError.nonExistentVariableError(name: name)
         }
         return variable.canAssign(to: assignment)
     }
 
-    public func getAssignment<V: Variable>(_ name: String, type: V.Type) throws -> V.ValueType? {
+    func getAssignment<V: Variable>(_ name: String, type: V.Type) throws -> V.ValueType? {
         let variable = try extractVariable(named: name)
         if variable.assignment == nil {
             return nil
@@ -72,14 +72,14 @@ public struct VariableSet {
         return assignment
     }
 
-    public mutating func assign(_ name: String, to assignment: some Value) throws {
+    mutating func assign(_ name: String, to assignment: some Value) throws {
         guard contains(name) else {
             throw VariableError.nonExistentVariableError(name: name)
         }
         try nameToVariable[name]?.assign(to: assignment)
     }
 
-    public mutating func unassign(_ name: String) throws {
+    mutating func unassign(_ name: String) throws {
         guard nameToVariable[name] != nil else {
             throw VariableError.nonExistentVariableError(name: name)
         }
@@ -87,19 +87,19 @@ public struct VariableSet {
     }
 
     // MARK: Variable domains
-    public mutating func setDomain(for name: String, to newDomain: [any Value]) throws {
+    mutating func setDomain(for name: String, to newDomain: [any Value]) throws {
         guard contains(name) else {
             throw VariableError.nonExistentVariableError(name: name)
         }
         try nameToVariable[name]?.setDomain(to: newDomain)
     }
 
-    public func getDomain(_ name: String) throws -> [any Value] {
+    func getDomain(_ name: String) throws -> [any Value] {
         let variable = try extractVariable(named: name)
         return variable.domainAsArray
     }
 
-    public func getDomain<V: Variable>(_ name: String, type: V.Type) throws -> [V.ValueType] {
+    func getDomain<V: Variable>(_ name: String, type: V.Type) throws -> [V.ValueType] {
         let domain = try getDomain(name)
         guard let castedDomain = domain as? [V.ValueType] else {
             throw VariableError.valueTypeError

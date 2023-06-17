@@ -3,15 +3,15 @@
  associated with a dual `Variable`, `d`, the assignment for `v` is equal to the
  respective value in the assignment tuple of `d`.
  */
-struct AuxillaryConstraint: BinaryConstraint {
+public struct AuxillaryConstraint: BinaryConstraint {
     let mainVariableName: String
     let dualVariableName: String
 
-    var variableNames: [String] {
+    public var variableNames: [String] {
         [mainVariableName, dualVariableName]
     }
 
-    init?(mainVariable: any Variable, dualVariable: TernaryVariable) {
+    public init?(mainVariable: any Variable, dualVariable: TernaryVariable) {
         guard dualVariable.isAssociated(with: mainVariable) else {
             return nil
         }
@@ -19,7 +19,7 @@ struct AuxillaryConstraint: BinaryConstraint {
         self.dualVariableName = dualVariable.name
     }
 
-    func isSatisfied(state: VariableSet) -> Bool {
+    public func isSatisfied(state: VariableSet) -> Bool {
         guard let mainVariable = state.getVariable(mainVariableName),
               let dualVariable = state.getVariable(dualVariableName, type: TernaryVariable.self) else {
             return false
@@ -27,7 +27,7 @@ struct AuxillaryConstraint: BinaryConstraint {
         return dualVariable.assignmentSatisfied(for: mainVariable)
     }
 
-    func isViolated(state: VariableSet) -> Bool {
+    public func isViolated(state: VariableSet) -> Bool {
         guard let mainVariable = state.getVariable(mainVariableName),
               let dualVariable = state.getVariable(dualVariableName, type: TernaryVariable.self) else {
             return false
@@ -37,7 +37,7 @@ struct AuxillaryConstraint: BinaryConstraint {
 }
 
 extension AuxillaryConstraint: Equatable {
-    static func == (lhs: AuxillaryConstraint, rhs: AuxillaryConstraint) -> Bool {
+    public static func == (lhs: AuxillaryConstraint, rhs: AuxillaryConstraint) -> Bool {
         lhs.mainVariableName.isEqual(rhs.mainVariableName)
         && lhs.dualVariableName.isEqual(rhs.dualVariableName)
     }

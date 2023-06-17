@@ -1,3 +1,3 @@
-enum NextVariableSelectorType {
+public enum NextVariableSelectorType {
     case minimumRemainingValues
 }

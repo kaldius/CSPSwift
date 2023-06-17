@@ -1,4 +1,4 @@
-enum VariableError: Error, Equatable {
+public enum VariableError: Error, Equatable {
     case valueTypeError
     case overwritingExistingVariableError(name: String)
     case nonExistentVariableError(name: String)
@@ -8,7 +8,7 @@ enum VariableError: Error, Equatable {
 }
 
 extension VariableError: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         switch self {
         case .valueTypeError:
             return "Unable to cast value to Variable.ValueType"

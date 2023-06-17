@@ -5,7 +5,6 @@ public protocol Constraint: Equatable {
     var variableNames: [String] { get }
     func isSatisfied(state: VariableSet) throws -> Bool
     func isViolated(state: VariableSet) throws -> Bool
-    func containsAssignedVariable(state: VariableSet) -> Bool
 }
 
 extension Constraint {

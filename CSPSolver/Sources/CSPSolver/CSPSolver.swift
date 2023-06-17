@@ -20,9 +20,26 @@ public struct CSPSolver {
         self.domainValueSorter = DomainValueSorterFactory.create(domainValueSorterType)
     }
 
+    /// Solves a given `ConstraintSatisfactionProblem` in place.
+    ///
+    /// - Throws: `CSPError.noValidSolutionError` if the CSP does not have a valid solution.
+    public func solve(csp: inout ConstraintSatisfactionProblem) throws {
+        guard let solvedVariableSet = try backtrack(csp: csp) else {
+            throw CSPError.noValidSolutionError
+        }
+        csp.variableSet = solvedVariableSet
+    }
+
+    /// Given a `ConstraintSatisfactionProblem`, returns it in a solved state.
+    public func solved(csp: ConstraintSatisfactionProblem) throws -> ConstraintSatisfactionProblem {
+        var clonedCsp = csp
+        try solve(csp: &clonedCsp)
+        return clonedCsp
+    }
+
     /// Returns the `VariableSet` in a solved state if it can be solved,
     /// returns `nil` otherwise.
-    public func backtrack(csp: ConstraintSatisfactionProblem) throws -> VariableSet? {
+    func backtrack(csp: ConstraintSatisfactionProblem) throws -> VariableSet? {
         if try csp.variablesCompletelyAssigned && csp.allConstraintsSatisfied {
             return csp.variableSet
         }

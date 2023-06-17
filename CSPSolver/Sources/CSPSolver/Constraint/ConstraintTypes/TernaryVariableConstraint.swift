@@ -6,7 +6,7 @@ protocol TernaryVariableConstraint: UnaryConstraint {
 }
 
 extension TernaryVariableConstraint {
-    var variableNames: [String] {
+    public var variableNames: [String] {
         [variableName]
     }
 }

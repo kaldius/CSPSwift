@@ -1,7 +1,7 @@
 /**
  Represents an Arc for all **Arc Consistency** algorithms.
  */
-public struct Arc {
+struct Arc {
     let variableIName: String
     let variableJName: String
     private let constraintIJ: any BinaryConstraint
@@ -34,7 +34,7 @@ public struct Arc {
         self.init(from: binaryConstraint, reverse: reverse)
     }
 
-    public func contains(_ variableName: String) -> Bool {
+    func contains(_ variableName: String) -> Bool {
         variableName == variableIName || variableName == variableJName
     }
 
@@ -42,14 +42,13 @@ public struct Arc {
     /// supporting `variableJ` value.
     ///
     /// - Returns: an array representing the revised domain for `variableI`, or nil if no revision occured.
-    public func revise(state: VariableSet) throws -> [any Value]? {
+    func revise(state: VariableSet) throws -> [any Value]? {
         guard try !state.isAssigned(variableIName) else {
             return nil
         }
         let variableIDomain = try state.getDomain(variableIName)
         var variableIDomainCopy = variableIDomain
         for iDomainValue in variableIDomain where try canBeRemoved(iDomainValue, state: state) {
-            // TODO: optimize?
             variableIDomainCopy.removeAll(where: { $0.isEqual(iDomainValue) })
         }
         if variableIDomainCopy.isEqual(variableIDomain) {

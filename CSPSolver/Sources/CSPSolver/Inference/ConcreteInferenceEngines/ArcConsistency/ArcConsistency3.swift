@@ -1,8 +1,8 @@
 /**
  An `InferenceEngine` that uses the **AC-3** algorithm.
  */
-public struct ArcConsistency3: InferenceEngine {
-    public func makeNewInference(from state: VariableSet, constraintSet: ConstraintSet) throws -> VariableSet? {
+struct ArcConsistency3: InferenceEngine {
+    func makeNewInference(from state: VariableSet, constraintSet: ConstraintSet) throws -> VariableSet? {
         var copiedState = state
         var arcs = Queue<Arc>(given: constraintSet)
 

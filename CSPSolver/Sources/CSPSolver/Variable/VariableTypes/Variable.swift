@@ -16,7 +16,7 @@ public protocol Variable: Hashable, CustomDebugStringConvertible {
 extension Variable {
     /// Returns true if assignment can be set to `newAssignment`, false otherwise.
     /// Note: this method takes in any type that conforms to `Value`.
-    public func canAssign(to newAssignment: some Value) -> Bool {
+    func canAssign(to newAssignment: some Value) -> Bool {
         guard let castedNewAssignment = newAssignment as? ValueType else {
             return false
         }
@@ -26,8 +26,8 @@ extension Variable {
     /// Sets the `Variable` assignment to `newAssignment`.
     /// Note: this method takes in any type that conforms to `Value`.
     ///
-    /// - Throws: VariableError.valueTypeError if casting fails
-    public mutating func assign(to newAssignment: any Value) throws {
+    /// - Throws: `VariableError.valueTypeError` if casting fails
+    mutating func assign(to newAssignment: any Value) throws {
         guard let castedNewAssignment = newAssignment as? ValueType else {
             throw VariableError.valueTypeError
         }
@@ -36,7 +36,7 @@ extension Variable {
 
     /// Returns true if domain can be set to `newDomain`, false otherwise.
     /// Note: this method takes in an **array** of any type that conforms to `Value`.
-    public func canSetDomain(to newDomain: [any Value]) -> Bool {
+    func canSetDomain(to newDomain: [any Value]) -> Bool {
         let newDomainAsValueType = newDomain.compactMap({ $0 as? ValueType })
         guard newDomain.count == newDomainAsValueType.count else {
             // casting failed at some point in compactMap
@@ -47,15 +47,15 @@ extension Variable {
 
     /// Sets the `Variable` domain to `newDomain`.
     /// Note: this method takes in an **array** of any type that conforms to `Value`.
-    public mutating func setDomain(to newDomain: [any Value]) throws {
+    mutating func setDomain(to newDomain: [any Value]) throws {
         try setDomain(to: try createValueTypeSet(from: newDomain))
     }
 
     /// Takes in an array of `any Value` and casts it to a Set of `ValueType`.
     /// If casting fails for any element, throws error.
     ///
-    /// - Throws: VariableError.valueTypeError if casting fails
-    private func createValueTypeSet(from array: [any Value]) throws -> Set<ValueType> {
+    /// - Throws: `VariableError.valueTypeError` if casting fails
+    func createValueTypeSet(from array: [any Value]) throws -> Set<ValueType> {
         let set = Set(array.compactMap({ $0 as? ValueType }))
         guard array.count == set.count else {
             // casting failed at some point in compactMap
@@ -64,12 +64,12 @@ extension Variable {
         return set
     }
 
-    internal func isSubsetOfDomain(_ newDomain: Set<ValueType>) -> Bool {
+    func isSubsetOfDomain(_ newDomain: Set<ValueType>) -> Bool {
         Set(newDomain).isSubset(of: domain)
     }
 
     // MARK: convenience attributes
-    public var domainAsArray: [ValueType] {
+    var domainAsArray: [ValueType] {
         Array(domain)
     }
 
@@ -77,7 +77,7 @@ extension Variable {
         domain.count
     }
 
-    public var isAssigned: Bool {
+    var isAssigned: Bool {
         assignment != nil
     }
 }

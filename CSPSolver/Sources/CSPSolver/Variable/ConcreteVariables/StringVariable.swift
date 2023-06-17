@@ -3,7 +3,7 @@ public struct StringVariable: Variable {
     private var _domain: Set<String>
     private var _assignment: String?
 
-    init(name: String, domain: Set<String>) {
+    public init(name: String, domain: Set<String>) {
         self.name = name
         self._domain = domain
         self._assignment = nil

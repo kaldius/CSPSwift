@@ -4,17 +4,17 @@
  Requires three other `AuxillaryConstraint`s to ensure the assignments for all three `Variable`s
  are equal to the respective values in the assignment tuple of the dual `Variable`.
  */
-struct TernaryVariable: NaryVariable {
+public struct TernaryVariable: NaryVariable {
     public var name: String
     private var _domain: Set<NaryVariableValueType>
     private var _assignment: NaryVariableValueType?
 
-    var associatedVariableNames: [String]
+    public var associatedVariableNames: [String]
 
-    init(name: String,
-         variableA: any Variable,
-         variableB: any Variable,
-         variableC: any Variable) {
+    public init(name: String,
+                variableA: any Variable,
+                variableB: any Variable,
+                variableC: any Variable) {
         self.name = name
         let associatedVariables = [variableA, variableB, variableC]
         self.associatedVariableNames = associatedVariables.map { $0.name }
@@ -23,7 +23,7 @@ struct TernaryVariable: NaryVariable {
         self._assignment = nil
     }
 
-    var domain: Set<NaryVariableValueType> {
+    public var domain: Set<NaryVariableValueType> {
         if let unwrappedAssignment = assignment {
             return [unwrappedAssignment]
         } else {
@@ -31,11 +31,11 @@ struct TernaryVariable: NaryVariable {
         }
     }
 
-    var assignment: NaryVariableValueType? {
+    public var assignment: NaryVariableValueType? {
         _assignment
     }
 
-    mutating func assign(to newAssignment: NaryVariableValueType) throws {
+    public mutating func assign(to newAssignment: NaryVariableValueType) throws {
         guard !isAssigned else {
             throw VariableError.overwritingExistingAssignmentError
         }
@@ -45,14 +45,14 @@ struct TernaryVariable: NaryVariable {
         _assignment = newAssignment
     }
 
-    mutating func setDomain(to newDomain: Set<NaryVariableValueType>) throws {
+    public mutating func setDomain(to newDomain: Set<NaryVariableValueType>) throws {
         guard isSubsetOfDomain(newDomain) else {
             throw VariableError.incompatibleDomainError
         }
         _domain = newDomain
     }
 
-    mutating func unassign() {
+    public mutating func unassign() {
         _assignment = nil
     }
 }

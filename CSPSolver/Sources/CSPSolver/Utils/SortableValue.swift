@@ -1,7 +1,7 @@
 /**
  A wrapper for `Value` that also takes in an integer `priority`.
  */
-public struct SortableValue<T: Value> {
+struct SortableValue<T: Value> {
     public var value: T
     public var priority: Int
 
@@ -15,11 +15,11 @@ public struct SortableValue<T: Value> {
  Higher priority == larger
  */
 extension SortableValue: Comparable {
-    public static func < (lhs: SortableValue<T>, rhs: SortableValue<T>) -> Bool {
+    static func < (lhs: SortableValue<T>, rhs: SortableValue<T>) -> Bool {
         lhs.priority < rhs.priority
     }
 
-    public static func == (lhs: SortableValue<T>, rhs: SortableValue<T>) -> Bool {
+    static func == (lhs: SortableValue<T>, rhs: SortableValue<T>) -> Bool {
         lhs.value == rhs.value
         && lhs.priority == rhs.priority
     }

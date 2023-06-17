@@ -3,7 +3,7 @@ public struct FloatVariable: Variable {
     private var _domain: Set<Float>
     private var _assignment: Float?
 
-    init(name: String, domain: Set<Float>) {
+    public init(name: String, domain: Set<Float>) {
         self.name = name
         self._domain = domain
         self._assignment = nil

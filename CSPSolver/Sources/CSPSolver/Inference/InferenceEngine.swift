@@ -1,7 +1,7 @@
 /**
  A protocol for all Inference Engines used in this CSPSolver.
  */
-public protocol InferenceEngine {
+protocol InferenceEngine {
     /// Given a `VariableSet` and a `ConstraintSet`, applies an inference algorithm.
     ///
     /// - Returns: a `VariableSet` containing the same`Variables` with their domains

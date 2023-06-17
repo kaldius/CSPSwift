@@ -20,21 +20,21 @@ public struct ConstraintSet {
         allConstraints.append(constraint)
     }
 
-    public func allSatisfied(state: VariableSet) throws -> Bool {
+    func allSatisfied(state: VariableSet) throws -> Bool {
         try allConstraints.allSatisfy({ try $0.isSatisfied(state: state) })
     }
 
-    public func anyViolated(state: VariableSet) throws -> Bool {
+    func anyViolated(state: VariableSet) throws -> Bool {
         try allConstraints.contains(where: { try $0.isViolated(state: state) })
     }
 
     /// Applies all `UnaryConstraint`s to the given `state` and returns a new
     /// `VariableSet` where all `Variable`s domains have been constrained.
-    public func applyUnaryConstraints(to state: VariableSet) throws -> VariableSet {
+    func applyUnaryConstraints(to state: VariableSet) throws -> VariableSet {
         return try unaryConstraints.reduce(state, { try $1.restrictDomain(state: $0) })
     }
 
-    public mutating func removeUnaryConstraints() {
+    mutating func removeUnaryConstraints() {
         allConstraints = allConstraints.filter({ !($0 is any UnaryConstraint) })
     }
 }
