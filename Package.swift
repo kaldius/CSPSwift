@@ -20,9 +20,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "CSPSolver",
-            dependencies: []),
+            dependencies: [],
+            path: "CSPSolver/Sources/CSPSolver"),
         .testTarget(
             name: "CSPSolverTests",
-            dependencies: ["CSPSolver"])
+            dependencies: ["CSPSolver"],
+            path: "CSPSolver/Tests/CSPSolverTests")
     ]
 )
