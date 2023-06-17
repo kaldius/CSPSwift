@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "CSPSolver",
+    name: "CSPSwift",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "CSPSolver",
-            targets: ["CSPSolver"])
+            name: "CSPSwift",
+            targets: ["CSPSwift"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -19,12 +19,12 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "CSPSolver",
+            name: "CSPSwift",
             dependencies: [],
-            path: "CSPSolver/Sources/CSPSolver"),
+            path: "CSPSwift/Sources/CSPSwift"),
         .testTarget(
-            name: "CSPSolverTests",
-            dependencies: ["CSPSolver"],
-            path: "CSPSolver/Tests/CSPSolverTests")
+            name: "CSPSwiftTests",
+            dependencies: ["CSPSwift"],
+            path: "CSPSwift/Tests/CSPSwiftTests")
     ]
 )
