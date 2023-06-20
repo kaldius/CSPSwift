@@ -9,6 +9,10 @@ public struct NaryVariableValueType {
         self.value = value
     }
 
+    var count: Int {
+        value.count
+    }
+
     subscript(_ idx: Int) -> (any Value) {
         value[idx]
     }

@@ -15,3 +15,21 @@ extension Constraint {
         })
     }
 }
+
+extension [any Constraint] {
+    func isEqual(_ other: [any Constraint]) -> Bool {
+        var equal = self.count == other.count
+        for idx in 0 ..< self.count {
+            equal = equal && self[idx].isEqual(other[idx])
+        }
+        return equal
+    }
+
+    func containsSameValues(as array: [any Constraint]) -> Bool {
+        var correct = self.count == array.count
+        for value in self {
+            correct = correct && array.contains(where: { $0.isEqual(value) })
+        }
+        return correct
+    }
+}

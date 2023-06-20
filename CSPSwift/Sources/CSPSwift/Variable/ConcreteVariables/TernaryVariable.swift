@@ -9,15 +9,17 @@ public struct TernaryVariable: NaryVariable {
     private var _domain: Set<NaryVariableValueType>
     private var _assignment: NaryVariableValueType?
 
-    public var associatedVariableNames: [String]
+    private var associatedVariables: [any Variable]
+    public var associatedVariableNames: [String] {
+        associatedVariables.map({ $0.name })
+    }
 
     public init(name: String,
                 variableA: any Variable,
                 variableB: any Variable,
                 variableC: any Variable) {
         self.name = name
-        let associatedVariables = [variableA, variableB, variableC]
-        self.associatedVariableNames = associatedVariables.map { $0.name }
+        self.associatedVariables = [variableA, variableB, variableC]
         let associatedDomains = Self.getAssociatedDomains(from: associatedVariables)
         self._domain = Self.createInternalDomain(from: associatedDomains)
         self._assignment = nil
@@ -33,6 +35,10 @@ public struct TernaryVariable: NaryVariable {
 
     public var assignment: NaryVariableValueType? {
         _assignment
+    }
+
+    public var auxillaryConstraints: [AuxillaryConstraint] {
+        associatedVariables.compactMap({ AuxillaryConstraint(mainVariable: $0, dualVariable: self) })
     }
 
     public mutating func assign(to newAssignment: NaryVariableValueType) throws {
