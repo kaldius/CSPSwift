@@ -2,7 +2,7 @@
  Holds all the information about the Constraint Satisfaction Problem.
  */
 public struct ConstraintSatisfactionProblem {
-    private(set) var variableSet: VariableSet
+    public var variableSet: VariableSet
     private(set) var constraintSet: ConstraintSet
 
     /// Stores `VariableSet`s used for the undo operation.
