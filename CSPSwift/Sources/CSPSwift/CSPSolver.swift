@@ -12,7 +12,7 @@ public struct CSPSolver {
     private let nextVariableSelector: any NextVariableSelector
     private let domainValueSorter: any DomainValueSorter
 
-    init(inferenceEngineType: InferenceEngineType,
+    public init(inferenceEngineType: InferenceEngineType,
          nextVariableSelectorType: NextVariableSelectorType,
          domainValueSorterType: DomainValueSorterType) {
         self.inferenceEngine = InferenceEngineFactory.create(inferenceEngineType)
