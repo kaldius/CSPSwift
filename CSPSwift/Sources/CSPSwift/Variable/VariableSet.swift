@@ -61,7 +61,7 @@ public struct VariableSet {
         return variable.canAssign(to: assignment)
     }
 
-    func getAssignment<V: Variable>(_ name: String, type: V.Type) throws -> V.ValueType? {
+    public func getAssignment<V: Variable>(_ name: String, type: V.Type) throws -> V.ValueType? {
         let variable = try extractVariable(named: name)
         if variable.assignment == nil {
             return nil
