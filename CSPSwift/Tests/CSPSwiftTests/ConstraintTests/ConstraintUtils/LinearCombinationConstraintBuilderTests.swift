@@ -90,7 +90,7 @@ final class LLCBuilderTests: XCTestCase {
         let lccAB = LinearCombinationConstraint(ternaryVariableAB,
                                                 scaleA: 1,
                                                 scaleB: 2,
-                                                scaleC: 1)
+                                                scaleC: -1)
 
         let repAbC = IntVariable(name: "((a+b_rep)+c_rep)", domain: Set(8 ... 16))
         let ternaryVariableAbC = TernaryVariable(name: "(a+b_rep)+c+((a+b_rep)+c_rep)",
@@ -100,7 +100,7 @@ final class LLCBuilderTests: XCTestCase {
         let lccAbC = LinearCombinationConstraint(ternaryVariableAbC,
                                                  scaleA: 1,
                                                  scaleB: 3,
-                                                 scaleC: 1)
+                                                 scaleC: -1)
 
         let ternaryVariableAbcDE = TernaryVariable(name: "((a+b_rep)+c_rep)+d+e",
                                                    variableA: repAbC,
@@ -120,13 +120,6 @@ final class LLCBuilderTests: XCTestCase {
 
         XCTAssertTrue(expectedVariables.containsSameValues(as: actualResult.variables))
         XCTAssertTrue(expectedConstraints.containsSameValues(as: actualResult.constraints))
-    }
-
-    func test_test() {
-        print(Array(Set(Array<Int>.possibleAssignments(domains: [[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4],
-                                                                 [4, 5].map({ $0 * -1})
-                                                                ])
-            .map({$0.reduce(0, +)}))).sorted())
     }
 
     // Test case:
@@ -158,7 +151,7 @@ final class LLCBuilderTests: XCTestCase {
         let lccAB = LinearCombinationConstraint(ternaryVariableAB,
                                                 scaleA: 1,
                                                 scaleB: 2,
-                                                scaleC: 1)
+                                                scaleC: -1)
 
         let repAbC = IntVariable(name: "((a+b_rep)+c_rep)", domain: Set(4 ... 10))
         let ternaryVariableAbC = TernaryVariable(name: "(a+b_rep)+c+((a+b_rep)+c_rep)",
@@ -168,7 +161,7 @@ final class LLCBuilderTests: XCTestCase {
         let lccAbC = LinearCombinationConstraint(ternaryVariableAbC,
                                                  scaleA: 1,
                                                  scaleB: 1,
-                                                 scaleC: 1)
+                                                 scaleC: -1)
 
         let repAbcD = IntVariable(name: "(((a+b_rep)+c_rep)+d_rep)", domain: Set(-6 ... 4))
         let ternaryVariableAbcD = TernaryVariable(name: "((a+b_rep)+c_rep)+d+(((a+b_rep)+c_rep)+d_rep)",
@@ -178,7 +171,7 @@ final class LLCBuilderTests: XCTestCase {
         let lccAbcD = LinearCombinationConstraint(ternaryVariableAbcD,
                                                   scaleA: 1,
                                                   scaleB: -2,
-                                                  scaleC: 1)
+                                                  scaleC: -1)
 
         let repAbcdE = IntVariable(name: "((((a+b_rep)+c_rep)+d_rep)+e_rep)", domain: Set(-11 ... 0))
         let ternaryVariableAbcdE = TernaryVariable(name: "(((a+b_rep)+c_rep)+d_rep)+e+((((a+b_rep)+c_rep)+d_rep)+e_rep)",
@@ -188,7 +181,7 @@ final class LLCBuilderTests: XCTestCase {
         let lccAbcdE = LinearCombinationConstraint(ternaryVariableAbcdE,
                                                   scaleA: 1,
                                                   scaleB: -1,
-                                                  scaleC: 1)
+                                                  scaleC: -1)
 
         let ternaryVariableAbcdeFG = TernaryVariable(name: "((((a+b_rep)+c_rep)+d_rep)+e_rep)+f+g",
                                                      variableA: repAbcdE,

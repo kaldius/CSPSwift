@@ -106,7 +106,7 @@ public struct LinearCombinationConstraintBuilder {
                                                                         variableB: variableB,
                                                                         scaleFactorB: scaleFactorB,
                                                                         variableC: variableC,
-                                                                        scaleFactorC: 1)
+                                                                        scaleFactorC: -1)
         return (variableC, ternaryVariable, constraint)
     }
 
