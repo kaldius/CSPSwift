@@ -16,7 +16,7 @@ public struct LinearCombinationConstraintBuilder {
         variableNameToScaleFactor[variable.name] = scaleFactor
     }
 
-    public var result: (variables: [any Variable], constraints: [LinearCombinationConstraint]) {
+    public var result: (variables: [any Variable], constraints: [any TernaryVariableConstraint]) {
         get throws {
             try checkConditions()
             if variables.count == 3 {
@@ -25,7 +25,7 @@ public struct LinearCombinationConstraintBuilder {
             var subLLCBuilder = Self.init()
             subLLCBuilder.additionalConstant = additionalConstant
             var newVariables: [any Variable] = []
-            var constraints : [LinearCombinationConstraint] = []
+            var constraints : [any TernaryVariableConstraint] = []
 
             // merge first two variables into a representative variable
             let (rep, ternaryVar, constraint) = try createVariablesAndLCCs(from: variables[0], and: variables[1])
@@ -47,49 +47,29 @@ public struct LinearCombinationConstraintBuilder {
         }
     }
 
-    private var resultBaseCase: (variables: [TernaryVariable], constraints: [LinearCombinationConstraint]) {
+    private var resultBaseCase: (variables: [TernaryVariable], constraints: [any TernaryVariableConstraint]) {
         get throws {
             guard let scaleFactorA = variableNameToScaleFactor[variables[0].name],
                   let scaleFactorB = variableNameToScaleFactor[variables[1].name],
                   let scaleFactorC = variableNameToScaleFactor[variables[2].name] else {
                 throw LCCBuilderError.noScaleFactorError
             }
-            let (ternaryVariable, constraint) = createTernaryVariableAndLCC(variableA: variables[0],
-                                                                            scaleFactorA: scaleFactorA,
-                                                                            variableB: variables[1],
-                                                                            scaleFactorB: scaleFactorB,
-                                                                            variableC: variables[2],
-                                                                            scaleFactorC: scaleFactorC,
-                                                                            add: additionalConstant)
+            let (ternaryVariable, constraint) = TernaryVariableConstraintBuilder.create(constraintType: .linearCombinationConstraint,
+                                                                                        variableA: variables[0],
+                                                                                        variableB: variables[1],
+                                                                                        variableC: variables[2],
+                                                                                        scaleA: Float(scaleFactorA),
+                                                                                        scaleB: Float(scaleFactorB),
+                                                                                        scaleC: Float(scaleFactorC),
+                                                                                        add: Float(additionalConstant))
             return ([ternaryVariable], [constraint])
         }
-    }
-
-    private func createTernaryVariableAndLCC(variableA: IntVariable,
-                                             scaleFactorA: Int,
-                                             variableB: IntVariable,
-                                             scaleFactorB: Int,
-                                             variableC: IntVariable,
-                                             scaleFactorC: Int,
-                                             add: Int = 0) -> (ternaryVariable: TernaryVariable,
-                                                                           constraint: LinearCombinationConstraint) {
-        let name = variableA.name + "+" + variableB.name + "+" + variableC.name
-        let ternaryVariable = TernaryVariable(name: name,
-                                              variableA: variableA,
-                                              variableB: variableB,
-                                              variableC: variableC)
-        let constraint = LinearCombinationConstraint(ternaryVariable,
-                                                     scaleA: Float(scaleFactorA),
-                                                     scaleB: Float(scaleFactorB),
-                                                     scaleC: Float(scaleFactorC),
-                                                     add: Float(add))
-        return (ternaryVariable, constraint)
     }
 
     private func createVariablesAndLCCs(from variableA: IntVariable,
                                         and variableB: IntVariable) throws -> (representativeVariable: IntVariable,
                                                                                ternaryVariable: TernaryVariable,
-                                                                               constraint: LinearCombinationConstraint) {
+                                                                               constraint: any TernaryVariableConstraint) {
         guard let scaleFactorA = variableNameToScaleFactor[variableA.name],
               let scaleFactorB = variableNameToScaleFactor[variableB.name] else {
             throw LCCBuilderError.noScaleFactorError
@@ -101,12 +81,13 @@ public struct LinearCombinationConstraintBuilder {
             pair[0] * scaleFactorA + pair[1] * scaleFactorB
         })
         let variableC = IntVariable(name: "(" + name + "_rep)", domain: Set(variableCDomain))
-        let (ternaryVariable, constraint) = createTernaryVariableAndLCC(variableA: variableA,
-                                                                        scaleFactorA: scaleFactorA,
-                                                                        variableB: variableB,
-                                                                        scaleFactorB: scaleFactorB,
-                                                                        variableC: variableC,
-                                                                        scaleFactorC: -1)
+        let (ternaryVariable, constraint) = TernaryVariableConstraintBuilder.create(constraintType: .linearCombinationConstraint,
+                                                                                    variableA: variableA,
+                                                                                    variableB: variableB,
+                                                                                    variableC: variableC,
+                                                                                    scaleA: Float(scaleFactorA),
+                                                                                    scaleB: Float(scaleFactorB),
+                                                                                    scaleC: -1)
         return (variableC, ternaryVariable, constraint)
     }
 
