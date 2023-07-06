@@ -56,7 +56,7 @@ final class LLCBuilderTests: XCTestCase {
                                                  add: -6)
 
         let expectedVariables: [any Variable] = [ternaryVariableABC]
-        let expectedConstraints: [any Constraint] = [lccABC]
+        let expectedConstraints: [any Constraint] = [lccABC] + ternaryVariableABC.auxillaryConstraints
 
         let actualResult = try builder.result
 
@@ -115,6 +115,9 @@ final class LLCBuilderTests: XCTestCase {
         let expectedVariables: [any Variable] = [repAB, repAbC, ternaryVariableAB,
                                                  ternaryVariableAbC, ternaryVariableAbcDE]
         let expectedConstraints: [any Constraint] = [lccAB, lccAbC, lccAbcDE]
+        + [ternaryVariableAB,
+           ternaryVariableAbC,
+           ternaryVariableAbcDE].flatMap({ $0.auxillaryConstraints })
 
         let actualResult = try builder.result
 
@@ -197,6 +200,11 @@ final class LLCBuilderTests: XCTestCase {
                                                  ternaryVariableAbC, ternaryVariableAbcD,
                                                  ternaryVariableAbcdE, ternaryVariableAbcdeFG]
         let expectedConstraints: [any Constraint] = [lccAB, lccAbC, lccAbcD, lccAbcdE, lccAbcdeFG]
+        + [ternaryVariableAB,
+           ternaryVariableAbC,
+           ternaryVariableAbcD,
+           ternaryVariableAbcdE,
+           ternaryVariableAbcdeFG].flatMap({ $0.auxillaryConstraints })
 
         let actualResult = try builder.result
 

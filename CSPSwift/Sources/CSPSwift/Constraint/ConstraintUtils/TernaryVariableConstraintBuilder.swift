@@ -8,23 +8,23 @@ public struct TernaryVariableConstraintBuilder {
                        scaleB: Float,
                        scaleC: Float,
                        add: Float = 0) -> (ternaryVariable: TernaryVariable,
-                                           constraint: any TernaryVariableConstraint) {
+                                           constraints: [any Constraint]) {
         let name = variableA.name + "+" + variableB.name + "+" + variableC.name
         let ternaryVariable = TernaryVariable(name: name,
                                               variableA: variableA,
                                               variableB: variableB,
                                               variableC: variableC)
-        var constraint: (any TernaryVariableConstraint)? = nil
-
+        var constraints: [any Constraint] = ternaryVariable.auxillaryConstraints
         switch constraintType {
         case .linearCombinationConstraint:
-            constraint = LinearCombinationConstraint(ternaryVariable,
-                                                     scaleA: scaleA,
-                                                     scaleB: scaleB,
-                                                     scaleC: scaleC,
-                                                     add: add)
+            let newConstraint = LinearCombinationConstraint(ternaryVariable,
+                                                            scaleA: scaleA,
+                                                            scaleB: scaleB,
+                                                            scaleC: scaleC,
+                                                            add: add)
+            constraints.append(newConstraint)
         }
 
-        return (ternaryVariable, constraint!)
+        return (ternaryVariable, constraints)
     }
 }
