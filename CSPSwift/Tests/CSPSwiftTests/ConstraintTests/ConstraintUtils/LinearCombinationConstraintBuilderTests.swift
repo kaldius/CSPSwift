@@ -2,6 +2,24 @@ import XCTest
 @testable import CSPSwift
 
 final class LLCBuilderTests: XCTestCase {
+    func testInit() throws {
+        let intVariableA = IntVariable(name: "a", domain: Set([0, 1]))
+        let intVariableB = IntVariable(name: "b", domain: Set([1, 2, 3]))
+        let intVariableC = IntVariable(name: "c", domain: Set([2, 3]))
+
+        let builderA = try LinearCombinationConstraintBuilder(variables: [intVariableA, intVariableB, intVariableC],
+                                                              scaleFactors: [1, 2, 3],
+                                                              additionalConstant: -6)
+
+        var builderB = LinearCombinationConstraintBuilder()
+        builderB.add(intVariableA)
+        builderB.add(intVariableB, scaleFactor: 2)
+        builderB.add(intVariableC, scaleFactor: 3)
+        builderB.additionalConstant = -6
+
+        XCTAssertEqual(builderA, builderB)
+    }
+
     func testResult_zeroVariables_throwsError() {
         let builder = LinearCombinationConstraintBuilder()
 
@@ -39,11 +57,9 @@ final class LLCBuilderTests: XCTestCase {
         let intVariableB = IntVariable(name: "b", domain: Set([1, 2, 3]))
         let intVariableC = IntVariable(name: "c", domain: Set([2, 3]))
 
-        var builder = LinearCombinationConstraintBuilder()
-        builder.add(intVariableA)
-        builder.add(intVariableB, scaleFactor: 2)
-        builder.add(intVariableC, scaleFactor: 3)
-        builder.additionalConstant = -6
+        let builder = try LinearCombinationConstraintBuilder(variables: [intVariableA, intVariableB, intVariableC],
+                                                             scaleFactors: [1, 2, 3],
+                                                             additionalConstant: -6)
 
         let ternaryVariableABC = TernaryVariable(name: "a+b+c",
                                                  variableA: intVariableA,
@@ -73,14 +89,13 @@ final class LLCBuilderTests: XCTestCase {
         let intVariableD = IntVariable(name: "d", domain: Set([3, 4, 5]))
         let intVariableE = IntVariable(name: "e", domain: Set([4, 5]))
 
-        var builder = LinearCombinationConstraintBuilder()
-        builder.add(intVariableA)
-        builder.add(intVariableB, scaleFactor: 2)
-        builder.add(intVariableC, scaleFactor: 3)
-        builder.add(intVariableD, scaleFactor: -4)
-        builder.add(intVariableE, scaleFactor: -1)
-        builder.additionalConstant = 13
-
+        let builder = try LinearCombinationConstraintBuilder(variables: [intVariableA,
+                                                                         intVariableB,
+                                                                         intVariableC,
+                                                                         intVariableD,
+                                                                         intVariableE],
+                                                             scaleFactors: [1, 2, 3, -4, -1],
+                                                             additionalConstant: 13)
 
         let repAB = IntVariable(name: "(a+b_rep)", domain: Set(2 ... 7))
         let ternaryVariableAB = TernaryVariable(name: "a+b+(a+b_rep)",
@@ -136,15 +151,15 @@ final class LLCBuilderTests: XCTestCase {
         let intVariableF = IntVariable(name: "f", domain: Set([5, 6, 7]))
         let intVariableG = IntVariable(name: "g", domain: Set([3, 5, 1]))
 
-        var builder = LinearCombinationConstraintBuilder()
-        builder.add(intVariableA)
-        builder.add(intVariableB, scaleFactor: 2)
-        builder.add(intVariableC, scaleFactor: 1)
-        builder.add(intVariableD, scaleFactor: -2)
-        builder.add(intVariableE, scaleFactor: -1)
-        builder.add(intVariableF, scaleFactor: 3)
-        builder.add(intVariableG, scaleFactor: -1)
-        builder.additionalConstant = -4
+        let builder = try LinearCombinationConstraintBuilder(variables: [intVariableA,
+                                                                         intVariableB,
+                                                                         intVariableC,
+                                                                         intVariableD,
+                                                                         intVariableE,
+                                                                         intVariableF,
+                                                                         intVariableG],
+                                                             scaleFactors: [1, 2, 1, -2, -1, 3, -1],
+                                                             additionalConstant: -4)
 
         let repAB = IntVariable(name: "(a+b_rep)", domain: Set(2 ... 7))
         let ternaryVariableAB = TernaryVariable(name: "a+b+(a+b_rep)",

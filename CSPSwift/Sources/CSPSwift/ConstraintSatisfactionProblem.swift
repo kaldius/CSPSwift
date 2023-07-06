@@ -13,6 +13,7 @@ public struct ConstraintSatisfactionProblem {
                 constraints: [any Constraint]) throws {
         let tempVariableSet = try VariableSet(from: variables)
         var tempConstraintSet = ConstraintSet(constraints)
+        // TODO: move application of unary constraints to solver side
         let finalVariableSet = try tempConstraintSet.applyUnaryConstraints(to: tempVariableSet)
         tempConstraintSet.removeUnaryConstraints()
 

@@ -8,6 +8,8 @@ struct InferenceEngineFactory {
             return ArcConsistency3()
         case .forwardChecking:
             return ForwardChecking()
+        case .identity:
+            return Identity()
         }
     }
 }

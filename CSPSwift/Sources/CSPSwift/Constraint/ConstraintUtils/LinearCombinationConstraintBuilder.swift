@@ -1,6 +1,6 @@
 
 // TODO: make this take in "AddableVariable"s instead of just IntVariables
-public struct LinearCombinationConstraintBuilder {
+public struct LinearCombinationConstraintBuilder: Equatable {
     private var variables: [IntVariable]
     private var variableNameToScaleFactor: [String: Int]
     public var additionalConstant: Int
@@ -13,7 +13,11 @@ public struct LinearCombinationConstraintBuilder {
 
     public init(variables: [IntVariable],
                 scaleFactors: [Int],
-                additionalConstant: Int = 0) {
+                additionalConstant: Int = 0) throws {
+        guard variables.count == scaleFactors.count else {
+            throw LCCBuilderError.unmatchedVariablesAndScaleFactorsError(variableCount: variables.count,
+                                                                         scaleFactorCount: scaleFactors.count)
+        }
         self.variables = variables
         self.variableNameToScaleFactor = [:]
         for idx in 0 ..< variables.count {
