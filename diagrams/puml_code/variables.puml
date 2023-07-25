@@ -1,0 +1,64 @@
+@startuml
+
+interface Value {
+  +isEqual(other: Value): Bool
+  +isGreaterThan(other: Value): Bool
+  +isLessThan(other: Value): Bool
+  +isEqual(other: [Value]): Bool
+  +containsSameValues(array: [Value]): Bool
+}
+
+interface Variable {
+  +name: String
+  +domain: Set<ValueType>
+  +assignment: ValueType?  
+  +domainAsArray: [ValueType]
+  +domainSize: Int
+  +isAssigned: Bool
+  +canAssign(to newAssignment: some Value): Bool
+  +assign(to newAssignment: ValueType) throws
+  +assign(to newAssignment: any Value) throws
+  +unassign()
+  +canSetDomain(to newDomain: [any Value]): Bool
+  +setDomain(to newDomain: Set<ValueType>) throws
+  +setDomain(to newDomain: [any Value]) throws
+  +createValueTypeSet(from array: [any Value]): Set<ValueType> throws
+  +isSubsetOfDomain(newDomain: Set<ValueType>): Bool
+}
+
+interface NaryVariable {
+    +associatedVariableNames: [String]
+    +assignment: NaryVariableValueType?
+    +domain: Set<NaryVariableValueType>
+    +isAssociated(with variable: any Variable): Bool
+    +isAssociated(with variableName: String): Bool
+    +assignmentSatisfied(for variable: some Variable): Bool
+    +assignmentViolated(for variable: some Variable): Bool
+}
+
+struct VariableSet {
+    -nameToVariable: [String: any Variable]
+    +init(from variables: [any Variable]) throws
+    +variables: [any Variable]
+    +unassignedVariables: [any Variable]
+    +isCompletelyAssigned: Bool
+    +containsEmptyDomain: Bool
+    +totalDomainValueCount: Int
+    +insert<Var: Variable>(variable: Var) throws
+    +getVariable(name: String): (any Variable)?
+    +getVariable<V: Variable>(name: String, type: V.Type): V?
+    +isAssigned(_ name: String) throws: Bool
+    +canAssign(_ name: String, to assignment: some Value) throws: Bool
+    +getAssignment<V: Variable>(_ name: String, type: V.Type) throws -> V.ValueType?
+    +assign(_ name: String, to assignment: some Value) throws
+    +unassign(_ name: String) throws
+    +setDomain(for name: String, to newDomain: [any Value]) throws
+    +getDomain(_ name: String) throws -> [any Value]
+    +getDomain<V: Variable>(name: String, type: V.Type) throws -> [V.ValueType]
+}
+
+Variable *-- Value
+Variable <|... NaryVariable
+VariableSet *-- Variable
+
+@enduml

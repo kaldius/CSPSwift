@@ -1,0 +1,36 @@
+@startuml
+
+interface InferenceEngine
+interface NextVariableSelector
+interface DomainValueSorter
+interface Variable
+interface Value
+struct ConstraintSatisfactionProblem
+struct VariableSet
+struct ConstraintSet
+
+struct CSPSolver {
+    - inferenceEngine: InferenceEngine
+    - nextVariableSelector: any NextVariableSelector
+    - domainValueSorter:any DomainValueSorter
+
+    + init(inferenceEngineType: InferenceEngineType, nextVariableSelectorType: NextVariableSelectorType, domainValueSorterType: DomainValueSorterType)
+    + solve(csp: inout ConstraintSatisfactionProblem) throws
+    + solved(csp: ConstraintSatisfactionProblem) throws -> ConstraintSatisfactionProblem
+    - backtrack(csp: ConstraintSatisfactionProblem) throws -> VariableSet?
+    - testAllValues(for variable: some Variable, given csp: ConstraintSatisfactionProblem) throws -> VariableSet?
+    - testSettingValue(for variable: some Variable, to value: some Value, given csp: ConstraintSatisfactionProblem) throws -> VariableSet?
+}
+
+CSPSolver --> InferenceEngine
+CSPSolver --> NextVariableSelector
+CSPSolver --> DomainValueSorter
+CSPSolver --> ConstraintSatisfactionProblem
+
+ConstraintSatisfactionProblem --> VariableSet
+ConstraintSatisfactionProblem --> ConstraintSet
+
+VariableSet --> Variable
+Variable --> Value
+
+@enduml

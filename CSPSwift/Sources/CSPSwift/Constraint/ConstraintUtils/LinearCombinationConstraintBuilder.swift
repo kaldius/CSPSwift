@@ -97,12 +97,12 @@ public struct LinearCombinationConstraintBuilder: Equatable {
         })
         let variableC = IntVariable(name: "(" + name + "_rep)", domain: Set(variableCDomain))
         let (ternaryVariable, constraints) = TernaryVariableConstraintBuilder.create(constraintType: .linearCombinationConstraint,
-                                                                                    variableA: variableA,
-                                                                                    variableB: variableB,
-                                                                                    variableC: variableC,
-                                                                                    scaleA: Float(scaleFactorA),
-                                                                                    scaleB: Float(scaleFactorB),
-                                                                                    scaleC: -1)
+                                                                                     variableA: variableA,
+                                                                                     variableB: variableB,
+                                                                                     variableC: variableC,
+                                                                                     scaleA: Float(scaleFactorA),
+                                                                                     scaleB: Float(scaleFactorB),
+                                                                                     scaleC: -1)
         return (variableC, ternaryVariable, constraints)
     }
 

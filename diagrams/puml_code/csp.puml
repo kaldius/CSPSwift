@@ -1,0 +1,22 @@
+@startuml ConstraintSatisfactionProblem
+
+
+struct ConstraintSatisfactionProblem {
+    - stateUndoStack: Stack<VariableSet>
+    + init(variables: [any Variable], constraints: [any Constraint]) throws
+    + variablesCompletelyAssigned: Bool
+    + allConstraintsSatisfied: Bool throws
+    + canAssign(_ variableName: String, to value: some Value) throws: Bool
+    + update(using state: VariableSet)
+    + revertToPreviousState() throws
+    - saveCurrentState()
+    - setDomains(using state: VariableSet)
+}
+
+struct ConstraintSet
+struct VariableSet
+
+ConstraintSatisfactionProblem --> VariableSet
+ConstraintSatisfactionProblem --> ConstraintSet
+
+@enduml

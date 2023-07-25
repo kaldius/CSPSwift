@@ -1,0 +1,38 @@
+@startuml
+
+struct ArcConsistency3 {
+    -arcsFromNeighbours(of: String, except: String, using: ConstraintSet): [Arc]
+}
+
+struct ForwardChecking {
+    -testCanAssign(variableName: String, to: some Value, state: VariableSet, constraintSet: ConstraintSet): Bool
+}
+
+interface InferenceEngine {
+    +makeNewInference(from: VariableSet, constraintSet: ConstraintSet): VariableSet? throws
+}
+
+struct Identity {
+}
+
+struct Arc {
+    +variableIName: String
+    +variableJName: String
+    -constraintIJ: any BinaryConstraint
+    +init(from: any BinaryConstraint, reverse: Bool = false)
+    +init(from: any BinaryConstraint, variableIName: String)
+    +init(from: any Constraint, reverse: Bool = false)
+    +contains(variableName: String): Bool
+    +revise(state: VariableSet): [any Value]? throws
+    -canBeRemoved(iDomainValue: any Value, state: VariableSet): Bool
+    -containsSatisfactoryJValue(domain: [any Value], state: VariableSet): Bool
+}
+
+ArcConsistency3 --> Arc
+
+InferenceEngine <|.. Identity
+InferenceEngine <|.. ForwardChecking
+InferenceEngine <|.. ArcConsistency3
+
+
+@enduml

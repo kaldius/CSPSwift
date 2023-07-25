@@ -2,6 +2,7 @@
  A protocol for all Unary constraints.
  */
 public protocol UnaryConstraint: Constraint {
+    // TODO: remove thie variable and just use variableNames
     var variableName: String { get }
 }
 

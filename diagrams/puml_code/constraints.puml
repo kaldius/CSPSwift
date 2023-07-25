@@ -1,0 +1,40 @@
+@startuml
+
+interface Constraint {
+    +variableNames: [String]
+    +isSatisfied(state: VariableSet): Bool
+    +isViolated(state: VariableSet): Bool
+}
+
+interface TernaryVariableConstraint {
+    +variableName: String
+    +init(_ ternaryVariable: TernaryVariable, scaleA: Float, scaleB: Float, scaleC: Float, add: Float)
+}
+
+Constraint <|.. BinaryConstraint
+Constraint <|.. UnaryConstraint
+UnaryConstraint <|.. TernaryVariableConstraint
+
+interface BinaryConstraint {
+    +depends(on variableName: String): Bool
+    +variableName(otherThan variableName: String): String?
+}
+
+interface UnaryConstraint {
+    +variableName: String
+    +restrictDomain(state: VariableSet): VariableSet
+}
+
+struct ConstraintSet {
+    -allConstraints: [any Constraint]
+    +init(_ allConstraints: [any Constraint])
+    +add(constraint: any Constraint)
+    +allSatisfied(state: VariableSet): Bool
+    +anyViolated(state: VariableSet): Bool
+    +applyUnaryConstraints(to state: VariableSet): VariableSet
+    +removeUnaryConstraints()
+}
+
+ConstraintSet o-- "1..*" Constraint
+
+@enduml
