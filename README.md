@@ -2,14 +2,29 @@
 
 A Constraint Satisfaction Problem (CSP) solver package written in Swift. 
 
-## How To Use
+This project came about when my friend and I decided to create a solver for [Aquarium](https://www.puzzle-aquarium.com), an online puzzle game. See his repo [here](https://github.com/nguyenvukhang/aquarium)!
+
+We initially came up with a naive backtracking solution, but since I had recently completed a Software Engineering course in school, I decided that it would be good practice to create a flexible, general CSP solver, while attempting to employ good Software Engineering practices.
+
+I am still in the process of integrating this package into our Aquarium solver. Once it is done I will leave a link to it here for you to check out this package in action.
 
 ## Software Architecture
 
 ### CSPSolver
 
-Below is a diagram for the `CSPSolver`. The other components will be explained in later parts.
 ![PUML diagram for CSPSolver](./diagrams/puml_images/cspSolver.png)
+
+`CSPSolver` is essentially a backtracking solver that 
+
+1. selects a variable, 
+2. assigns it a value and 
+3. makes inferences, then repeats.
+
+The `CSPSolver` can be customized for different use cases, with 3 areas of customization:
+
+1. `NextVariableSelector`: implements a heuristic to select the next variable to assign.
+2. `DomainValueSorter`: implements a heuristic to sort the domain values of the selected heuristic.
+3. `InferenceEngine`: implements some form of consistency checking, ensuring other variables' domains only contain assignable values.
 
 ### ConstraintSatisfactionProblem
 
@@ -49,6 +64,36 @@ getAssignment("myIntVariable", type: IntVariable.self)
 ```
 returns a value of type `Int` since that is the `ValueType` associated with `IntVariable`.
 
-### Inference
+### NextVariableSelector
+
+Currently, the only concrete implementation is the **Minimum Remaining Values (MRV)** heuristic. 
+
+Since every variable needs an assignment in a CSP, this heuristic aims to fail first, selecting the variable with the smallest remaining domain to be assigned next. 
+
+1. If the variable has **no values in its domain**, the search has failed and there is no need to continue searching. 
+2. If **not**, selecting the variable with the smallest remaining domain will ensure that each search tree will be the largest it can be, hence if we reach a failure in the next iteration, the size of the pruned tree is maximized.
+
+### DomainValueSorter
+
+There are currently 2 concrete implementations, 
+
+1. the Least Constraining Value (LCV) heuristic and
+2. Random.
+
+The LCV heuristic aims to sort the domain values in a way that fails last, since we only need one out of all the possible valid solutions. For each domain value, we suppose the variable is set to that domain value, then the total number of valid domain values in the entire CSP is counted. Finally, the domain values are sorted in descending order of the count.
+
+However, experiments show that this heuristic is too slow in practice, likely due to the step where the total number of valid domain values is counted. Hence, the random Domain Value Sorter was implemented and surprisingly, its average speed is significantly faster, albeit with a larger variance, as expected of randomized algorithms.
+
+### InferenceEngine
 
 ![PUML diagram for InferenceEngines](./diagrams/puml_images/inference.png)
+
+The purpose of the `InferenceEngine` is to handle consistency checking, removing values from the domain of a `Variable` once we are sure that they should no longer be considered.
+
+There are 3 concrete implementations of `InferenceEngine` that can be selected:
+
+1. `Identity`: makes no changes to variable domains.
+2. `ForwardChecking`: for every domain value in each variable, if it cannot be assigned, removes it.
+3. `ArcConsistency3`: the AC-3 algorithm developed by Alan Mackworth.
+
+In order to allow convenient construction of each type of `InferenceEngine`, a factory was created, taking in an enum value for the type to create.
