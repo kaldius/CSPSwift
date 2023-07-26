@@ -2,11 +2,15 @@
 
 A Constraint Satisfaction Problem (CSP) solver package written in Swift. 
 
-This project came about when my friend and I decided to create a solver for [Aquarium](https://www.puzzle-aquarium.com), an online puzzle game. See his repo [here](https://github.com/nguyenvukhang/aquarium)!
+This project came about when my friend, [Khang](https://github.com/nguyenvukhang) and I decided to create a solver for [Aquarium](https://www.puzzle-aquarium.com), an online puzzle game. Check out his repo [here](https://github.com/nguyenvukhang/aquarium)!
 
-We initially came up with a naive backtracking solution, but since I had recently completed a Software Engineering course in school, I decided that it would be good practice to create a flexible, general CSP solver, while attempting to employ good Software Engineering practices.
+We initially came up with a naive backtracking solution, and he proceeded make it run at the speed of light with some special inference techniques catered specifically for Aquarium.
+
+Now, since I had recently completed a Software Engineering course in school, I decided that it would be good practice to create a flexible, general CSP solver, while attempting to employ good Software Engineering practices. This solver would ideally be adaptable enough for the user to create their own inference methods and other heuristics to speed up the basic backtracking algorithm without having to code out the common CSP boilerplate.
 
 I am still in the process of integrating this package into our Aquarium solver. Once it is done I will leave a link to it here for you to check out this package in action.
+
+TL;DR: this package allows the user to solve a CSP by simply providing the Variables and Constraints, while also making room for custom inference methods and heuristics.
 
 ## Software Architecture
 
